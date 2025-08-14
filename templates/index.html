@@ -5,7 +5,7 @@
     <title>W3.CSS Template</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="../static/css/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -23,18 +23,48 @@
         html {
             height: 100%;
             line-height: 1.8;
+            scroll-behavior: smooth;
         }
 
         /* Full height image header */
         .bgimg-1 {
             background-position: center;
             background-size: cover;
-            background-image: url("../static/img/mac.jpg");
+            background-image: url("../static/../static/img/mac.jpg");
             min-height: 100%;
         }
 
         .w3-bar .w3-button {
             padding: 16px;
+        }
+
+        /* Modal animations */
+        .modal-image-slide {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.6s ease-in-out;
+        }
+
+        .modal-image-slide.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .modal-text-slide {
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.6s ease-in-out;
+            transition-delay: 0.2s;
+        }
+
+        .modal-text-slide.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        #modal-description {
+            line-height: 1.8;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -129,7 +159,7 @@
         <div class="w3-row-padding w3-grayscale" style="margin-top:64px">
             <div class="w3-col l3 m6 w3-margin-bottom">
                 <div class="w3-card">
-                    <img src="img/team2.jpg" alt="John" style="width:100%">
+                    <img src="../static/img/team2.jpg" alt="John" style="width:100%">
                     <div class="w3-container">
                         <h3>John Doe</h3>
                         <p class="w3-opacity">CEO & Founder</p>
@@ -142,7 +172,7 @@
             </div>
             <div class="w3-col l3 m6 w3-margin-bottom">
                 <div class="w3-card">
-                    <img src="img/team1.jpg" alt="Jane" style="width:100%">
+                    <img src="../static/img/team1.jpg" alt="Jane" style="width:100%">
                     <div class="w3-container">
                         <h3>Anja Doe</h3>
                         <p class="w3-opacity">Art Director</p>
@@ -155,7 +185,7 @@
             </div>
             <div class="w3-col l3 m6 w3-margin-bottom">
                 <div class="w3-card">
-                    <img src="img/team3.jpg" alt="Mike" style="width:100%">
+                    <img src="../static/img/team3.jpg" alt="Mike" style="width:100%">
                     <div class="w3-container">
                         <h3>Mike Ross</h3>
                         <p class="w3-opacity">Web Designer</p>
@@ -168,7 +198,7 @@
             </div>
             <div class="w3-col l3 m6 w3-margin-bottom">
                 <div class="w3-card">
-                    <img src="img/team4.jpg" alt="Dan" style="width:100%">
+                    <img src="../static/img/team4.jpg" alt="Dan" style="width:100%">
                     <div class="w3-container">
                         <h3>Dan Star</h3>
                         <p class="w3-opacity">Designer</p>
@@ -189,39 +219,39 @@
 
         <div class="w3-row-padding" style="margin-top:64px">
             <div class="w3-col l3 m6">
-                <img src="img/tech_mic.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity"
-                    alt="A microphone">
+                <img src="../static/img/tech_mic.jpg" style="width:100%" onclick="onClick(this)"
+                    class="w3-hover-opacity" alt="A microphone">
             </div>
             <div class="w3-col l3 m6">
-                <img src="img/tech_phone.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity"
-                    alt="A phone">
+                <img src="../static/img/tech_phone.jpg" style="width:100%" onclick="onClick(this)"
+                    class="w3-hover-opacity" alt="A phone">
             </div>
             <div class="w3-col l3 m6">
-                <img src="img/tech_drone.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity"
-                    alt="A drone">
+                <img src="../static/img/tech_drone.jpg" style="width:100%" onclick="onClick(this)"
+                    class="w3-hover-opacity" alt="A drone">
             </div>
             <div class="w3-col l3 m6">
-                <img src="img/tech_sound.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity"
-                    alt="Soundbox">
+                <img src="../static/img/tech_sound.jpg" style="width:100%" onclick="onClick(this)"
+                    class="w3-hover-opacity" alt="Soundbox">
             </div>
         </div>
 
         <div class="w3-row-padding w3-section">
             <div class="w3-col l3 m6">
-                <img src="img/tech_tablet.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity"
-                    alt="A tablet">
+                <img src="../static/img/tech_tablet.jpg" style="width:100%" onclick="onClick(this)"
+                    class="w3-hover-opacity" alt="A tablet">
             </div>
             <div class="w3-col l3 m6">
-                <img src="img/tech_camera.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity"
-                    alt="A camera">
+                <img src="../static/img/tech_camera.jpg" style="width:100%" onclick="onClick(this)"
+                    class="w3-hover-opacity" alt="A camera">
             </div>
             <div class="w3-col l3 m6">
-                <img src="img/tech_typewriter.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity"
-                    alt="A typewriter">
+                <img src="../static/img/tech_typewriter.jpg" style="width:100%" onclick="onClick(this)"
+                    class="w3-hover-opacity" alt="A typewriter">
             </div>
             <div class="w3-col l3 m6">
-                <img src="img/tech_tableturner.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity"
-                    alt="A tableturner">
+                <img src="../static/img/tech_tableturner.jpg" style="width:100%" onclick="onClick(this)"
+                    class="w3-hover-opacity" alt="A tableturner">
             </div>
         </div>
     </div>
@@ -230,9 +260,18 @@
     <div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
         <span class="w3-button w3-xxlarge w3-black w3-padding-large w3-display-topright"
             title="Close Modal Image">×</span>
-        <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
-            <img id="img01" class="w3-image">
-            <p id="caption" class="w3-opacity w3-large"></p>
+        <div class="w3-modal-content w3-transparent w3-padding-64">
+            <div class="w3-row-padding w3-center">
+                <div class="w3-half">
+                    <img id="img01" class="modal-image-slide" style="width:100%; max-width:500px;">
+                </div>
+                <div class="w3-half w3-left-align">
+                    <div id="modal-text" class="modal-text-slide">
+                        <h2 id="modal-title" class="w3-text-white w3-margin-bottom"></h2>
+                        <p id="modal-description" class="w3-text-light-grey w3-large w3-line-height"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -253,14 +292,93 @@
     </footer>
 
     <script>
+        // Image descriptions
+        const imageDescriptions = {
+            "tech_mic.jpg": {
+                title: "Professional Microphone",
+                description: "High-quality studio microphone designed for crystal clear audio recording. Perfect for podcasts, music production, and professional voice-over work. Features noise cancellation and premium sound quality."
+            },
+            "tech_phone.jpg": {
+                title: "Modern Smartphone",
+                description: "Cutting-edge smartphone technology with advanced features. Includes high-resolution camera, fast processing power, and sleek design that fits perfectly in your daily life."
+            },
+            "tech_drone.jpg": {
+                title: "Professional Drone",
+                description: "Advanced aerial photography drone equipped with 4K camera and intelligent flight modes. Capture stunning aerial shots and videos with precision control and stability."
+            },
+            "tech_sound.jpg": {
+                title: "Premium Sound System",
+                description: "High-fidelity sound system delivering exceptional audio experience. Features powerful bass, clear trebles, and immersive surround sound technology for music enthusiasts."
+            },
+            "tech_tablet.jpg": {
+                title: "Digital Tablet",
+                description: "Versatile tablet perfect for creative work, entertainment, and productivity. Features responsive touch screen, long battery life, and powerful performance for all your needs."
+            },
+            "tech_camera.jpg": {
+                title: "Digital Camera",
+                description: "Professional-grade digital camera with advanced imaging capabilities. Capture life's precious moments with stunning clarity, perfect color reproduction, and exceptional detail."
+            },
+            "tech_typewriter.jpg": {
+                title: "Vintage Typewriter",
+                description: "Classic vintage typewriter that combines nostalgia with functionality. Perfect for writers who appreciate the tactile experience and timeless aesthetic of traditional writing."
+            },
+            "tech_tableturner.jpg": {
+                title: "DJ Turntable",
+                description: "Professional DJ turntable for music mixing and entertainment. Features precise control, high-quality sound output, and durable construction for professional performances."
+            }
+        };
+
         // Modal Image Gallery
         function onClick(element) {
-            document.getElementById("img01").src = element.src;
-            document.getElementById("modal01").style.display = "block";
-            var captionText = document.getElementById("caption");
-            captionText.innerHTML = element.alt;
+            const modal = document.getElementById("modal01");
+            const img = document.getElementById("img01");
+            const modalText = document.getElementById("modal-text");
+            const title = document.getElementById("modal-title");
+            const description = document.getElementById("modal-description");
+
+            // Get filename from src
+            const filename = element.src.split('/').pop();
+            const imageData = imageDescriptions[filename];
+
+            // Set content
+            img.src = element.src;
+            title.textContent = imageData ? imageData.title : element.alt;
+            description.textContent = imageData ? imageData.description : "No description available.";
+
+            // Show modal
+            modal.style.display = "block";
+
+            // Reset animations
+            img.classList.remove("show");
+            modalText.classList.remove("show");
+
+            // Trigger animations after a brief delay
+            setTimeout(() => {
+                img.classList.add("show");
+                modalText.classList.add("show");
+            }, 50);
         }
 
+        // Close modal and reset animations
+        function closeModal() {
+            const modal = document.getElementById("modal01");
+            const img = document.getElementById("img01");
+            const modalText = document.getElementById("modal-text");
+
+            img.classList.remove("show");
+            modalText.classList.remove("show");
+
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 300);
+        }
+
+        // Add click event to modal background
+        document.getElementById("modal01").addEventListener("click", function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
 
         // Toggle between showing and hiding the sidebar when clicking the menu icon
         var mySidebar = document.getElementById("mySidebar");
