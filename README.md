@@ -23,7 +23,7 @@ Web app sử dụng **HTML + Bootstrap** để tạo giao diện thân thiện, 
   - **static/** → Chứa file tĩnh (CSS, JS, ảnh)
     - **css/**
     - **js/**
-    - **img/**s
+    - **img/**
     - **uploads/** → Lưu ảnh người dùng upload
     - **processed/** → Lưu ảnh đã xử lý
   - **templates/** → HTML templates
