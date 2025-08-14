@@ -1,0 +1,19 @@
+# Vscode
+.vscode/
+# Jetbrain Idea
+.idea/
+*.iml
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+# Jupyter Notebook
+env/
+venv/
+.venv/
+.env
+#OS
+.DS_Store      # macOS
+Thumbs.db      # Windowsg
