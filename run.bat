@@ -1,8 +1,20 @@
 @echo off
-echo Installing requirements...
+echo === Checking virtual environment ===
+
+:: Nếu chưa có .venv thì tạo
+if not exist .venv (
+    echo Creating virtual environment...
+    python -m venv .venv
+)
+
+:: Kích hoạt venv
+call .venv\Scripts\activate.bat
+
+echo === Installing requirements ===
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
-echo Starting Flask application...
+echo === Starting Flask application ===
 echo Opening browser in 3 seconds...
 
 :: Start Flask app in background
