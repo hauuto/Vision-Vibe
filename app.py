@@ -6,13 +6,9 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route('/hello')
-def hello_world():
-    return jsonify({'message': 'Hello World from Flask!'})
-
-@app.route('/bt1')
-def bt1():
-    return 'hello bt1 nha'
+@app.route('/essay_1')
+def essay_1():
+    return render_template('Essay_1.html')
 
 # Template context processor để có thể sử dụng include trong template
 @app.context_processor
