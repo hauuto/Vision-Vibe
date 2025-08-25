@@ -75,12 +75,36 @@ def cal_img(npArray):
 
 
 def demo_histogram_equalization(image):
-    r, g, b = cv2.split(image)
-    tf_r = cal_img(r)
-    tf_g = cal_img(g)
-    tf_b = cal_img(b)
-
-    img_refine = cv2.merge((tf_r, tf_g, tf_b))
-    plt.imshow(img_refine.astype(np.uint8))
+    plt.figure(figsize=(10,5))
+    img_refine = np.array([])
     
+    if len(image.shape) == 2:
+        img_refine = cal_img(image)
+        plt.subplot(1,2,1)
+        plt.title("Histogram eq")
+        plt.hist(img_refine)
+        plt.subplot(1,2,2)
+        plt.title("Image")
+        plt.imshow(img_refine.astype(np.uint8), cmap="gray")
+    
+    if len(image.shape) == 3:
+        r, g, b = cv2.split(image)
+        tf_r = cal_img(r)
+        tf_g = cal_img(g)
+        tf_b = cal_img(b)
+    
+        img_refine = cv2.merge((tf_r, tf_g, tf_b))
+
+        plt.subplot(1,2,1)
+        plt.title("Histogram eq")
+        plt.hist(tf_r)
+        plt.subplot(1,2,2)
+        plt.title("Image")
+        plt.imshow(img_refine.astype(np.uint8), cmap="gray")
+
+    # return img_refine
+
+
+# plt.imshow(cv2.imread("img/blur.png", cv2.IMREAD_GRAYSCALE), cmap="gray")
+
 demo_histogram_equalization(cv2.imread("img/blur.png"))
