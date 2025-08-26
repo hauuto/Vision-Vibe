@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Tiểu luận 1</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='reveal/reveal.css')}}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='reveal/theme/black.css')}}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='reveal/reset.css')}}">
+
+
+	</head>
+	<body>
+
+		<div class="reveal">
+			<div class="slides">
+				<section data-background="indigo">
+					<div class="grid grid-cols-12 grid-rows-6">
+						<div class="col-span-4">
+							Mục lục báo cáo
+						</div>
+
+					</div>
+
+				</section>
+				<section data-background="indigo">
+					<div>Giới thiệu dự án</div>
+				</section>
+				<section>
+
+					<h1>Cơ sở lý thuyết</h1>
+				</section>
+				<section>
+					<h1>Thiết kế & Phương pháp</h1>
+				</section>
+				<section>
+					<h1>Cài đặt & minh họa</h1>
+				</section>
+				<section>
+					<h1>Kết quả & đánh giá</h1>
+				</section>
+				<section>
+					<h1>Kết luận & đề xuất</h1>
+				</section>
+				<section>
+					<h1>Tài liệu tham khảo</h1>
+				</section>
+				<section>
+					<h1>Phụ lục</h1>
+				</section>
+
+
+			</div>
+		</div>
+
+	</body>
+	<script src="{{url_for('static',filename='reveal/reveal.js')}}"></script>
+	<script>
+		Reveal.initialize({
+			view: 'scroll',
+			hash: true,
+			transition: 'zoom',
+			slideNumber: true,
+            scrollProgress: 'auto',
+			plugin: []
+		});
+
+	</script>
+</html>
