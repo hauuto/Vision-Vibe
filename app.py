@@ -23,7 +23,7 @@ def inject_template_vars():
     return dict()
 
 freezer = Freezer(app)
-
+app.config['FREEZER_DESTINATION'] = 'docs'
 if __name__ == '__main__':
     freezer.freeze()
     app.run(debug=True)

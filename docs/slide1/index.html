@@ -22,6 +22,10 @@
 				margin-top: 30px;
 			}
 
+			li.nostyle{
+				margin-top: 0
+			}
+
 			* {
 				font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 			}
@@ -34,6 +38,47 @@
 			.neon-text { text-shadow: 0 0 20px rgba(115, 190, 221, 0.8); }
 			.card-hover { transition: all 0.3s ease; }
 			.card-hover:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(31, 38, 102, 0.3); }
+
+			/* Enhanced transition animations */
+			.reveal .slides section {
+				transition: all 0.8s cubic-bezier(0.26, 0.86, 0.44, 0.985);
+			}
+
+			.reveal .slides section.stack {
+				padding-bottom: 0;
+			}
+
+			/* Custom slide animations */
+			.slide-fade-in {
+				animation: fadeInUp 0.8s ease-out;
+			}
+
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			/* Smooth content transitions */
+			.content-animate {
+				animation: slideInLeft 0.6s ease-out;
+			}
+
+			@keyframes slideInLeft {
+				from {
+					opacity: 0;
+					transform: translateX(-50px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -49,7 +94,7 @@
 		<div class="reveal">
 			<div class="slides">
 
-				<section class="custom-gradient-1">
+				<section data-transition="zoom" class="custom-gradient-1">
 					<div class="flex flex-col items-center justify-center h-screen text-center p-8">
 						<div class="glassmorphism rounded-3xl p-12">
 							<div class="text-4xl font-black text-white mb-6 neon-text">Tiểu luận 1: Xử lý ảnh dựa trên giá trị điểm ảnh (Point Processing)</div>
@@ -71,7 +116,7 @@
 				</section>
 
 
-				<section class="custom-gradient-2">
+				<section data-transition="slide" class="custom-gradient-2">
 					<div class="p-12">
 						<div class="text-3xl font-black text-center text-white mb-16 neon-text">
 							<span class="text-4xl">
@@ -156,7 +201,7 @@
 				</section>
 
 
-				<section class="custom-gradient-4">
+				<section data-transition="fade" class="custom-gradient-4">
 					<div class="p-12">
 						<div class="text-center mb-12">
 							<div class="text-3xl font-black text-white mb-4 neon-text">Giới thiệu dự án</div>
@@ -180,16 +225,9 @@
 								</div>
 
 								<div>
-									<img src="/static/img/moon.png" alt="moon" class="absolute">
+									<img src="/static/img/moon.png" alt="moon" class="absolute ">
 								</div>
-
 							</div>
-
-
-
-
-
-
 						</div>
 
 
@@ -197,7 +235,7 @@
 				</section>
 
 
-				<section class="custom-gradient-4">
+				<section data-transition="convex" class="custom-gradient-4">
 					<div class="p-12">
 						<div class="text-center mb-12">
 							<div class="text-3xl font-black text-white mb-4 neon-text">Giới thiệu dự án</div>
@@ -205,46 +243,117 @@
 						</div>
 
 
+						<div class="grid grid-cols-2 gap-6">
 
-						<div class="grid grid-cols-2 gap-12 mt-16">
-							<div class="glassmorphism rounded-3xl p-8">
-								<p class="text-xl font-bold text-white mb-6 flex items-center">
-									<span class="mr-3">🚀</span>Mục tiêu
+
+							<div class="glassmorphism rounded-3xl p-8 text-left">
+								<p class="text-2xl font-bold text-white mb-6 flex items-center">
+									Mục tiêu
+								</p>
+
+								<div class="space-y-4 text-white text-base">
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-cyan);">▶</span>
+										<span>Xây dựng một web app xử lý ảnh với giao diện đơn giản, thao tác trực quan.</span>
+									</div>
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-cyan);">▶</span>
+										<span>Tích hợp các phép biến đổi cường độ sáng:</span>
+									</div>
+									<div class="mx-10">
+										<ul>
+											<li class="nostyle">Ảnh âm, Log, Gamma correction.</li>
+											<li class="nostyle">Biến đổi tuyến tính từng đoạn.</li>
+											<li class="nostyle">Histogram Equalization & CLAHE.</li>
+										</ul>
+									</div>
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-cyan);">▶</span>
+										<span>Cho phép người dùng xem trực tiếp ảnh gốc và ảnh sau khi xử lý, so sánh hiệu quả.</span>
+									</div>
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-cyan);">▶</span>
+										<span>Hướng tới mở rộng thành nền tảng xử lý ảnh trực tuyến phục vụ nghiên cứu và học tập.</span>
+									</div>
+								</div>
+							</div>
+
+
+
+
+
+						</div>
+					</div>
+				</section>
+
+
+				<section data-transition="concave" class="custom-gradient-4">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Giới thiệu dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+
+
+						<div class="grid grid-cols-2 gap-6">
+
+							<div class="glassmorphism rounded-3xl p-8 text-left">
+								<p class="text-2xl font-bold text-white mb-6 flex items-center">
+									Mục tiêu
 								</p>
 								<div class="space-y-4 text-white text-base">
 									<div class="flex items-start space-x-3">
 										<span style="color: var(--color-cyan);">▶</span>
-										<span>Phát triển hệ thống xử lý ảnh thông minh</span>
+										<span>Xây dựng một web app xử lý ảnh với giao diện đơn giản, thao tác trực quan.</span>
 									</div>
 									<div class="flex items-start space-x-3">
 										<span style="color: var(--color-cyan);">▶</span>
-										<span>Ứng dụng AI trong computer vision</span>
+										<span>Tích hợp các phép biến đổi cường độ sáng:</span>
+									</div>
+									<div class="mx-10">
+										<ul>
+											<li class="nostyle">Ảnh âm, Log, Gamma correction.</li>
+											<li class="nostyle">Biến đổi tuyến tính từng đoạn.</li>
+											<li class="nostyle">Histogram Equalization & CLAHE.</li>
+										</ul>
 									</div>
 									<div class="flex items-start space-x-3">
 										<span style="color: var(--color-cyan);">▶</span>
-										<span>Tạo ra giải pháp thực tế cho người dùng</span>
+										<span>Cho phép người dùng xem trực tiếp ảnh gốc và ảnh sau khi xử lý, so sánh hiệu quả.</span>
+									</div>
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-cyan);">▶</span>
+										<span>Hướng tới mở rộng thành nền tảng xử lý ảnh trực tuyến phục vụ nghiên cứu và học tập.</span>
 									</div>
 								</div>
 							</div>
-							<div class="glassmorphism rounded-3xl p-8">
-								<p class="text-xl font-bold text-white mb-6 flex items-center">
-									<span class="mr-3">🎨</span>Tính năng
+
+
+							<div class="glassmorphism rounded-3xl p-8 text-left">
+								<p class="text-2xl font-bold text-white mb-6 flex items-center">
+									Ý nghĩa & Ứng duụng
 								</p>
 								<div class="space-y-4 text-white text-base">
 									<div class="flex items-start space-x-3">
-										<span style="color: var(--color-light);">✨</span>
-										<span>Giao diện hiện đại, thân thiện</span>
+										<span style="color: var(--color-cyan);">▶</span>
+										<span>Cung cấp nền tảng xử lý ảnh trực tuyến: chỉ cần tải ảnh lên web, hệ thống tự động áp dụng các thuật toán biến đổi cường độ sáng và trả về kết quả.</span>
 									</div>
 									<div class="flex items-start space-x-3">
-										<span style="color: var(--color-light);">✨</span>
-										<span>Xử lý realtime với độ chính xác cao</span>
+										<span style="color: var(--color-cyan);">▶</span>
+										<span>Ứng dụng trong:</span>
 									</div>
-									<div class="flex items-start space-x-3">
-										<span style="color: var(--color-light);">✨</span>
-										<span>Hỗ trợ multiple formats</span>
+									<div class="mx-10">
+										<ul>
+											<li class="nostyle">Ảnh y tế: làm rõ chi tiết X-quang, CT-scan.</li>
+											<li class="nostyle">Ảnh thiên văn: quan sát vật thể mờ.</li>
+											<li class="nostyle">Nhiếp ảnh & in ấn: tạo hiệu ứng, nâng cao chất lượng ảnh.</li>
+											<li class="nostyle">Thị giác máy tính: tiền xử lý dữ liệu trước khi huấn luyện AI.</li>
+										</ul>
 									</div>
 								</div>
 							</div>
+
+
 						</div>
 					</div>
 				</section>
@@ -252,8 +361,11 @@
 
 
 
+
 			</div>
 		</div>
+
+
 
 	</body>
 	<script src="/static/reveal/reveal.js"></script>
@@ -261,11 +373,39 @@
 		Reveal.initialize({
 			view: 'scroll',
 			hash: true,
-			transition: 'zoom',
+			transition: 'slide', // default transition
+			transitionSpeed: 'default', // default/fast/slow
+			backgroundTransition: 'fade',
 			slideNumber: true,
-            scrollProgress: 'auto',
+			scrollProgress: 'auto',
+
+			// Enhanced transition configuration
+			parallaxBackgroundImage: '',
+			parallaxBackgroundSize: '',
+
+			// Transition variations for different directions
+			transitions: {
+				'slide': 'slide',
+				'fade': 'fade',
+				'zoom': 'zoom',
+				'convex': 'convex',
+				'concave': 'concave'
+			},
+
 			plugin: []
 		});
 
+		// Add dynamic transition effects
+		Reveal.addEventListener('slidechanged', function(event) {
+			// Add animation class to current slide content
+			const currentSlide = event.currentSlide;
+			const content = currentSlide.querySelector('.glassmorphism, .grid, ul');
+			if (content) {
+				content.classList.add('content-animate');
+				setTimeout(() => {
+					content.classList.remove('content-animate');
+				}, 600);
+			}
+		});
 	</script>
 </html>
