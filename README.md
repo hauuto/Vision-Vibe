@@ -5,7 +5,7 @@ Web app dùng **Flask** và **OpenCV** để:
 - Upload ảnh
 - Xử lý ảnh (grayscale, blur, edge detection)
 - Hiển thị ảnh gốc và ảnh đã xử lý
-- Giao diện responsive với **HTML + Bootstrap**
+- Giao diện responsive với **HTML + TailwindCSS**
 
 ## 🚀 Cài đặt
 1. Cài đặt Python 3.8+
@@ -89,20 +89,4 @@ headerComponent.setActiveMenuItem('about');
 headerComponent.toggleNavbar(true); // Show
 ```
 
-### 🔧 Tính năng Header
-- Sticky nav, responsive, smooth scroll
-- Active menu highlight, scroll effects
-- Mobile sidebar
 
-### 🚀 Mở rộng Header
-- Thêm menu item:
-```html
-<a href="#contact" class="w3-bar-item w3-button">CONTACT</a>
-```
-- Thêm logo:
-```html
-<a href="#home" class="w3-bar-item w3-button w3-wide">
-    <img src="/static/img/logo.png" alt="Logo" style="height:30px;">
-</a>
-```
-- Custom CSS trong `index.html` hoặc file riêng
