@@ -1,23 +1,18 @@
-from flask import Flask, render_template, jsonify, request
-import cv2
-import numpy as np
-import base64
-from io import BytesIO
-from PIL import Image
-
+from flask import Flask, render_template, jsonify
+from flask_frozen import Freezer
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/slide1')
+@app.route('/slide1/')
 def slide01():
     return render_template('components/slide01.html')
 
 # --- API DEMOS ---
 
-@app.route('/api/hello')
+@app.route('/api/hello/')
 def api_hello():
     return jsonify({'message': 'Hello from Flask API!'})
 
@@ -27,5 +22,8 @@ def api_hello():
 def inject_template_vars():
     return dict()
 
+freezer = Freezer(app)
+
 if __name__ == '__main__':
+    freezer.freeze()
     app.run(debug=True)
