@@ -38,6 +38,47 @@
 			.neon-text { text-shadow: 0 0 20px rgba(115, 190, 221, 0.8); }
 			.card-hover { transition: all 0.3s ease; }
 			.card-hover:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(31, 38, 102, 0.3); }
+
+			/* Enhanced transition animations */
+			.reveal .slides section {
+				transition: all 0.8s cubic-bezier(0.26, 0.86, 0.44, 0.985);
+			}
+
+			.reveal .slides section.stack {
+				padding-bottom: 0;
+			}
+
+			/* Custom slide animations */
+			.slide-fade-in {
+				animation: fadeInUp 0.8s ease-out;
+			}
+
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			/* Smooth content transitions */
+			.content-animate {
+				animation: slideInLeft 0.6s ease-out;
+			}
+
+			@keyframes slideInLeft {
+				from {
+					opacity: 0;
+					transform: translateX(-50px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -53,7 +94,7 @@
 		<div class="reveal">
 			<div class="slides">
 
-				<section class="custom-gradient-1">
+				<section data-transition="zoom" class="custom-gradient-1">
 					<div class="flex flex-col items-center justify-center h-screen text-center p-8">
 						<div class="glassmorphism rounded-3xl p-12">
 							<div class="text-4xl font-black text-white mb-6 neon-text">Tiểu luận 1: Xử lý ảnh dựa trên giá trị điểm ảnh (Point Processing)</div>
@@ -75,7 +116,7 @@
 				</section>
 
 
-				<section class="custom-gradient-2">
+				<section data-transition="slide" class="custom-gradient-2">
 					<div class="p-12">
 						<div class="text-3xl font-black text-center text-white mb-16 neon-text">
 							<span class="text-4xl">
@@ -160,7 +201,7 @@
 				</section>
 
 
-				<section class="custom-gradient-4">
+				<section data-transition="fade" class="custom-gradient-4">
 					<div class="p-12">
 						<div class="text-center mb-12">
 							<div class="text-3xl font-black text-white mb-4 neon-text">Giới thiệu dự án</div>
@@ -194,7 +235,7 @@
 				</section>
 
 
-				<section class="custom-gradient-4">
+				<section data-transition="convex" class="custom-gradient-4">
 					<div class="p-12">
 						<div class="text-center mb-12">
 							<div class="text-3xl font-black text-white mb-4 neon-text">Giới thiệu dự án</div>
@@ -202,11 +243,14 @@
 						</div>
 
 
-						<div class="grid grid-cols-2">
+						<div class="grid grid-cols-2 gap-6">
+
+
 							<div class="glassmorphism rounded-3xl p-8 text-left">
 								<p class="text-2xl font-bold text-white mb-6 flex items-center">
 									Mục tiêu
 								</p>
+
 								<div class="space-y-4 text-white text-base">
 									<div class="flex items-start space-x-3">
 										<span style="color: var(--color-cyan);">▶</span>
@@ -233,12 +277,17 @@
 									</div>
 								</div>
 							</div>
+
+
+
+
+
 						</div>
 					</div>
 				</section>
 
 
-				<section class="custom-gradient-4">
+				<section data-transition="concave" class="custom-gradient-4">
 					<div class="p-12">
 						<div class="text-center mb-12">
 							<div class="text-3xl font-black text-white mb-4 neon-text">Giới thiệu dự án</div>
@@ -282,15 +331,15 @@
 
 							<div class="glassmorphism rounded-3xl p-8 text-left">
 								<p class="text-2xl font-bold text-white mb-6 flex items-center">
-									Ý nghĩa & Ứng dụng
+									Ý nghĩa & Ứng duụng
 								</p>
 								<div class="space-y-4 text-white text-base">
 									<div class="flex items-start space-x-3">
-										<span style="color: var(--color-purple);">▶</span>
+										<span style="color: var(--color-cyan);">▶</span>
 										<span>Cung cấp nền tảng xử lý ảnh trực tuyến: chỉ cần tải ảnh lên web, hệ thống tự động áp dụng các thuật toán biến đổi cường độ sáng và trả về kết quả.</span>
 									</div>
 									<div class="flex items-start space-x-3">
-										<span style="color: var(--color-purple);">▶</span>
+										<span style="color: var(--color-cyan);">▶</span>
 										<span>Ứng dụng trong:</span>
 									</div>
 									<div class="mx-10">
@@ -324,11 +373,39 @@
 		Reveal.initialize({
 			view: 'scroll',
 			hash: true,
-			transition: 'zoom',
+			transition: 'slide', // default transition
+			transitionSpeed: 'default', // default/fast/slow
+			backgroundTransition: 'fade',
 			slideNumber: true,
-            scrollProgress: 'auto',
+			scrollProgress: 'auto',
+
+			// Enhanced transition configuration
+			parallaxBackgroundImage: '',
+			parallaxBackgroundSize: '',
+
+			// Transition variations for different directions
+			transitions: {
+				'slide': 'slide',
+				'fade': 'fade',
+				'zoom': 'zoom',
+				'convex': 'convex',
+				'concave': 'concave'
+			},
+
 			plugin: []
 		});
 
+		// Add dynamic transition effects
+		Reveal.addEventListener('slidechanged', function(event) {
+			// Add animation class to current slide content
+			const currentSlide = event.currentSlide;
+			const content = currentSlide.querySelector('.glassmorphism, .grid, ul');
+			if (content) {
+				content.classList.add('content-animate');
+				setTimeout(() => {
+					content.classList.remove('content-animate');
+				}, 600);
+			}
+		});
 	</script>
 </html>
