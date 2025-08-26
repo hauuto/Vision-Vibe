@@ -24,6 +24,8 @@ def inject_template_vars():
 
 freezer = Freezer(app)
 app.config['FREEZER_DESTINATION'] = 'docs'
+app.config['FREEZER_BASE_URL'] = ''
+app.config['FREEZER_RELATIVE_URLS'] = True
 if __name__ == '__main__':
     freezer.freeze()
     app.run(debug=True)
