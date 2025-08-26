@@ -11,9 +11,9 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route('/essay1')
-def essay_1():
-    return render_template('essay1.html')
+@app.route('/slide1')
+def slide01():
+    return render_template('components/slide01.html')
 
 # --- API DEMOS ---
 
@@ -21,22 +21,6 @@ def essay_1():
 def api_hello():
     return jsonify({'message': 'Hello from Flask API!'})
 
-@app.route('/api/opencv-demo', methods=['POST'])
-def api_opencv_demo():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image uploaded'}), 400
-    file = request.files['image']
-    in_memory = BytesIO()
-    file.save(in_memory)
-    data = np.frombuffer(in_memory.getvalue(), dtype=np.uint8)
-    img = cv2.imdecode(data, cv2.IMREAD_COLOR)
-    if img is None:
-        return jsonify({'error': 'Invalid image'}), 400
-    # Simple OpenCV processing: convert to grayscale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    _, buf = cv2.imencode('.png', gray)
-    img_b64 = base64.b64encode(buf).decode('utf-8')
-    return jsonify({'image': img_b64})
 
 # Template context processor để có thể sử dụng include trong template
 @app.context_processor
