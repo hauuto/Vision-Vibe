@@ -561,6 +561,9 @@
 							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 								1. Ảnh âm (Negative image)
 							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Đặc trưng
+							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
 								<div class="grid justify-items-center w-1/2">
 									<div>
@@ -735,10 +738,10 @@
 								c) Triển khai
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>
-									Code
-								</p>
+								<p>Code</p>
+
 							</div>
+
 						</div>
 					</div>
 				</section>
@@ -762,9 +765,9 @@
 								d) Ứng dụng
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>
-									Nén dải động (Dynamic Range Compression): Hữu ích khi xử lý ảnh có dải cường độ quá rộng (ví dụ: ảnh thiên văn, ảnh radar, ảnh y tế).
-								</p>
+								<ul>
+									<li><b>Nén dải động (Dynamic Range Compression)</b>: Hữu ích khi xử lý ảnh có dải cường độ quá rộng (ví dụ: ảnh thiên văn, ảnh radar, ảnh y tế).</li>
+								</ul>
 
 								<p>Tăng cường chi tiết trong vùng tối: Giúp làm nổi bật các chi tiết ít thấy ở vùng cường độ thấp.</p>
 								<p>Tiền xử lý ảnh: Hỗ trợ các bước tiếp theo như trích chọn đặc trưng, nhận dạng mẫu.</p>
@@ -786,22 +789,449 @@
 								I. Các phép biến đổi cường độ sáng
 							</div>
 							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
-								2. Biến đổi Log (Log Transformation)
+								3. Power-law (Gamma Correction)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Biến đổi Power-law (hay còn gọi là Gamma Correction) là một dạng <b>biến đổi cường độ điểm (point processing)</b>, trong đó mức xám đầu vào được biến đổi theo lũy thừa (power) với số mũ gamma.</p>
+								<p><b>Mục đích:</b></p>
+								<ul>
+									<li class="nostyle">Điều chỉnh độ sáng và độ tương phản của ảnh.</li>
+									<li class="nostyle">Phù hợp với đặc tính phi tuyến của hệ thống hiển thị (mắt người, màn hình, camera,...).</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								3. Power-law (Gamma Correction)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Công thức toán học
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Giả sử:</b></p>
+								<ul>
+									<li class="nostyle">r: mức xám đầu vào (0 ≤ r ≤ 1 sau khi chuẩn hóa).</li>
+									<li class="nostyle">s: mức xám đầu ra.</li>
+									<li class="nostyle">γ: hệ số gamma.</li>
+									<li class="nostyle">c: hằng số tỉ lệ.</li>
+								</ul>
+								<p><b>Khi đó:</b></p>
+								<p class="text-center text-3xl">𝑠 = 𝑐 ⋅ 𝑟<sup>γ</sup></p>
+							</div>
+						</div>
+					</div>
+				</section>
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								3. Power-law (Gamma Correction)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Công thức toán học (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Nếu ảnh ở dạng 8-bit (0–255), thường chuẩn hóa trước:</p>
+								<p class="text-center text-2xl">
+									r = I/255, &nbsp;&nbsp; s = c ⋅ r<sup>γ</sup> ⋅ 255
+								</p>
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">c thường chọn bằng 1.</li>
+									<li class="nostyle">γ quyết định mức tăng/giảm độ sáng.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								3. Power-law (Gamma Correction)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Ảnh hưởng của giá trị gamma
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>γ < 1</b>: Ảnh trở nên sáng hơn (mở rộng chi tiết vùng tối).</li>
+									<li><b>γ = 1</b>: Ảnh giữ nguyên (không thay đổi).</li>
+									<li><b>γ > 1</b>: Ảnh trở nên tối hơn (nén vùng sáng).</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+										<img src="{{ url_for('static', filename='img/gamma-curve.png')}}" alt="gamma curves" class="rounded-lg">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								3. Power-law (Gamma Correction)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Triển khai
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Code</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								3. Power-law (Gamma Correction)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								e) Ứng dụng
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>Hiệu chỉnh hiển thị (Display Correction)</b>: Bù trừ đặc tính phi tuyến của màn hình (ví dụ: màn hình CRT có đặc tính gần r<sup>2.2</sup>, cần hiệu chỉnh ngược lại).</li>
+									<li><b>Tiền xử lý ảnh</b>: Cải thiện khả năng quan sát ở các vùng sáng hoặc tối.</li>
+									<li><b>Thị giác máy tính</b>: Dùng để chuẩn hóa ảnh trước khi trích chọn đặc trưng.</li>
+									<li><b>Đồ họa và video</b>: Điều chỉnh ánh sáng, độ tương phản, hoặc tạo hiệu ứng hình ảnh.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								3. Power-law (Gamma Correction)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								f) So sánh với biến đổi Log
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2 gap-8">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">Log Transformation</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Nén dải động rất mạnh ở vùng sáng</li>
+											<li class="nostyle">Mở rộng vùng tối</li>
+											<li class="nostyle">Thường dùng cho ảnh có dải cường độ rất rộng (như ảnh thiên văn)</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">Gamma Correction</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Linh hoạt hơn</li>
+											<li class="nostyle">Có thể điều chỉnh sáng/tối bằng cách thay đổi γ</li>
+											<li class="nostyle">Dùng nhiều trong các hệ thống hiển thị</li>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</section>
 
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Biến đổi tuyến tính từng khúc (Piecewise-linear Transformation) là một phương pháp <b>biến đổi cường độ điểm (point processing)</b> trong đó hàm biến đổi được xây dựng từ nhiều đoạn tuyến tính ghép lại.</p>
+								<p>Đây là một kỹ thuật <b>linh hoạt</b>, cho phép điều chỉnh độ sáng và độ tương phản của ảnh theo từng khoảng mức xám khác nhau.</p>
+								<p>Thường được dùng để tăng cường chi tiết trong những vùng cường độ quan tâm, đồng thời nén hoặc bỏ bớt chi tiết ở những vùng không cần thiết.</p>
+							</div>
+						</div>
+					</div>
+				</section>
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Ý tưởng cơ bản
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Thay vì dùng một công thức cố định (như log hay power-law), người ta định nghĩa một hàm ánh xạ s = T(r) bằng cách chia miền giá trị mức xám [0, L−1] thành nhiều đoạn con, trên mỗi đoạn đó T(r) là một hàm tuyến tính:</p>
+								<p class="text-center text-2xl">
+									s = a<sub>i</sub> ⋅ r + b<sub>i</sub> với r ∈ [r<sub>i</sub>, r<sub>i+1</sub>]
+								</p>
+							</div>
+						</div>
+					</div>
+				</section>
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Ý tưởng cơ bản (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">r: giá trị mức xám đầu vào.</li>
+									<li class="nostyle">s: giá trị mức xám đầu ra.</li>
+									<li class="nostyle">a<sub>i</sub>, b<sub>i</sub>: hệ số tuyến tính xác định trên đoạn thứ i.</li>
+									<li class="nostyle">r<sub>i</sub>, r<sub>i+1</sub>: biên của đoạn mức xám.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+										<img src="{{ url_for('static', filename='img/piecewise-linear.png')}}" alt="piecewise linear" class="rounded-lg">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Các dạng biến đổi phổ biến
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="space-y-6">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-3" style="color: var(--color-cyan);">1. Biến đổi co giãn (Contrast Stretching)</h4>
+										<p class="text-base">Làm dãn vùng mức xám hẹp ra toàn khoảng [0, L-1], từ đó tăng độ tương phản của ảnh.</p>
+										<p class="text-base">Thường được định nghĩa bởi một hàm gãy khúc với 3 đoạn: nén vùng tối, kéo dãn vùng trung bình, nén vùng sáng.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Các dạng biến đổi phổ biến (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="space-y-6">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-3" style="color: var(--color-purple);">2. Biến đổi cắt ngưỡng (Intensity Level Slicing)</h4>
+										<p class="text-base">Làm nổi bật các mức xám trong một khoảng quan tâm (ví dụ: nhấn mạnh vùng mô nhất định trong ảnh y tế).</p>
+										<p class="text-base">Các mức xám ngoài khoảng đó có thể giữ nguyên hoặc đặt về 0.</p>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(40, 66, 150, 0.1);">
+										<h4 class="text-lg font-bold mb-3" style="color: var(--color-blue);">3. Biến đổi nhị phân hóa (Thresholding)</h4>
+										<p class="text-base">Một dạng đặc biệt của piecewise-linear, trong đó hàm chỉ có 2 mức: 0 và L-1.</p>
+										<p class="text-base">Dùng để tách đối tượng ra khỏi nền.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Triển khai
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Code</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								e) Ứng dụng
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>Tăng cường ảnh (Image Enhancement)</b>: Cải thiện chất lượng ảnh bằng cách điều chỉnh tương phản ở những vùng quan trọng.</li>
+									<li><b>Ảnh y tế</b>: Nhấn mạnh chi tiết mô mềm hoặc xương bằng cách co giãn các mức xám quan tâm.</li>
+									<li><b>Xử lý tài liệu số</b>: Biến đổi nhị phân hóa để tách chữ viết ra khỏi nền.</li>
+									<li><b>Ảnh vệ tinh</b>: Tăng độ tương phản cho các dải phổ nhất định để dễ phân tích.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								f) Đặc trưng
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2 gap-8">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">Ưu điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Linh hoạt trong thiết kế</li>
+											<li class="nostyle">Dễ hiểu và cài đặt</li>
+											<li class="nostyle">Có thể tùy biến theo yêu cầu ứng dụng</li>
+											<li class="nostyle">Kiểm soát được từng vùng mức xám</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">Nhược điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Cần chọn đúng các điểm gãy (breakpoints)</li>
+											<li class="nostyle">Cần xác định chính xác hệ số tuyến tính</li>
+											<li class="nostyle">Nếu không cẩn thận, ảnh có thể bị mất chi tiết</li>
+											<li class="nostyle">Có thể gây méo màu</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
 
 
 			</div>
