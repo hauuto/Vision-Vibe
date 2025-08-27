@@ -43,7 +43,7 @@ def home():
 def slide01():
     return render_template('components/slide01.html')
 
-@app.route('/test')
+@app.route('/test/')
 def test():
     return render_template('test.html')
 
@@ -245,7 +245,7 @@ def process_image():
         print(traceback.format_exc())
         return jsonify({'error': f'Server error: {str(e)}'}), 500
 
-@app.route('/api/available-methods')
+@app.route('/api/available-methods.json')
 def available_methods():
     """Return list of available image processing methods"""
     methods = [
@@ -268,5 +268,10 @@ app.config['FREEZER_DESTINATION'] = 'docs'
 app.config['FREEZER_BASE_URL'] = ''
 app.config['FREEZER_RELATIVE_URLS'] = True
 
+@freezer.register_generator
+def available_methods():
+    yield {'_ext': '.json'}
+
 if __name__ == '__main__':
+    freezer.freeze()
     app.run(debug=True)

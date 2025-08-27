@@ -506,11 +506,7 @@
 							<div class="text-xl font-bold" style="color: var(--color-blue)">
 								b)Triển khai
 							</div>
-							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Code</p>
-
-							</div>
-
+							<img src="../static/img/TieuLuan1/code_amban.png" alt="negative-img">
 						</div>
 					</div>
 				</section>
@@ -628,42 +624,13 @@
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
 
-								<p>Biến đổi logarit là một phép <b>biến đổi cường độ điểm (point processing)</b>, trong đó giá trị mức xám của ảnh được ánh xạ theo hàm logarit.</p>
-								<p>Mục đích của phép biến đổi này là <b>tăng cường độ tương phản (contrast enhancement)</b> ở những vùng có giá trị mức xám thấp và <b>nén dải động (dynamic range compression)</b> ở những vùng có mức xám cao.</p>
-							</div>
-
-						</div>
-					</div>
-				</section>
-
-
-
-
-				<section class="custom-gradient-3">
-					<div class="p-12">
-						<div class="text-center mb-12">
-							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
-							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
-						</div>
-						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
-							<div class=" text-3xl" style="color: var(--color-dark-blue);">
-								I. Các phép biến đổi cường độ sáng
-							</div>
-							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
-								2. Biến đổi Log (Log Transformation)
-							</div>
-							<div class="text-xl font-bold" style="color: var(--color-blue)">
-								a) Khái niệm
-							</div>
-							<div class="text-xl font-normal" style="color: var(--color-blue);">
-
-								<p>
-									Với ảnh có giá trị mức xám
-									𝑟 (đầu vào) và
-									𝑠 (đầu ra), công thức biến đổi log là:
+								<p>Giả sử ảnh đầu vào có mức xám trong khoảng
+									[0,𝐿	−1]. Nếu
+									𝑟 là giá trị cường độ mức xám tại một điểm ảnh và
+									𝑠 là giá trị sau biến đổi, thì ảnh âm được định nghĩa:
 								</p>
-								<p class="text-center text-3xl">
-									𝑠 = 𝑐⋅log(1+𝑟 )
+
+								<p class="text-center text-3xl">𝑠 = 𝑐⋅log(1+𝑟 )
 								</p>
 								<ul>
 									<li class="nostyle">𝑟 : giá trị mức xám gốc (0 ≤ r ≤ L-1).</li>
@@ -675,6 +642,7 @@
 						</div>
 					</div>
 				</section>
+
 
 
 
@@ -737,14 +705,14 @@
 								c) Triển khai
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Code</p>
+								<img src="../static/img/TieuLuan1/code_cdoi_log.png" alt="negative-img">
+
 
 							</div>
 
 						</div>
 					</div>
 				</section>
-
 
 
 				<section class="custom-gradient-3">
@@ -915,7 +883,8 @@
 								d) Triển khai
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Code</p>
+								<img src="../static/img/TieuLuan1/code_cdoi_mu.png" alt="negative-img">
+
 							</div>
 						</div>
 					</div>
@@ -1154,7 +1123,8 @@
 								d) Triển khai
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Code</p>
+								<img src="../static/img/TieuLuan1/code_piecewise_linear.png" alt="negative-img">
+
 							</div>
 						</div>
 					</div>
@@ -1196,12 +1166,9 @@
 						</div>
 						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
 							<div class=" text-3xl" style="color: var(--color-dark-blue);">
-								I. Các phép biến đổi cường độ sáng
-							</div>
-							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
 							</div>
-							<div class="text-xl font-bold" style="color: var(--color-blue)">
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 								f) Đặc trưng
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
@@ -1231,7 +1198,1440 @@
 				</section>
 
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Cân bằng lược đồ xám (Histogram Equalization – HE) là một kỹ thuật <b>tăng cường ảnh (image enhancement)</b> dựa trên việc phân phối lại mức xám của ảnh sao cho lược đồ xám (histogram) sau biến đổi trở nên cân bằng hơn (phân bố gần đều).</p>
+								<p>Với <b>Global Histogram Equalization (GHE)</b>, phép biến đổi được tính toán dựa trên toàn bộ ảnh.</p>
+								<p><b>Mục đích:</b> cải thiện độ tương phản, đặc biệt cho các ảnh có lược đồ xám bị tập trung hẹp ở một khoảng giá trị.</p>
+							</div>
+						</div>
+					</div>
+				</section>
 
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Nguyên lý
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Ý tưởng của GHE:</b></p>
+								<ul>
+									<li class="nostyle">Dựa trên <b>phân phối tích lũy (CDF – Cumulative Distribution Function)</b> của ảnh gốc để ánh xạ các giá trị mức xám.</li>
+									<li class="nostyle">Biến đổi này phân tán các mức xám gốc vào toàn bộ dải [0, L-1], giúp ảnh có độ tương phản tốt hơn.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Công thức toán học
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Giả sử:</b></p>
+								<ul>
+									<li class="nostyle">r<sub>k</sub>: mức xám gốc (0 ≤ k ≤ L-1).</li>
+									<li class="nostyle">p(r<sub>k</sub>): xác suất xuất hiện của mức xám r<sub>k</sub>.</li>
+								</ul>
+								<p class="text-center text-2xl">
+									p(r<sub>k</sub>) = n<sub>k</sub> / (M × N)
+								</p>
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">n<sub>k</sub>: số pixel có mức xám r<sub>k</sub>.</li>
+									<li class="nostyle">M × N: kích thước ảnh.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Công thức toán học (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Hàm phân phối tích lũy (CDF):</b></p>
+								<p class="text-center text-2xl">
+									CDF(r<sub>k</sub>) = Σ<sub>j=0</sub><sup>k</sup> p(r<sub>j</sub>)
+								</p>
+								<p><b>Phép biến đổi lược đồ xám:</b></p>
+								<p class="text-center text-2xl">
+									s<sub>k</sub> = (L - 1) × CDF(r<sub>k</sub>)
+								</p>
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">s<sub>k</sub>: mức xám mới sau cân bằng.</li>
+									<li class="nostyle">L: số mức xám (với ảnh 8-bit thì L = 256).</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Triển khai
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<img src="../static/img/TieuLuan1/code_histogram_transform.png" alt="negative-img">
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								e) Đặc điểm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2 gap-8">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">Ưu điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Tăng cường độ tương phản cho ảnh</li>
+											<li class="nostyle">Dễ cài đặt, hiệu quả với nhiều loại ảnh</li>
+											<li class="nostyle">Phân bố đều mức xám trên toàn dải</li>
+											<li class="nostyle">Cải thiện khả năng quan sát chi tiết</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">Nhược điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Không thích hợp nếu ảnh có nhiễu → nhiễu cũng bị khuếch đại</li>
+											<li class="nostyle">Với ảnh có vùng sáng/tối quá lớn → có thể bị mất chi tiết</li>
+											<li class="nostyle">Không phù hợp với ảnh có đặc trưng cục bộ</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+							II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Adaptive Histogram Equalization (AHE)</b> là một kỹ thuật cải tiến của Global Histogram Equalization (GHE).</p>
+								<p>Thay vì tính toán phép cân bằng mức xám trên toàn ảnh, AHE tiến hành trên các <b>vùng cục bộ (local regions/tiles)</b>.</p>
+								<p><b>Mục đích:</b> cải thiện độ tương phản cục bộ, giúp làm nổi bật chi tiết trong từng vùng ảnh (đặc biệt hữu ích cho ảnh có độ sáng không đồng đều).</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>CLAHE (Contrast Limited Adaptive Histogram Equalization)</b> là một phiên bản cải tiến của AHE:</p>
+								<ul>
+									<li class="nostyle"><b>Giới hạn độ tương phản (contrast limiting)</b> để tránh khuếch đại nhiễu quá mức trong các vùng đồng nhất.</li>
+									<li class="nostyle">Kiểm soát được mức độ tăng cường tương phản, tránh hiện tượng over-enhancement.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Nguyên lý - AHE
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Adaptive Histogram Equalization (AHE):</b></p>
+								<ul>
+									<li class="nostyle">Chia ảnh thành nhiều khối nhỏ (tiles).</li>
+									<li class="nostyle">Thực hiện Histogram Equalization riêng cho từng khối.</li>
+									<li class="nostyle">Dùng <b>nội suy song tuyến tính (bilinear interpolation)</b> để làm mượt biên giữa các khối, tránh hiện tượng giật cục.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Nguyên lý - CLAHE
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Contrast Limited AHE (CLAHE):</b></p>
+								<p>Trong quá trình HE cho từng khối:</p>
+								<ul>
+									<li class="nostyle">Nếu một mức xám nào đó xuất hiện quá nhiều → histogram sẽ bị <b>cắt ngưỡng (clipping)</b> tại một giá trị giới hạn (clip limit).</li>
+									<li class="nostyle">Phần bị cắt sẽ được <b>phân bố lại đều</b> cho các mức khác.</li>
+								</ul>
+								<p><b>Kết quả:</b></p>
+								<ul>
+									<li class="nostyle">Giữ được hiệu ứng tăng cường độ tương phản.</li>
+									<li class="nostyle">Giảm hiện tượng khuếch đại nhiễu (noise amplification).</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Công thức (ý tưởng)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Với AHE:</b></p>
+								<p class="text-center text-2xl">
+									s<sub>k</sub> = (L - 1) × CDF<sub>local</sub>(r<sub>k</sub>)
+								</p>
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">CDF<sub>local</sub>(r<sub>k</sub>): hàm phân phối tích lũy tính trên khối cục bộ chứa pixel r<sub>k</sub>.</li>
+								</ul>
+								<p><b>Với CLAHE:</b></p>
+								<ul>
+									<li class="nostyle">Histogram của khối được cắt tại ngưỡng H<sub>clip</sub>.</li>
+									<li class="nostyle">Phần dư được phân bố lại cho toàn bộ histogram trước khi tính CDF<sub>local</sub>(r<sub>k</sub>).</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Triển khai
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="text-xl font-normal" style="color: var(--color-blue);">
+									<img src="../static/img/TieuLuan1/code_CLAHE.png" alt="negative-img">
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								e) Đặc điểm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2 gap-8">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">Ưu điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Cải thiện chi tiết cục bộ rõ rệt, đặc biệt trong vùng tối hoặc vùng sáng</li>
+											<li class="nostyle">CLAHE khắc phục nhược điểm của AHE khi ảnh có nhiễu</li>
+											<li class="nostyle">Thích ứng với từng vùng ảnh</li>
+											<li class="nostyle">Kiểm soát được mức độ tăng cường</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">Nhược điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Tốn nhiều thời gian tính toán hơn GHE</li>
+											<li class="nostyle">Nếu chia khối quá nhỏ → dễ tạo hiện tượng giả (artifacts)</li>
+											<li class="nostyle">Phức tạp hơn trong cài đặt</li>
+											<li class="nostyle">Cần điều chỉnh tham số phù hợp</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								f) Ứng dụng
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>Ảnh y tế (X-quang, CT, MRI)</b>: Làm rõ cấu trúc mô mềm hoặc chi tiết trong vùng có độ sáng tối không đồng đều.</li>
+									<li><b>Ảnh vệ tinh</b>: Nâng cao chi tiết địa hình, cải thiện độ tương phản ở từng khu vực.</li>
+									<li><b>Thị giác máy tính</b>: Tiền xử lý ảnh trong các hệ thống nhận dạng, giám sát.</li>
+									<li><b>Ảnh tài liệu số</b>: Cải thiện khả năng OCR trong trường hợp ảnh scan kém chất lượng.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								3. Power-law (Gamma Correction)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								f) So sánh với biến đổi Log
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2 gap-8">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">Log Transformation</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Nén dải động rất mạnh ở vùng sáng</li>
+											<li class="nostyle">Mở rộng vùng tối</li>
+											<li class="nostyle">Thường dùng cho ảnh có dải cường độ rất rộng (như ảnh thiên văn)</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">Gamma Correction</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Linh hoạt hơn</li>
+											<li class="nostyle">Có thể điều chỉnh sáng/tối bằng cách thay đổi γ</li>
+											<li class="nostyle">Dùng nhiều trong các hệ thống hiển thị</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Biến đổi tuyến tính từng khúc (Piecewise-linear Transformation) là một phương pháp <b>biến đổi cường độ điểm (point processing)</b> trong đó hàm biến đổi được xây dựng từ nhiều đoạn tuyến tính ghép lại.</p>
+								<p>Đây là một kỹ thuật <b>linh hoạt</b>, cho phép điều chỉnh độ sáng và độ tương phản của ảnh theo từng khoảng mức xám khác nhau.</p>
+								<p>Thường được dùng để tăng cường chi tiết trong những vùng cường độ quan tâm, đồng thời nén hoặc bỏ bớt chi tiết ở những vùng không cần thiết.</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Ý tưởng cơ bản
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Thay vì dùng một công thức cố định (như log hay power-law), người ta định nghĩa một hàm ánh xạ s = T(r) bằng cách chia miền giá trị mức xám [0, L−1] thành nhiều đoạn con, trên mỗi đoạn đó T(r) là một hàm tuyến tính:</p>
+								<p class="text-center text-2xl">
+									s = a<sub>i</sub> ⋅ r + b<sub>i</sub> với r ∈ [r<sub>i</sub>, r<sub>i+1</sub>]
+								</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Ý tưởng cơ bản (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">r: giá trị mức xám đầu vào.</li>
+									<li class="nostyle">s: giá trị mức xám đầu ra.</li>
+									<li class="nostyle">a<sub>i</sub>, b<sub>i</sub>: hệ số tuyến tính xác định trên đoạn thứ i.</li>
+									<li class="nostyle">r<sub>i</sub>, r<sub>i+1</sub>: biên của đoạn mức xám.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Các dạng biến đổi phổ biến
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="space-y-6">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-3" style="color: var(--color-cyan);">1. Biến đổi co giãn (Contrast Stretching)</h4>
+										<p class="text-base">Làm dãn vùng mức xám hẹp ra toàn khoảng [0, L-1], từ đó tăng độ tương phản của ảnh.</p>
+										<p class="text-base">Thường được định nghĩa bởi một hàm gãy khúc với 3 đoạn: nén vùng tối, kéo dãn vùng trung bình, nén vùng sáng.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Các dạng biến đổi phổ biến (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="space-y-6">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-3" style="color: var(--color-purple);">2. Biến đổi cắt ngưỡng (Intensity Level Slicing)</h4>
+										<p class="text-base">Làm nổi bật các mức xám trong một khoảng quan tâm (ví dụ: nhấn mạnh vùng mô nhất định trong ảnh y tế).</p>
+										<p class="text-base">Các mức xám ngoài khoảng đó có thể giữ nguyên hoặc đặt về 0.</p>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(40, 66, 150, 0.1);">
+										<h4 class="text-lg font-bold mb-3" style="color: var(--color-blue);">3. Biến đổi nhị phân hóa (Thresholding)</h4>
+										<p class="text-base">Một dạng đặc biệt của piecewise-linear, trong đó hàm chỉ có 2 mức: 0 và L-1.</p>
+										<p class="text-base">Dùng để tách đối tượng ra khỏi nền.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Triển khai
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Code</p>
+
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								1. OpenCV
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Vai trò trong dự án
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>Đọc, hiển thị và lưu trữ hình ảnh</b>: Xử lý các định dạng ảnh phổ biến (JPEG, PNG, BMP,...)</li>
+									<li><b>Cài đặt và đánh giá các thuật toán xử lý ảnh</b>:</li>
+									<div class="mx-10">
+										<ul>
+											<li class="nostyle">Biến đổi âm bản (Negative transformation)</li>
+											<li class="nostyle">Biến đổi Log và Gamma correction</li>
+											<li class="nostyle">Histogram Equalization và CLAHE</li>
+											<li class="nostyle">Biến đổi tuyến tính từng khúc</li>
+										</ul>
+									</div>
+									<li><b>Hỗ trợ kiểm thử kết quả</b>: Trực tiếp thông qua biểu đồ histogram hoặc hình ảnh so sánh</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								2. Matplotlib
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Matplotlib là một <b>thư viện vẽ đồ thị 2D trong Python</b>, thường dùng để trực quan hóa dữ liệu khoa học và kết quả xử lý.</p>
+								<p>Được thiết kế để tạo ra các biểu đồ chất lượng cao với cú pháp đơn giản và linh hoạt.</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								2. Matplotlib
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Vai trò trong dự án
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>Hiển thị ảnh gốc và ảnh sau xử lý</b>: Tạo giao diện trực quan để so sánh kết quả</li>
+									<li><b>Vẽ các biểu đồ histogram</b>: Minh họa sự thay đổi phân bố mức xám trước và sau khi áp dụng thuật toán</li>
+									<li><b>So sánh trực quan nhiều kết quả xử lý khác nhau</b>: Hỗ trợ đánh giá hiệu quả của các thuật toán</li>
+									<li><b>Tạo báo cáo trực quan</b>: Xuất kết quả dưới dạng hình ảnh hoặc biểu đồ chất lượng cao</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								3. TailwindCSS + HTML
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2 gap-8">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">HTML</h4>
+										<p class="text-base">HyperText Markup Language - Ngôn ngữ đánh dấu tiêu chuẩn để xây dựng cấu trúc giao diện web.</p>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">TailwindCSS</h4>
+										<p class="text-base">Framework CSS tiện ích (utility-first CSS framework) cho phép thiết kế giao diện nhanh chóng, linh hoạt bằng cách sử dụng các lớp tiện ích (utility classes).</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								3. TailwindCSS + HTML
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Vai trò trong dự án
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>HTML tạo phần khung (layout)</b>: Xây dựng cấu trúc cơ bản cho giao diện web, định nghĩa các thành phần và khu vực chức năng</li>
+									<li><b>TailwindCSS thiết kế giao diện hiện đại</b>:</li>
+									<div class="mx-10">
+										<ul>
+											<li class="nostyle">Giao diện trực quan, dễ sử dụng</li>
+											<li class="nostyle">Dễ tùy biến và phản hồi nhanh (responsive)</li>
+											<li class="nostyle">Styling nhất quán trên toàn bộ ứng dụng</li>
+										</ul>
+									</div>
+									<li><b>Tương tác người dùng</b>: Cho phép người dùng tải ảnh, xem kết quả xử lý ảnh một cách trực quan trên trình duyệt</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								4. Reveal.js
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Reveal.js là một <b>thư viện mã nguồn mở</b> hỗ trợ tạo slide thuyết trình trực tiếp trên nền tảng web, dựa trên HTML, CSS và JavaScript.</p>
+								<p>Cho phép tạo ra các bài thuyết trình tương tác với hiệu ứng chuyển slide mượt mà và hỗ trợ đa phương tiện.</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								4. Reveal.js
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Vai trò trong dự án
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>Trình bày nội dung lý thuyết</b>: Hiển thị các khái niệm, công thức và nguyên lý của các thuật toán xử lý ảnh một cách có cấu trúc</li>
+									<li><b>Hiển thị slide minh họa kết quả</b>: Thay thế cho PowerPoint với khả năng tích hợp trực tiếp vào web app</li>
+									<li><b>Báo cáo trực tuyến tương tác</b>:</li>
+									<div class="mx-10">
+										<ul>
+											<li class="nostyle">Có thể tương tác trực tiếp ngay trên giao diện web</li>
+											<li class="nostyle">Dễ dàng chia sẻ và truy cập từ mọi thiết bị</li>
+											<li class="nostyle">Tích hợp liền mạch với các tính năng khác của ứng dụng</li>
+										</ul>
+									</div>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								5. Python Flask
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Flask là một <b>micro-framework Python</b> dùng để xây dựng các ứng dụng web, API RESTful, nhẹ và dễ mở rộng.</p>
+								<p>Được thiết kế theo triết lý tối giản nhưng mạnh mẽ, cho phép developers tự do lựa chọn các thành phần phù hợp với dự án.</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								5. Python Flask
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Vai trò trong dự án
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>Cầu nối Backend - Frontend</b>:</li>
+									<div class="mx-10">
+										<ul>
+											<li class="nostyle">Backend: Xử lý ảnh bằng OpenCV, trực quan hóa với Matplotlib</li>
+											<li class="nostyle">Frontend: Giao diện HTML + TailwindCSS + Reveal.js</li>
+										</ul>
+									</div>
+									<li><b>Tổ chức API RESTful</b>: Cho phép người dùng tải ảnh lên, gửi yêu cầu xử lý, và nhận kết quả trả về</li>
+									<li><b>Tích hợp liền mạch</b>: Giúp tích hợp các thuật toán xử lý ảnh vào hệ thống web app một cách hiệu quả</li>
+									<li><b>Quản lý session và routing</b>: Điều hướng các trang web và quản lý trạng thái người dùng</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Các công cụ sử dụng trong dự án</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class="text-3xl" style="color: var(--color-dark-blue);">
+								Tổng kết
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-3 gap-6">
+									<div class="glassmorphism rounded-2xl p-6 card-hover" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">Xử lý Backend</h4>
+										<ul class="space-y-2 text-sm">
+											<li class="nostyle">OpenCV → Thuật toán xử lý ảnh</li>
+											<li class="nostyle">Matplotlib → Trực quan hóa kết quả</li>
+											<li class="nostyle">Flask → API và routing</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6 card-hover" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">Giao diện Frontend</h4>
+										<ul class="space-y-2 text-sm">
+											<li class="nostyle">HTML → Cấu trúc trang web</li>
+											<li class="nostyle">TailwindCSS → Thiết kế UI/UX</li>
+											<li class="nostyle">Reveal.js → Slide thuyết trình</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6 card-hover" style="background: rgba(40, 66, 150, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-blue);">Tích hợp</h4>
+										<ul class="space-y-2 text-sm">
+											<li class="nostyle">Hệ thống web app hoàn chỉnh</li>
+											<li class="nostyle">Tương tác trực quan và hiệu quả</li>
+											<li class="nostyle">Dễ sử dụng và mở rộng</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								1. Sơ đồ tổng quan
+							</div>
+							<div class="text-xl text-white font-normal mb-6">
+								Quy trình xử lý ảnh trong hệ thống được xây dựng theo các bước sau:
+							</div>
+							<div class="space-y-1">
+
+								<div class="flex items-center space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold" style="background: var(--color-purple);">1</div>
+									<div class="text-white">
+										<div class="text-2xl font-bold">Nhập ảnh đầu vào</div>
+										<div class="text-sm opacity-80">Người dùng tải ảnh lên thông qua giao diện web</div>
+									</div>
+								</div>
+
+								<div class="flex items-center space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold" style="background: var(--color-cyan);">2</div>
+									<div class="text-white">
+										<div class="text-2xl font-bold">Tiền xử lý</div>
+										<div class="text-sm opacity-80">Ảnh được đọc và chuẩn hóa bằng OpenCV</div>
+									</div>
+								</div>
+
+								<div class="flex items-center space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold" style="background: var(--color-blue);">3</div>
+									<div class="text-white">
+										<div class="text-2xl font-bold">Áp dụng thuật toán xử lý ảnh</div>
+										<div class="text-sm opacity-80">Ảnh âm, log, gamma, histogram equalization, piecewise-linear</div>
+									</div>
+								</div>
+
+								<div class="flex items-center space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold" style="background: var(--color-dark-blue);">4</div>
+									<div class="text-white">
+										<div class="text-2xl font-bold">Trực quan hóa</div>
+										<div class="text-sm opacity-80">Kết quả được hiển thị qua Matplotlib và Flask API</div>
+									</div>
+								</div>
+
+								<div class="flex items-center space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold" style="background: var(--color-purple);">5</div>
+									<div class="text-white">
+										<div class="text-2xl font-bold">Hiển thị giao diện</div>
+										<div class="text-sm opacity-80">Front-end (HTML + TailwindCSS) và slide (Reveal.js)</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								1. Sơ đồ tổng quan (tiếp)
+							</div>
+							<div class="space-y-4">
+
+
+							</div>
+							<div class="mt-12">
+								<div class="glassmorphism rounded-2xl p-6" style="background: rgba(255, 255, 255, 0.1);">
+									<h4 class="text-lg font-bold mb-4 text-white text-center">Sơ đồ khối quy trình</h4>
+									<div class="flex items-center justify-center space-x-2 text-white text-sm">
+										<span class="text-3xl bg-purple-600 px-3 py-2 rounded-lg">Ảnh đầu vào</span>
+										<span>→</span>
+										<span class="text-2xl bg-cyan-600 px-3 py-2 rounded-lg">Tiền xử lý (OpenCV)</span>
+										<span>→</span>
+										<span class="text-2xl bg-blue-600 px-3 py-2 rounded-lg">Thuật toán xử lý ảnh</span>
+										<span>→</span>
+										<span class="text-2xl bg-indigo-600 px-3 py-2 rounded-lg">Trực quan hóa (Matplotlib)</span>
+										<span>→</span>
+										<span class="text-2xl bg-purple-800 px-3 py-2 rounded-lg">Kết quả (Flask + Web)</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								2. Phương pháp đề xuất
+							</div>
+							<div class="text-xl text-white font-normal mb-6">
+								Nhóm áp dụng các phương pháp xử lý ảnh cơ bản kết hợp trực quan hóa để tăng khả năng quan sát và phân tích:
+							</div>
+							<div class="grid grid-cols-2 gap-6">
+								<div class="space-y-4">
+									<div class="glassmorphism rounded-2xl p-4 card-hover" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-2 text-white">Ảnh âm (Negative Image)</h4>
+										<p class="text-white text-sm">Đảo ngược mức xám để làm rõ chi tiết ở vùng tối</p>
+									</div>
+									<div class="glassmorphism rounded-2xl p-4 card-hover" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-2 text-white">Biến đổi Log</h4>
+										<p class="text-white text-sm">Mở rộng chi tiết vùng tối và nén dải sáng</p>
+									</div>
+									<div class="glassmorphism rounded-2xl p-4 card-hover" style="background: rgba(40, 66, 150, 0.1);">
+										<h4 class="text-lg font-bold mb-2 text-white">Gamma Correction</h4>
+										<p class="text-white text-sm">Điều chỉnh độ sáng và độ tương phản dựa trên hệ số gamma</p>
+									</div>
+								</div>
+								<div class="space-y-4">
+									<div class="glassmorphism rounded-2xl p-4 card-hover" style="background: rgba(31, 38, 102, 0.3);">
+										<h4 class="text-lg font-bold mb-2 text-white">Piecewise-linear</h4>
+										<p class="text-white text-sm">Tăng cường độ tương phản tại các vùng cường độ quan tâm</p>
+									</div>
+									<div class="glassmorphism rounded-2xl p-4 card-hover" style="background: rgba(115, 190, 221, 0.2);">
+										<h4 class="text-lg font-bold mb-2 text-white">Global Histogram Equalization</h4>
+										<p class="text-white text-sm">Phân bố lại mức xám toàn ảnh để cải thiện độ tương phản</p>
+									</div>
+									<div class="glassmorphism rounded-2xl p-4 card-hover" style="background: rgba(100, 56, 134, 0.2);">
+										<h4 class="text-lg font-bold mb-2 text-white">CLAHE</h4>
+										<p class="text-white text-sm">Nâng cao độ tương phản cục bộ, hạn chế khuếch đại nhiễu</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								2. Phương pháp đề xuất (tiếp)
+							</div>
+							<div class="glassmorphism rounded-2xl p-6" style="background: rgba(255, 255, 255, 0.1);">
+								<h4 class="text-2xl font-bold mb-6 text-white">Phương pháp đề xuất của dự án</h4>
+								<div class="text-white space-y-4">
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-cyan);">▶</span>
+										<span class="text-lg">Xây dựng một <b>hệ thống web app tích hợp</b> các kỹ thuật xử lý ảnh cơ bản</span>
+									</div>
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-cyan);">▶</span>
+										<span class="text-lg">Cho phép người dùng:</span>
+									</div>
+									<div class="mx-10 space-y-2">
+										<div class="flex items-center space-x-2">
+											<span class="w-2 h-2 bg-cyan-400 rounded-full"></span>
+											<span>Tải ảnh lên hệ thống</span>
+										</div>
+										<div class="flex items-center space-x-2">
+											<span class="w-2 h-2 bg-purple-400 rounded-full"></span>
+											<span>Chọn thuật toán xử lý phù hợp</span>
+										</div>
+										<div class="flex items-center space-x-2">
+											<span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+											<span>Thực thi xử lý ảnh tự động</span>
+										</div>
+										<div class="flex items-center space-x-2">
+											<span class="w-2 h-2 bg-indigo-400 rounded-full"></span>
+											<span>Quan sát kết quả trực quan</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								3. Thu thập dữ liệu
+							</div>
+							<div class="text-2xl font-bold text-white mb-6">
+								a) Nguồn dữ liệu
+							</div>
+							<div class="grid grid-cols-2 gap-8">
+								<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+									<h4 class="text-lg font-bold mb-4 text-white">Bộ dữ liệu chính</h4>
+									<ul class="text-white space-y-2">
+										<li class="flex items-center space-x-2">
+											<span class="w-2 h-2 bg-cyan-400 rounded-full"></span>
+											<span class="text-sm">Oxford Pet Dataset</span>
+										</li>
+										<li class="flex items-center space-x-2">
+											<span class="w-2 h-2 bg-cyan-400 rounded-full"></span>
+											<span class="text-sm">Cat Dataset</span>
+										</li>
+										<li class="flex items-center space-x-2">
+											<span class="w-2 h-2 bg-cyan-400 rounded-full"></span>
+											<span class="text-sm">Ảnh y tế (X-ray, CT)</span>
+										</li>
+										<li class="flex items-center space-x-2">
+											<span class="w-2 h-2 bg-cyan-400 rounded-full"></span>
+											<span class="text-sm">Ảnh tự nhiên</span>
+										</li>
+									</ul>
+								</div>
+								<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+									<h4 class="text-lg font-bold mb-4 text-white">Bổ sung thêm</h4>
+									<div class="text-white space-y-3">
+										<p class="text-sm">Một số ảnh được bổ sung từ internet để đa dạng hóa dữ liệu thử nghiệm</p>
+										<div class="bg-white bg-opacity-20 rounded-lg p-3">
+											<p class="text-xs italic">Đảm bảo tính đa dạng về nội dung và chất lượng ảnh</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								3. Thu thập dữ liệu (tiếp)
+							</div>
+							<div class="text-2xl font-bold text-white mb-6">
+								b) Mục đích thu thập dữ liệu
+							</div>
+							<div class="space-y-4">
+								<div class="glassmorphism rounded-xl p-4" style="background: rgba(115, 190, 221, 0.1);">
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-cyan);">🎯</span>
+										<div class="text-white">
+											<div class="font-bold">Đảm bảo tính đa dạng về nội dung ảnh</div>
+											<div class="text-sm opacity-80 mt-2">Ảnh thú nuôi, ảnh phong cảnh, ảnh xám, ảnh màu</div>
+										</div>
+									</div>
+								</div>
+								<div class="glassmorphism rounded-xl p-4" style="background: rgba(100, 56, 134, 0.1);">
+									<div class="flex items-start space-x-3">
+										<span style="color: var(--color-purple);">🔬</span>
+										<div class="text-white">
+											<div class="font-bold">Kiểm chứng hiệu quả của từng thuật toán</div>
+											<div class="text-sm opacity-80 mt-2">Trong các điều kiện ảnh khác nhau: ảnh sáng, tối, độ tương phản thấp, có nhiễu</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								3. Thu thập dữ liệu (tiếp)
+							</div>
+							<div class="text-2xl font-bold text-white mb-6">
+								c) Tiến trình thực hiện
+							</div>
+							<div class="space-y-4">
+								<div class="flex items-start space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold flex-shrink-0" style="background: var(--color-purple);">1</div>
+									<div class="text-white">
+										<div class="font-bold">Chọn ảnh mẫu từ tập dữ liệu</div>
+										<div class="text-sm opacity-80 mt-1">Lựa chọn các ảnh đại diện cho từng loại và điều kiện khác nhau</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold flex-shrink-0" style="background: var(--color-cyan);">2</div>
+									<div class="text-white">
+										<div class="font-bold">Áp dụng lần lượt các thuật toán xử lý ảnh</div>
+										<div class="text-sm opacity-80 mt-1">Test từng phương pháp: negative, log, gamma, histogram equalization, CLAHE, piecewise-linear</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold flex-shrink-0" style="background: var(--color-blue);">3</div>
+									<div class="text-white">
+										<div class="font-bold">Trực quan hóa bằng Matplotlib</div>
+										<div class="text-sm opacity-80 mt-1">Đánh giá kết quả bước trung gian, so sánh ảnh gốc và ảnh xử lý</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-4 glassmorphism rounded-xl p-4 card-hover">
+									<div class="rounded-full w-10 h-10 flex items-center justify-center text-white font-bold flex-shrink-0" style="background: var(--color-dark-blue);">4</div>
+									<div class="text-white">
+										<div class="font-bold">Tích hợp vào web app</div>
+										<div class="text-sm opacity-80 mt-1">Kiểm thử toàn hệ thống với giao diện người dùng hoàn chỉnh</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								4. Đánh giá và so sánh
+							</div>
+							<div class="text-xl text-white font-normal mb-6">
+								Các thuật toán xử lý ảnh được đánh giá dựa trên:
+							</div>
+							<div class="space-y-4">
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">📊</span>
+									<div class="text-white">
+										<div class="font-bold">Biểu đồ histogram</div>
+										<div class="text-sm opacity-80">So sánh sự phân bố mức xám trước và sau xử lý</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">🔍</span>
+									<div class="text-white">
+										<div class="font-bold">Ảnh so sánh</div>
+										<div class="text-sm opacity-80">Hiển thị cạnh nhau ảnh gốc và ảnh đã xử lý</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">⚙️</span>
+									<div class="text-white">
+										<div class="font-bold">Thông số kỹ thuật</div>
+										<div class="text-sm opacity-80">Độ sáng, độ tương phản, độ nhiễu của ảnh sau xử lý</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								4. Đánh giá và so sánh (tiếp)
+							</div>
+							<div class="text-xl text-white font-normal mb-6">
+								Các tiêu chí đánh giá chính:
+							</div>
+							<div class="space-y-4">
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">✔️</span>
+									<div class="text-white">
+										<div class="font-bold">Độ chính xác</div>
+										<div class="text-sm opacity-80">Mức độ khớp giữa ảnh xử lý và ảnh mong muốn</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">✔️</span>
+									<div class="text-white">
+										<div class="font-bold">Thời gian xử lý</div>
+										<div class="text-sm opacity-80">Thời gian cần thiết để hoàn thành xử lý ảnh</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">✔️</span>
+									<div class="text-white">
+										<div class="font-bold">Khả năng mở rộng</div>
+										<div class="text-sm opacity-80">Hiệu suất khi xử lý hàng loạt ảnh hoặc ảnh có kích thước lớn</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								4. Đánh giá và so sánh (tiếp)
+							</div>
+							<div class="text-xl text-white font-normal mb-6">
+								Kết quả đạt được:
+							</div>
+							<div class="space-y-4">
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">🏆</span>
+									<div class="text-white">
+										<div class="font-bold">Cải thiện rõ rệt độ tương phản</div>
+										<div class="text-sm opacity-80">Các chi tiết trong ảnh trở nên rõ ràng và dễ nhận diện hơn</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">🏆</span>
+									<div class="text-white">
+										<div class="font-bold">Giảm thiểu nhiễu hiệu quả</div>
+										<div class="text-sm opacity-80">Ảnh sau xử lý ít bị ảnh hưởng bởi nhiễu hơn</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">🏆</span>
+									<div class="text-white">
+										<div class="font-bold">Thời gian xử lý nhanh</div>
+										<div class="text-sm opacity-80">Đặc biệt là với các ảnh có kích thước lớn hoặc số lượng lớn</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-3xl font-bold text-white mb-8">
+								5. Kết luận
+							</div>
+							<div class="text-xl text-white font-normal mb-6">
+								Dự án đã hoàn thành với các kết quả đạt được như mong đợi:
+							</div>
+							<div class="space-y-4">
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">✅</span>
+									<div class="text-white">
+										<div class="font-bold">Hệ thống web app hoạt động ổn định</div>
+										<div class="text-sm opacity-80">Cho phép xử lý ảnh trực tuyến với nhiều thuật toán khác nhau</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">✅</span>
+									<div class="text-white">
+										<div class="font-bold">Chất lượng ảnh sau xử lý được cải thiện đáng kể</div>
+										<div class="text-sm opacity-80">Đặc biệt là về độ tương phản và độ sáng</div>
+									</div>
+								</div>
+								<div class="flex items-start space-x-3">
+									<span style="color: var(--color-cyan);">✅</span>
+									<div class="text-white">
+										<div class="font-bold">Tính năng so sánh ảnh gốc và ảnh đã xử lý</div>
+										<div class="text-sm opacity-80">Giúp người dùng dễ dàng nhận thấy sự khác biệt và hiệu quả của việc xử lý ảnh</div>
+									</div>
+								</div>
+							</div>
+							<div class="mt-8">
+								<div class="text-white text-sm">
+									Cảm ơn quý thầy cô và các bạn đã lắng nghe phần trình bày của nhóm. Rất mong nhận được ý kiến đóng góp để dự án hoàn thiện hơn.
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
 
 
 			</div>

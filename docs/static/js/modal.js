@@ -19,7 +19,7 @@ class ModalGallery {
         // Set content
         img.src = element.src;
         title.textContent = imageData ? imageData.title : element.alt;
-        description.textContent = imageData ? imageData.description : "No description available.";
+        description.innerHTML = imageData ? imageData.description : "No description available.";
 
         // Show modal
         modal.style.display = "block";
