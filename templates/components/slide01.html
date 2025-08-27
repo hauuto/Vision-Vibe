@@ -628,42 +628,13 @@
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
 
-								<p>Biến đổi logarit là một phép <b>biến đổi cường độ điểm (point processing)</b>, trong đó giá trị mức xám của ảnh được ánh xạ theo hàm logarit.</p>
-								<p>Mục đích của phép biến đổi này là <b>tăng cường độ tương phản (contrast enhancement)</b> ở những vùng có giá trị mức xám thấp và <b>nén dải động (dynamic range compression)</b> ở những vùng có mức xám cao.</p>
-							</div>
-
-						</div>
-					</div>
-				</section>
-
-
-
-
-				<section class="custom-gradient-3">
-					<div class="p-12">
-						<div class="text-center mb-12">
-							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
-							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
-						</div>
-						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
-							<div class=" text-3xl" style="color: var(--color-dark-blue);">
-								I. Các phép biến đổi cường độ sáng
-							</div>
-							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
-								2. Biến đổi Log (Log Transformation)
-							</div>
-							<div class="text-xl font-bold" style="color: var(--color-blue)">
-								a) Khái niệm
-							</div>
-							<div class="text-xl font-normal" style="color: var(--color-blue);">
-
-								<p>
-									Với ảnh có giá trị mức xám
-									𝑟 (đầu vào) và
-									𝑠 (đầu ra), công thức biến đổi log là:
+								<p>Giả sử ảnh đầu vào có mức xám trong khoảng
+									[0,𝐿	−1]. Nếu
+									𝑟 là giá trị cường độ mức xám tại một điểm ảnh và
+									𝑠 là giá trị sau biến đổi, thì ảnh âm được định nghĩa:
 								</p>
-								<p class="text-center text-3xl">
-									𝑠 = 𝑐⋅log(1+𝑟 )
+
+								<p class="text-center text-3xl">𝑠 = 𝑐⋅log(1+𝑟 )
 								</p>
 								<ul>
 									<li class="nostyle">𝑟 : giá trị mức xám gốc (0 ≤ r ≤ L-1).</li>
@@ -675,6 +646,7 @@
 						</div>
 					</div>
 				</section>
+
 
 
 
@@ -744,7 +716,6 @@
 						</div>
 					</div>
 				</section>
-
 
 
 				<section class="custom-gradient-3">
@@ -1196,12 +1167,9 @@
 						</div>
 						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
 							<div class=" text-3xl" style="color: var(--color-dark-blue);">
-								I. Các phép biến đổi cường độ sáng
-							</div>
-							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 								4. Biến đổi tuyến tính từng khúc (Piecewise-linear)
 							</div>
-							<div class="text-xl font-bold" style="color: var(--color-blue)">
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 								f) Đặc trưng
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
@@ -1223,6 +1191,451 @@
 											<li class="nostyle">Nếu không cẩn thận, ảnh có thể bị mất chi tiết</li>
 											<li class="nostyle">Có thể gây méo màu</li>
 										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Cân bằng lược đồ xám (Histogram Equalization – HE) là một kỹ thuật <b>tăng cường ảnh (image enhancement)</b> dựa trên việc phân phối lại mức xám của ảnh sao cho lược đồ xám (histogram) sau biến đổi trở nên cân bằng hơn (phân bố gần đều).</p>
+								<p>Với <b>Global Histogram Equalization (GHE)</b>, phép biến đổi được tính toán dựa trên toàn bộ ảnh.</p>
+								<p><b>Mục đích:</b> cải thiện độ tương phản, đặc biệt cho các ảnh có lược đồ xám bị tập trung hẹp ở một khoảng giá trị.</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Nguyên lý
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Ý tưởng của GHE:</b></p>
+								<ul>
+									<li class="nostyle">Dựa trên <b>phân phối tích lũy (CDF – Cumulative Distribution Function)</b> của ảnh gốc để ánh xạ các giá trị mức xám.</li>
+									<li class="nostyle">Biến đổi này phân tán các mức xám gốc vào toàn bộ dải [0, L-1], giúp ảnh có độ tương phản tốt hơn.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Công thức toán học
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Giả sử:</b></p>
+								<ul>
+									<li class="nostyle">r<sub>k</sub>: mức xám gốc (0 ≤ k ≤ L-1).</li>
+									<li class="nostyle">p(r<sub>k</sub>): xác suất xuất hiện của mức xám r<sub>k</sub>.</li>
+								</ul>
+								<p class="text-center text-2xl">
+									p(r<sub>k</sub>) = n<sub>k</sub> / (M × N)
+								</p>
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">n<sub>k</sub>: số pixel có mức xám r<sub>k</sub>.</li>
+									<li class="nostyle">M × N: kích thước ảnh.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Công thức toán học (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Hàm phân phối tích lũy (CDF):</b></p>
+								<p class="text-center text-2xl">
+									CDF(r<sub>k</sub>) = Σ<sub>j=0</sub><sup>k</sup> p(r<sub>j</sub>)
+								</p>
+								<p><b>Phép biến đổi lược đồ xám:</b></p>
+								<p class="text-center text-2xl">
+									s<sub>k</sub> = (L - 1) × CDF(r<sub>k</sub>)
+								</p>
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">s<sub>k</sub>: mức xám mới sau cân bằng.</li>
+									<li class="nostyle">L: số mức xám (với ảnh 8-bit thì L = 256).</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Triển khai
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Code</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Cân bằng lược đồ xám toàn cục (Global HE)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								e) Đặc điểm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2 gap-8">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">Ưu điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Tăng cường độ tương phản cho ảnh</li>
+											<li class="nostyle">Dễ cài đặt, hiệu quả với nhiều loại ảnh</li>
+											<li class="nostyle">Phân bố đều mức xám trên toàn dải</li>
+											<li class="nostyle">Cải thiện khả năng quan sát chi tiết</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">Nhược điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Không thích hợp nếu ảnh có nhiễu → nhiễu cũng bị khuếch đại</li>
+											<li class="nostyle">Với ảnh có vùng sáng/tối quá lớn → có thể bị mất chi tiết</li>
+											<li class="nostyle">Không phù hợp với ảnh có đặc trưng cục bộ</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+							II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Adaptive Histogram Equalization (AHE)</b> là một kỹ thuật cải tiến của Global Histogram Equalization (GHE).</p>
+								<p>Thay vì tính toán phép cân bằng mức xám trên toàn ảnh, AHE tiến hành trên các <b>vùng cục bộ (local regions/tiles)</b>.</p>
+								<p><b>Mục đích:</b> cải thiện độ tương phản cục bộ, giúp làm nổi bật chi tiết trong từng vùng ảnh (đặc biệt hữu ích cho ảnh có độ sáng không đồng đều).</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm (tiếp)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>CLAHE (Contrast Limited Adaptive Histogram Equalization)</b> là một phiên bản cải tiến của AHE:</p>
+								<ul>
+									<li class="nostyle"><b>Giới hạn độ tương phản (contrast limiting)</b> để tránh khuếch đại nhiễu quá mức trong các vùng đồng nhất.</li>
+									<li class="nostyle">Kiểm soát được mức độ tăng cường tương phản, tránh hiện tượng over-enhancement.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Nguyên lý - AHE
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Adaptive Histogram Equalization (AHE):</b></p>
+								<ul>
+									<li class="nostyle">Chia ảnh thành nhiều khối nhỏ (tiles).</li>
+									<li class="nostyle">Thực hiện Histogram Equalization riêng cho từng khối.</li>
+									<li class="nostyle">Dùng <b>nội suy song tuyến tính (bilinear interpolation)</b> để làm mượt biên giữa các khối, tránh hiện tượng giật cục.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Nguyên lý - CLAHE
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Contrast Limited AHE (CLAHE):</b></p>
+								<p>Trong quá trình HE cho từng khối:</p>
+								<ul>
+									<li class="nostyle">Nếu một mức xám nào đó xuất hiện quá nhiều → histogram sẽ bị <b>cắt ngưỡng (clipping)</b> tại một giá trị giới hạn (clip limit).</li>
+									<li class="nostyle">Phần bị cắt sẽ được <b>phân bố lại đều</b> cho các mức khác.</li>
+								</ul>
+								<p><b>Kết quả:</b></p>
+								<ul>
+									<li class="nostyle">Giữ được hiệu ứng tăng cường độ tương phản.</li>
+									<li class="nostyle">Giảm hiện tượng khuếch đại nhiễu (noise amplification).</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Công thức (ý tưởng)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p><b>Với AHE:</b></p>
+								<p class="text-center text-2xl">
+									s<sub>k</sub> = (L - 1) × CDF<sub>local</sub>(r<sub>k</sub>)
+								</p>
+								<p><b>Trong đó:</b></p>
+								<ul>
+									<li class="nostyle">CDF<sub>local</sub>(r<sub>k</sub>): hàm phân phối tích lũy tính trên khối cục bộ chứa pixel r<sub>k</sub>.</li>
+								</ul>
+								<p><b>Với CLAHE:</b></p>
+								<ul>
+									<li class="nostyle">Histogram của khối được cắt tại ngưỡng H<sub>clip</sub>.</li>
+									<li class="nostyle">Phần dư được phân bố lại cho toàn bộ histogram trước khi tính CDF<sub>local</sub>(r<sub>k</sub>).</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Triển khai
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Code</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								e) Đặc điểm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2 gap-8">
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(115, 190, 221, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-cyan);">Ưu điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Cải thiện chi tiết cục bộ rõ rệt, đặc biệt trong vùng tối hoặc vùng sáng</li>
+											<li class="nostyle">CLAHE khắc phục nhược điểm của AHE khi ảnh có nhiễu</li>
+											<li class="nostyle">Thích ứng với từng vùng ảnh</li>
+											<li class="nostyle">Kiểm soát được mức độ tăng cường</li>
+										</ul>
+									</div>
+									<div class="glassmorphism rounded-2xl p-6" style="background: rgba(100, 56, 134, 0.1);">
+										<h4 class="text-lg font-bold mb-4" style="color: var(--color-purple);">Nhược điểm</h4>
+										<ul class="space-y-2">
+											<li class="nostyle">Tốn nhiều thời gian tính toán hơn GHE</li>
+											<li class="nostyle">Nếu chia khối quá nhỏ → dễ tạo hiện tượng giả (artifacts)</li>
+											<li class="nostyle">Phức tạp hơn trong cài đặt</li>
+											<li class="nostyle">Cần điều chỉnh tham số phù hợp</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								II. Cân bằng lược đồ mức xám (Histogram Equalization)
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Adaptive Histogram Equalization (AHE) và CLAHE
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								f) Ứng dụng
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<ul>
+									<li><b>Ảnh y tế (X-quang, CT, MRI)</b>: Làm rõ cấu trúc mô mềm hoặc chi tiết trong vùng có độ sáng tối không đồng đều.</li>
+									<li><b>Ảnh vệ tinh</b>: Nâng cao chi tiết địa hình, cải thiện độ tương phản ở từng khu vực.</li>
+									<li><b>Thị giác máy tính</b>: Tiền xử lý ảnh trong các hệ thống nhận dạng, giám sát.</li>
+									<li><b>Ảnh tài liệu số</b>: Cải thiện khả năng OCR trong trường hợp ảnh scan kém chất lượng.</li>
+								</ul>
+								<div class="mt-8 grid justify-items-center">
+									<div class="w-3/4">
 									</div>
 								</div>
 							</div>
