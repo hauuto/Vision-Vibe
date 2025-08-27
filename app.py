@@ -1,3 +1,5 @@
+from flask import Flask, render_template, jsonify
+from flask_frozen import Freezer
 from flask import Flask, render_template, jsonify, request
 import cv2
 import numpy as np
@@ -28,7 +30,7 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route('/slide1')
+@app.route('/slide1/')
 def slide01():
     return render_template('components/slide01.html')
 
@@ -37,7 +39,7 @@ def test():
     return render_template('test.html')
 # --- API DEMOS ---
 
-@app.route('/api/hello')
+@app.route('/api/hello/')
 def api_hello():
     return jsonify({'message': 'Hello from Flask API!'})
 
@@ -139,5 +141,10 @@ def available_methods():
 def inject_template_vars():
     return dict()
 
+freezer = Freezer(app)
+app.config['FREEZER_DESTINATION'] = 'docs'
+app.config['FREEZER_BASE_URL'] = ''
+app.config['FREEZER_RELATIVE_URLS'] = True
 if __name__ == '__main__':
+    freezer.freeze()
     app.run(debug=True)

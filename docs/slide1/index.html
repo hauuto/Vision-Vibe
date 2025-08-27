@@ -6,10 +6,10 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css')}}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='reveal/reveal.css')}}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='reveal/theme/black.css')}}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='reveal/reset.css')}}">
+		<link rel="stylesheet" href="../static/css/tailwind.min.css">
+        <link rel="stylesheet" href="../static/reveal/reveal.css">
+		<link rel="stylesheet" href="../static/reveal/theme/black.css">
+		<link rel="stylesheet" href="../static/reveal/reset.css">
 		<style>
 			:root {
 				--color-light: rgb(237, 245, 247);
@@ -84,10 +84,10 @@
 	<body>
 
 		<div class="fixed top-4 left-4 z-50">
-			<a href="{{ url_for('home') }}" class="group flex items-center mx-5 my-5
+			<a href="../index.html" class="group flex items-center mx-5 my-5
 			justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full
 			border border-white border-opacity-30 hover:bg-opacity-30 transition-all duration-300 hover:scale-110 shadow-lg">
-				<img src="{{ url_for('static', filename='img/logo.png')}}" alt="back-to-home" class="rounded-full">
+				<img src="../static/img/logo.png" alt="back-to-home" class="rounded-full">
 			</a>
 		</div>
 
@@ -225,7 +225,7 @@
 								</div>
 
 								<div>
-									<img src="{{ url_for('static', filename='img/moon.png')}}" alt="moon" class="absolute ">
+									<img src="../static/img/moon.png" alt="moon" class="absolute ">
 								</div>
 							</div>
 						</div>
@@ -331,7 +331,7 @@
 
 							<div class="glassmorphism rounded-3xl p-8 text-left">
 								<p class="text-2xl font-bold text-white mb-6 flex items-center">
-									Ý nghĩa & Ứng dụng
+									Ý nghĩa & Ứng duụng
 								</p>
 								<div class="space-y-4 text-white text-base">
 									<div class="flex items-start space-x-3">
@@ -359,126 +359,6 @@
 				</section>
 
 
-				<section class="custom-gradient-3">
-				<div class="p-12">
-					<div class="text-center mb-12">
-						<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
-						<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
-					</div>
-					<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
-						<div class=" text-3xl" style="color: var(--color-dark-blue);">
-							I. Các phép biến đổi cường độ sáng
-						</div>
-						<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
-							1. Ảnh âm (Negative image)
-						</div>
-						<div class="text-xl font-normal" style="color: var(--color-blue);">
-							<p>Ảnh âm (negative image) là một dạng biến đổi <b>cường độ điểm (point processing)</b> trong xử lý ảnh.</p>
-							<p>Ý tưởng cơ bản là <b>đảo ngược giá trị mức xám (intensity)</b> hoặc <b>màu sắc</b> của ảnh gốc.</p>
-							<ul>
-								<li class="nostyle">Với ảnh mức xám: vùng sáng sẽ trở thành tối và ngược lại.</li>
-								<li class="nostyle">Với ảnh màu: mỗi kênh màu (R, G, B) đều được đảo ngược, từ đó tạo nên hiệu ứng màu âm bản.</li>
-							</ul>
-						</div>
-
-					</div>
-				</div>
-			</section>
-
-
-
-				<section class="custom-gradient-3">
-					<div class="p-12">
-						<div class="text-center mb-12">
-							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
-							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
-						</div>
-						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
-							<div class=" text-3xl" style="color: var(--color-dark-blue);">
-								I. Các phép biến đổi cường độ sáng
-							</div>
-							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
-								1. Ảnh âm (Negative image)
-							</div>
-							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Cong thuc + y nghia</p>
-
-							</div>
-
-						</div>
-					</div>
-				</section>
-
-
-				<section class="custom-gradient-3">
-					<div class="p-12">
-						<div class="text-center mb-12">
-							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
-							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
-						</div>
-						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
-							<div class=" text-3xl" style="color: var(--color-dark-blue);">
-								I. Các phép biến đổi cường độ sáng
-							</div>
-							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
-								1. Ảnh âm (Negative image)
-							</div>
-							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Code</p>
-
-							</div>
-
-						</div>
-					</div>
-				</section>
-
-
-				<section class="custom-gradient-3">
-					<div class="p-12">
-						<div class="text-center mb-12">
-							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
-							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
-						</div>
-						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
-							<div class=" text-3xl" style="color: var(--color-dark-blue);">
-								I. Các phép biến đổi cường độ sáng
-							</div>
-							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
-								1. Ảnh âm (Negative image)
-							</div>
-							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Ung dung</p>
-
-							</div>
-
-						</div>
-					</div>
-				</section>
-
-
-				<section class="custom-gradient-3">
-					<div class="p-12">
-						<div class="text-center mb-12">
-							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
-							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
-						</div>
-						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
-							<div class=" text-3xl" style="color: var(--color-dark-blue);">
-								I. Các phép biến đổi cường độ sáng
-							</div>
-							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
-								1. Ảnh âm (Negative image)
-							</div>
-							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Vi du</p>
-
-							</div>
-
-						</div>
-					</div>
-				</section>
-
-
 
 
 
@@ -488,7 +368,7 @@
 
 
 	</body>
-	<script src="{{url_for('static',filename='reveal/reveal.js')}}"></script>
+	<script src="../static/reveal/reveal.js"></script>
 	<script>
 		Reveal.initialize({
 			view: 'scroll',

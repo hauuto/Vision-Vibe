@@ -5,7 +5,7 @@
     <title>Vision Vibe</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
+    <link rel="stylesheet" href="static/css/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%20Slab">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -72,7 +72,37 @@
 <body>
 
     <!-- Include Header Component -->
-    {% include 'components/header.html' %}
+    <!-- Header Component - Navbar và Sidebar -->
+
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+    <div class="w3-bar w3-white w3-card" id="myNavbar">
+        <a href="#home" class="w3-bar-item">
+            <img src="static/img/logo.png" alt="logo" style="width: 5%">
+        </a>
+        <!-- Right-sided navbar links -->
+        <div class="w3-right w3-hide-small">
+            <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
+            <a href="#team" class="w3-bar-item w3-button"><i class="fa fa-user"></i> TEAM</a>
+            <a href="#work" class="w3-bar-item w3-button"><i class="fa fa-th"></i> WORK</a>
+        </div>
+        <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+        <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
+            onclick="w3_open()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+</div>
+
+<!-- Sidebar on small screens when clicking the menu icon -->
+<nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none"
+    id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close
+        ×</a>
+    <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
+    <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
+    <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
+</nav>
 
     <!-- Header with full-height image -->
     <header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
@@ -148,7 +178,7 @@
             </div>
             <div class="w3-col l4 m6 w3-margin-bottom">
                 <div class="w3-card">
-                    <img src="{{ url_for('static', filename='img/truongMinhViet.jpg') }}" alt="Dan" style="width:100%">
+                    <img src="static/img/truongMinhViet.jpg" alt="Dan" style="width:100%">
                     <div class="w3-container">
                         <h3>Trương Minh Việt</h3>
                         <p class="w3-opacity">23702921</p>
@@ -241,12 +271,12 @@
     </footer>
 
     <!-- JavaScript Files -->
-    <script src="{{ url_for('static', filename='js/data.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/header.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="static/js/data.js"></script>
+    <script src="static/js/modal.js"></script>
+    <script src="static/js/navigation.js"></script>
+    <script src="static/js/header.js"></script>
+    <script src="static/js/api.js"></script>
+    <script src="static/js/main.js"></script>
 
 </body>
 
