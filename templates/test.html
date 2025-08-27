@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing - Vision Vibe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .upload-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .file-input-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .method-selection {
+            margin-bottom: 30px;
+        }
+
+        .method-selection h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .method-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .method-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .method-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .method-btn.active {
+            border-color: #667eea;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .options-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .option-group {
+            margin-bottom: 15px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .checkbox-wrapper label {
+            color: #333;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .gamma-control, .piecewise-control {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .gamma-control.show, .piecewise-control.show {
+            display: block;
+        }
+
+        .gamma-control label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .gamma-control input {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .piecewise-graph-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .piecewise-graph {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: crosshair;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .piecewise-info {
+            margin-top: 10px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .point-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .point-display {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .reset-points-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .reset-points-btn:hover {
+            background: #5a6268;
+        }
+
+        .process-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .process-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .process-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .images-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .image-container {
+            text-align: center;
+        }
+
+        .image-container h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .image-display {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+        }
+
+        .image-display img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        .placeholder {
+            color: #999;
+            font-size: 16px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .images-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .method-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 Vision Vibe</h1>
+            <p>Image Processing with Computer Vision</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="file-input-wrapper">
+                    <input type="file" id="imageInput" class="file-input" accept="image/*">
+                    <button class="file-input-button" onclick="document.getElementById('imageInput').click()">
+                        📁 Choose Image
+                    </button>
+                </div>
+                <p>Select an image to process (PNG, JPG, JPEG)</p>
+            </div>
+
+            <!-- Method Selection -->
+            <div class="method-selection">
+                <h3>🔧 Choose Processing Method:</h3>
+                <div class="method-buttons">
+                    <div class="method-btn active" data-method="3">
+                        <strong>Negative Transform</strong><br>
+                        <small>Âm bản - Invert image colors</small>
+                    </div>
+                    <div class="method-btn" data-method="1">
+                        <strong>Log Transform</strong><br>
+                        <small>Chuyển đổi log - Enhance dark regions</small>
+                    </div>
+                    <div class="method-btn" data-method="2">
+                        <strong>Power Transform</strong><br>
+                        <small>Chuyển đổi mũ - Gamma correction</small>
+                    </div>
+                    <div class="method-btn" data-method="4">
+                        <strong>Histogram Equalization</strong><br>
+                        <small>Cân bằng histogram - Improve contrast</small>
+                    </div>
+                    <div class="method-btn" data-method="5">
+                        <strong>Piecewise-linear Transform</strong><br>
+                        <small>Chuyển đổi đoạn - Enhance specific regions</small>
+                    </div>
+                </div>
+
+                <!-- Options Section -->
+                <div class="options-section">
+                    <h4 style="margin-bottom: 15px; color: #333;">⚙️ Processing Options:</h4>
+                    
+                    <!-- Grayscale Checkbox -->
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="grayscaleCheckbox">
+                        <label for="grayscaleCheckbox">🎨 Convert to Grayscale (Chuyển sang ảnh xám)</label>
+                    </div>
+
+                    <!-- Gamma Control for Power Transform -->
+                    <div class="gamma-control" id="gammaControl">
+                        <label for="gammaSlider">Gamma Value: <span id="gammaValue">0.5</span></label>
+                        <input type="range" id="gammaSlider" min="0.1" max="3.0" step="0.1" value="0.5">
+                    </div>
+
+                    <!-- Piecewise Linear Control -->
+                    <div class="piecewise-control" id="piecewiseControl">
+                        <h5 style="margin-bottom: 10px; color: #333;">📊 Piecewise Linear Transform</h5>
+                        <p style="margin-bottom: 15px; font-size: 14px; color: #666;">
+                            Click on the graph to set two control points. The function will map input intensities to output intensities.
+                        </p>
+                        
+                        <div class="piecewise-graph-container">
+                            <canvas id="piecewiseGraph" class="piecewise-graph" width="300" height="300"></canvas>
+                        </div>
+                        
+                        <div class="piecewise-info">
+                            <div class="point-info">
+                                <div class="point-display">
+                                    <strong>Point 1:</strong> (<span id="point1X">100</span>, <span id="point1Y">50</span>)
+                                </div>
+                                <div class="point-display">
+                                    <strong>Point 2:</strong> (<span id="point2X">200</span>, <span id="point2Y">200</span>)
+                                </div>
+                            </div>
+                            <button class="reset-points-btn" onclick="resetPiecewisePoints()">Reset Points</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="process-btn" id="processBtn" disabled>
+                        ⚡ Process Image
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing image...</p>
+            </div>
+
+            <!-- Error Display -->
+            <div class="error" id="error"></div>
+
+            <!-- Images Display -->
+            <div class="images-section">
+                <div class="image-container">
+                    <h4>📷 Original Image</h4>
+                    <div class="image-display" id="originalImage">
+                        <div class="placeholder">No image selected</div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <h4>✨ Processed Image</h4>
+                    <div class="image-display" id="processedImage">
+                        <div class="placeholder">Process an image to see results</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedImage = null;
+        let selectedMethod = '3';
+
+        // Piecewise linear points
+        let piecewisePoints = {
+            point1: { x: 100, y: 50 },
+            point2: { x: 200, y: 200 }
+        };
+
+        // DOM elements
+        const imageInput = document.getElementById('imageInput');
+        const originalImageDiv = document.getElementById('originalImage');
+        const processedImageDiv = document.getElementById('processedImage');
+        const processBtn = document.getElementById('processBtn');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const methodBtns = document.querySelectorAll('.method-btn');
+        const gammaControl = document.getElementById('gammaControl');
+        const gammaSlider = document.getElementById('gammaSlider');
+        const gammaValue = document.getElementById('gammaValue');
+        const grayscaleCheckbox = document.getElementById('grayscaleCheckbox');
+        const piecewiseControl = document.getElementById('piecewiseControl');
+        const piecewiseCanvas = document.getElementById('piecewiseGraph');
+        const ctx = piecewiseCanvas.getContext('2d');
+
+        // Initialize piecewise graph
+        function initPiecewiseGraph() {
+            drawPiecewiseGraph();
+        }
+
+        function drawPiecewiseGraph() {
+            const canvas = piecewiseCanvas;
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            
+            // Vertical grid lines
+            for (let i = 0; i <= 10; i++) {
+                const x = (i / 10) * canvas.width;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            // Horizontal grid lines
+            for (let i = 0; i <= 10; i++) {
+                const y = (i / 10) * canvas.height;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            
+            // X-axis
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height);
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.stroke();
+            
+            // Y-axis
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, canvas.height);
+            ctx.stroke();
+            
+            // Draw piecewise function
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            // Convert points to canvas coordinates
+            const p1_canvas = {
+                x: (piecewisePoints.point1.x / 255) * canvas.width,
+                y: canvas.height - (piecewisePoints.point1.y / 255) * canvas.height
+            };
+            const p2_canvas = {
+                x: (piecewisePoints.point2.x / 255) * canvas.width,
+                y: canvas.height - (piecewisePoints.point2.y / 255) * canvas.height
+            };
+            
+            // Draw three line segments
+            // Segment 1: (0,0) to point1
+            ctx.moveTo(0, canvas.height);
+            ctx.lineTo(p1_canvas.x, p1_canvas.y);
+            
+            // Segment 2: point1 to point2
+            ctx.lineTo(p2_canvas.x, p2_canvas.y);
+            
+            // Segment 3: point2 to (255,255)
+            ctx.lineTo(canvas.width, 0);
+            
+            ctx.stroke();
+            
+            // Draw control points
+            ctx.fillStyle = '#dc3545';
+            
+            // Point 1
+            ctx.beginPath();
+            ctx.arc(p1_canvas.x, p1_canvas.y, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Point 2
+            ctx.beginPath();
+            ctx.arc(p2_canvas.x, p2_canvas.y, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw labels
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.fillText('(0,0)', 5, canvas.height - 5);
+            ctx.fillText('(255,255)', canvas.width - 50, 15);
+            
+            // Update point displays
+            document.getElementById('point1X').textContent = piecewisePoints.point1.x;
+            document.getElementById('point1Y').textContent = piecewisePoints.point1.y;
+            document.getElementById('point2X').textContent = piecewisePoints.point2.x;
+            document.getElementById('point2Y').textContent = piecewisePoints.point2.y;
+        }
+
+        // Handle canvas clicks
+        piecewiseCanvas.addEventListener('click', function(e) {
+            const rect = piecewiseCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Convert to intensity values (0-255)
+            const intensityX = Math.round((x / piecewiseCanvas.width) * 255);
+            const intensityY = Math.round(((piecewiseCanvas.height - y) / piecewiseCanvas.height) * 255);
+            
+            // Determine which point to update (closer one)
+            const p1_canvas = {
+                x: (piecewisePoints.point1.x / 255) * piecewiseCanvas.width,
+                y: piecewiseCanvas.height - (piecewisePoints.point1.y / 255) * piecewiseCanvas.height
+            };
+            const p2_canvas = {
+                x: (piecewisePoints.point2.x / 255) * piecewiseCanvas.width,
+                y: piecewiseCanvas.height - (piecewisePoints.point2.y / 255) * piecewiseCanvas.height
+            };
+            
+            const dist1 = Math.sqrt((x - p1_canvas.x)**2 + (y - p1_canvas.y)**2);
+            const dist2 = Math.sqrt((x - p2_canvas.x)**2 + (y - p2_canvas.y)**2);
+            
+            if (dist1 < dist2) {
+                piecewisePoints.point1 = { x: intensityX, y: intensityY };
+            } else {
+                piecewisePoints.point2 = { x: intensityX, y: intensityY };
+            }
+            
+            // Ensure point1.x < point2.x
+            if (piecewisePoints.point1.x > piecewisePoints.point2.x) {
+                const temp = piecewisePoints.point1;
+                piecewisePoints.point1 = piecewisePoints.point2;
+                piecewisePoints.point2 = temp;
+            }
+            
+            drawPiecewiseGraph();
+        });
+
+        function resetPiecewisePoints() {
+            piecewisePoints = {
+                point1: { x: 100, y: 50 },
+                point2: { x: 200, y: 200 }
+            };
+            drawPiecewiseGraph();
+        }
+
+        // Image input handler
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedImage = e.target.result;
+                    originalImageDiv.innerHTML = `<img src="${e.target.result}" alt="Original Image">`;
+                    processBtn.disabled = false;
+                    hideError();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Method selection handlers
+        methodBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                methodBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedMethod = this.dataset.method;
+                
+                // Show/hide controls based on method
+                gammaControl.classList.remove('show');
+                piecewiseControl.classList.remove('show');
+                
+                if (selectedMethod === '2') { // Power transform
+                    gammaControl.classList.add('show');
+                } else if (selectedMethod === '5') { // Piecewise linear
+                    piecewiseControl.classList.add('show');
+                }
+            });
+        });
+
+        // Gamma slider handler
+        gammaSlider.addEventListener('input', function() {
+            gammaValue.textContent = this.value;
+        });
+
+        // Process button handler
+        processBtn.addEventListener('click', async function() {
+            if (!selectedImage) {
+                showError('Please select an image first');
+                return;
+            }
+
+            showLoading();
+            hideError();
+
+            try {
+                const formData = new FormData();
+                
+                // Convert base64 to blob and append as file
+                const response = await fetch(selectedImage);
+                const blob = await response.blob();
+                formData.append('image', blob, 'image.jpg');
+                formData.append('method', selectedMethod);
+                formData.append('grayscale', grayscaleCheckbox.checked);
+                
+                if (selectedMethod === '2') { // Power transform
+                    formData.append('gamma', gammaSlider.value);
+                } else if (selectedMethod === '5') { // Piecewise linear
+                    formData.append('r1', piecewisePoints.point1.x);
+                    formData.append('s1', piecewisePoints.point1.y);
+                    formData.append('r2', piecewisePoints.point2.x);
+                    formData.append('s2', piecewisePoints.point2.y);
+                }
+
+                const apiResponse = await fetch('/api/process-image', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await apiResponse.json();
+
+                if (result.success) {
+                    processedImageDiv.innerHTML = `<img src="${result.processed_image}" alt="Processed Image">`;
+                } else {
+                    showError(result.error || 'Processing failed');
+                }
+            } catch (err) {
+                showError('Error: ' + err.message);
+            } finally {
+                hideLoading();
+            }
+        });
+
+        // Utility functions
+        function showLoading() {
+            loading.classList.add('show');
+            processBtn.disabled = true;
+        }
+
+        function hideLoading() {
+            loading.classList.remove('show');
+            processBtn.disabled = false;
+        }
+
+        function showError(message) {
+            error.textContent = message;
+            error.classList.add('show');
+        }
+
+        function hideError() {
+            error.classList.remove('show');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initPiecewiseGraph();
+        });
+    </script>
+</body>
+</html>

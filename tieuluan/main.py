@@ -2,109 +2,93 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-#Read images
-iname1 = "img/1.png"
-iname2 = "img/2.jpg"
-iname3 = "img/3.jpg"
-iname5 = "img/5.jpg"
-
-image1 = cv2.imread(iname1, 0)
-image2 = cv2.imread(iname2)
-image3 = cv2.imread(iname3)
-image5 = cv2.imread(iname5) 
-
 def amBan(image):
+    """Negative transformation"""
     return 255 - image
 
-def chuyen_doi_log(image, c):
+def chuyen_doi_log(image, c=None):
+    """Log transformation"""
+    if c is None:
+        c = 255 / np.log(1 + np.max(image))
     return c * (np.log(1 + image))
 
-def chuyen_doi_mu(image, g, c):
-    return c * np.pow(image, g)
+def chuyen_doi_mu(image, g=1, c=None):
+    """Power transformation (gamma correction)"""
+    if c is None:
+        c = 255.0 / np.power(255.0, g)
+    return c * np.power(image, g)
 
-def demo_log():
-    image1 = cv2.imread(iname1, 0)
-    plt.figure(figsize=(10,5))
-    plt.subplot(1,2,1)
-    plt.imshow(image1, cmap="gray")
-    plt.title("Ảnh gốc")
-    plt.axis("off")
-    c = 255 / np.log(1 + np.max(image1))
-    image1 = chuyen_doi_log(image1, c)
-    image1 = np.array(image1, dtype=np.uint8)
-    plt.subplot(1,2,2)
-    plt.imshow(image1, cmap="gray")
-    plt.title("Ảnh sau log transform")
-    plt.axis("off")
-
-    plt.show()
-    
-
-def demo_mu():
-    image1 = cv2.imread(iname1, 0)
-    g = 1
-    c = 1.0 / np.pow(np.max(image1), g)
-
-    image1 = cv2.imread(iname1, 0)
-    image1 = chuyen_doi_mu(image1, g, c)
-    plt.figure(figsize=(10,5))
-    plt.subplot(1,2,1)
-    plt.imshow(image1, cmap="gray")
-    plt.title("Ảnh dùng c chuẩn")
-    plt.axis("off")
-    print(image1)
-
-    c = 2
-    image1 = cv2.imread(iname1, 0)
-    image1 = chuyen_doi_mu(image1, g, c)
-    plt.subplot(1,2,2)
-    plt.imshow(image1, cmap="gray")
-    plt.title("Ảnh sau chuyển đổi mũ c=2")
-    plt.axis("off")
-
-    plt.show()
-    
 def cal_img(npArray):
+    """Calculate histogram equalization for single channel"""
     arr = np.bincount(npArray.flatten(), minlength=256)
     pdf = arr / npArray.size
     cdf = np.cumsum(pdf)
-    # cdf_norm = (cdf.max
     tf = np.round(cdf * 255)
     img = tf[npArray]
     return img
 
-
-def demo_histogram_equalization(image):
-    plt.figure(figsize=(10,5))
-    img_refine = np.array([])
-    
-    if len(image.shape) == 2:
+def histogram_equalization(image):
+    """Apply histogram equalization to image"""
+    if len(image.shape) == 2:  # Grayscale image
         img_refine = cal_img(image)
-        plt.subplot(1,2,1)
-        plt.title("Histogram eq")
-        plt.hist(img_refine)
-        plt.subplot(1,2,2)
-        plt.title("Image")
-        plt.imshow(img_refine.astype(np.uint8), cmap="gray")
+        return img_refine.astype(np.uint8)
     
-    if len(image.shape) == 3:
-        r, g, b = cv2.split(image)
-        tf_r = cal_img(r)
-        tf_g = cal_img(g)
+    if len(image.shape) == 3 and image.shape[2] == 3:  # BGR format
+        b, g, r = cv2.split(image)
         tf_b = cal_img(b)
+        tf_g = cal_img(g)
+        tf_r = cal_img(r)
+        img_refine = cv2.merge((tf_b, tf_g, tf_r))
+        return img_refine.astype(np.uint8)
     
-        img_refine = cv2.merge((tf_r, tf_g, tf_b))
+    return image
 
-        plt.subplot(1,2,1)
-        plt.title("Histogram eq")
-        plt.hist(tf_r)
-        plt.subplot(1,2,2)
-        plt.title("Image")
-        plt.imshow(img_refine.astype(np.uint8), cmap="gray")
+def piecewise_linear_transformation(pixel, r1=100, s1=0, r2=200, s2=255):
+    """Piecewise linear transform for a single pixel"""
+    if pixel <= r1:
+        return (s1 / r1) * pixel if r1 != 0 else 0
+    elif pixel <= r2:
+        return ((s2 - s1) / (r2 - r1)) * (pixel - r1) + s1
+    else:
+        return ((255 - s2) / (255 - r2)) * (pixel - r2) + s2 if r2 != 255 else 255
 
-    # return img_refine
+# ==============================
+# Các hàm apply (wrapper)
+# ==============================
+def apply_log_transform(image, c=None):
+    """Apply log transformation (color-aware)"""
+    if len(image.shape) == 3:  # Color
+        channels = cv2.split(image)
+        log_channels = []
+        for ch in channels:
+            result = chuyen_doi_log(ch.astype(np.float32), c)
+            result = np.clip(result, 0, 255).astype(np.uint8)
+            log_channels.append(result)
+        return cv2.merge(log_channels)
+    else:  # Grayscale
+        result = chuyen_doi_log(image.astype(np.float32), c)
+        return np.clip(result, 0, 255).astype(np.uint8)
 
+def apply_power_transform(image, gamma=0.5, c=None):
+    """Apply gamma correction (color-aware)"""
+    if len(image.shape) == 3:  # Color
+        channels = cv2.split(image)
+        power_channels = []
+        for ch in channels:
+            result = chuyen_doi_mu(ch.astype(np.float32), gamma, c)
+            result = np.clip(result, 0, 255).astype(np.uint8)
+            power_channels.append(result)
+        return cv2.merge(power_channels)
+    else:  # Grayscale
+        result = chuyen_doi_mu(image.astype(np.float32), gamma, c)
+        return np.clip(result, 0, 255).astype(np.uint8)
 
-# plt.imshow(cv2.imread("img/blur.png", cv2.IMREAD_GRAYSCALE), cmap="gray")
+def apply_negative_transform(image):
+    """Apply negative transformation"""
+    return amBan(image)
 
-demo_histogram_equalization(cv2.imread("img/blur.png"))
+def apply_piecewise_linear(image, r1=100, s1=0, r2=200, s2=255):
+    """Apply piecewise linear transformation to image"""
+    vec_func = np.vectorize(piecewise_linear_transformation)
+    result = vec_func(image, r1, s1, r2, s2)
+    return np.clip(result, 0, 255).astype(np.uint8)
