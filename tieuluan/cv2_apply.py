@@ -37,14 +37,50 @@ def cv2_apply_negative_transform(image):
     return cv2.bitwise_not(image)
 
 def cv2_histogram_equalization(image):
-    """Histogram equalization using OpenCV built-in functions"""
+    """Histogram equalization using OpenCV built-in functions - WITH NORMALIZATION"""
+    print(f"🔧 OpenCV HE - Input range: [{np.min(image)}, {np.max(image)}]")
+    
     if len(image.shape) == 2:  # Grayscale
-        return cv2.equalizeHist(image)
+        result = cv2.equalizeHist(image)
+        
+        # Normalize to full range if needed
+        result_min = np.min(result)
+        result_max = np.max(result)
+        
+        if result_max > result_min and (result_min > 0 or result_max < 255):
+            result_normalized = ((result.astype(np.float64) - result_min) / (result_max - result_min) * 255)
+            result = np.round(result_normalized).astype(np.uint8)
+            print(f"🔧 OpenCV normalized range from [{result_min}, {result_max}] to [0, 255]")
+        
+        print(f"✅ OpenCV final range: [{np.min(result)}, {np.max(result)}]")
+        return result
+        
     elif len(image.shape) == 3 and image.shape[2] == 3:  # Color
-        # Convert to YUV, equalize Y channel, convert back
-        yuv = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
-        yuv[:,:,0] = cv2.equalizeHist(yuv[:,:,0])
-        return cv2.cvtColor(yuv, cv2.COLOR_YUV2BGR)
+        # Method 1: Equalize each channel separately (like custom method)
+        b, g, r = cv2.split(image)
+        
+        # Apply histogram equalization to each channel
+        b_eq = cv2.equalizeHist(b)
+        g_eq = cv2.equalizeHist(g)
+        r_eq = cv2.equalizeHist(r)
+        
+        # Normalize each channel if needed
+        def normalize_channel(ch):
+            ch_min = np.min(ch)
+            ch_max = np.max(ch)
+            if ch_max > ch_min and (ch_min > 0 or ch_max < 255):
+                ch_normalized = ((ch.astype(np.float64) - ch_min) / (ch_max - ch_min) * 255)
+                return np.round(ch_normalized).astype(np.uint8)
+            return ch
+        
+        b_eq = normalize_channel(b_eq)
+        g_eq = normalize_channel(g_eq)
+        r_eq = normalize_channel(r_eq)
+        
+        result = cv2.merge((b_eq, g_eq, r_eq))
+        print(f"✅ OpenCV final range: [{np.min(result)}, {np.max(result)}]")
+        return result
+    
     return image
 
 def cv2_apply_piecewise_linear(image, r1=100, s1=0, r2=200, s2=255):

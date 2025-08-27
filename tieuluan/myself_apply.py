@@ -19,35 +19,43 @@ def chuyen_doi_mu(image, g=1, c=None):
     return c * np.power(image, g)
 
 def cal_img(npArray):
-    """Calculate histogram equalization for single channel"""
+    """Calculate histogram equalization for single channel - FIXED VERSION"""
+    npArray = np.clip(npArray, 0, 255).astype(np.uint8)
     arr = np.bincount(npArray.flatten(), minlength=256)
-    pdf = arr / npArray.size
+    total_pixels = npArray.size
+    pdf = arr.astype(np.float64) / total_pixels
     cdf = np.cumsum(pdf)
-    tf = np.round(cdf * 255)
-    img = tf[npArray]
-    return img
+    tf = np.round(cdf * 255).astype(np.uint8)
+    img = tf[npArray.flatten()].reshape(npArray.shape)
+    img_min = np.min(img)
+    img_max = np.max(img)
+    img_normalized = ((img.astype(np.float64) - img_min) / (img_max - img_min) * 255)
+    img = np.round(img_normalized).astype(np.uint8)
+    print(f"🔧 Normalized range from [{img_min}, {img_max}] to [0, 255]")
+    
+    return img.astype(np.uint8)
 
 def histogram_equalization(image):
-    """Apply histogram equalization to image"""
-    
-    if len(image.shape) == 2:  # Grayscale image
-        print("Processing as grayscale")
-        img_refine = cal_img(image)
-        result = img_refine.astype(np.uint8)
+    """Apply histogram equalization to image - IMPROVED VERSION WITH NORMALIZATION"""
+    # Ensure input is uint8
+    if image.dtype != np.uint8:
+        image = np.clip(image, 0, 255).astype(np.uint8)
+        
+    if len(image.shape) == 2: 
+        result = cal_img(image)
         return result
     
-    if len(image.shape) == 3 and image.shape[2] == 3:  # BGR format
-        print("Processing as BGR color")
+    elif len(image.shape) == 3 and image.shape[2] == 3:  # BGR format
         b, g, r = cv2.split(image)
         tf_b = cal_img(b)
-        tf_g = cal_img(g)
+        tf_g = cal_img(g) 
         tf_r = cal_img(r)
-        img_refine = cv2.merge((tf_b, tf_g, tf_r))
-        result = img_refine.astype(np.uint8)
-        return result
+        result = cv2.merge((tf_b, tf_g, tf_r))
+        return result.astype(np.uint8)
     
-    
-    return image
+    else:
+        print(f"Unsupported image format: shape={image.shape}")
+        return image
 
 def piecewise_linear_transformation(pixel, r1=100, s1=0, r2=200, s2=255):
     """Piecewise linear transform for a single pixel"""
