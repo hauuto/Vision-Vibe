@@ -29,17 +29,23 @@ def cal_img(npArray):
 
 def histogram_equalization(image):
     """Apply histogram equalization to image"""
+    
     if len(image.shape) == 2:  # Grayscale image
+        print("Processing as grayscale")
         img_refine = cal_img(image)
-        return img_refine.astype(np.uint8)
+        result = img_refine.astype(np.uint8)
+        return result
     
     if len(image.shape) == 3 and image.shape[2] == 3:  # BGR format
+        print("Processing as BGR color")
         b, g, r = cv2.split(image)
         tf_b = cal_img(b)
         tf_g = cal_img(g)
         tf_r = cal_img(r)
         img_refine = cv2.merge((tf_b, tf_g, tf_r))
-        return img_refine.astype(np.uint8)
+        result = img_refine.astype(np.uint8)
+        return result
+    
     
     return image
 
