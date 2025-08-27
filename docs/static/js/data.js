@@ -1,8 +1,8 @@
 // Image descriptions data
 const imageDescriptions = {
-    "tech_mic.jpg": {
-        title: "Professional Microphone",
-        description: "High-quality studio microphone designed for crystal clear audio recording. Perfect for podcasts, music production, and professional voice-over work. Features noise cancellation and premium sound quality."
+    "cover_tieuluan1.png": {
+        title: "Tiểu luận 1: Xử lý ảnh dựa trên giá trị điểm ảnh",
+        description: "Bài tiểu luận được xây dựng nhằm cung cấp cái nhìn rõ ràng và hệ thống về các kỹ thuật xử lý ảnh cơ bản. Nội dung được trình bày một cách khoa học, dễ hiểu, giúp người đọc nắm vững cơ sở lý thuyết cũng như ứng dụng thực tiễn. Phù hợp cho sinh viên, nhà nghiên cứu và những ai quan tâm đến lĩnh vực xử lý ảnh số. Bài tiểu luận nổi bật với cách diễn giải mạch lạc, minh họa trực quan và chất lượng học thuật cao. <a href=\"/slide1/\">Bắt đầu ngay!</a>"
     },
     "tech_phone.jpg": {
         title: "Modern Smartphone",

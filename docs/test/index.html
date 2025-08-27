@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image Processing - Vision Vibe</title>
+    <link rel="stylesheet" href="../static/css/tailwind.min.css">
+
+    <title>Xử lý Ảnh - Vision Vibe</title>
+
     <style>
+      /* CSS giữ nguyên */
       * {
         margin: 0;
         padding: 0;
@@ -454,10 +458,18 @@
     </style>
   </head>
   <body>
+    <div class="fixed top-4 left-4 z-50">
+        <a href="../index.html" class="group flex items-center mx-5 my-5
+        justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full
+        border border-white border-opacity-30 hover:bg-opacity-30 transition-all duration-300 hover:scale-110 shadow-lg">
+            <img src="../static/img/logo.png" alt="back-to-home" class="rounded-full">
+        </a>
+    </div>
+
     <div class="container">
       <div class="header">
         <h1>🔮 Vision Vibe</h1>
-        <p>Image Processing with Computer Vision</p>
+        <p>Xử lý Ảnh với Thị giác Máy tính</p>
       </div>
 
       <div class="main-content">
@@ -474,66 +486,66 @@
               class="file-input-button"
               onclick="document.getElementById('imageInput').click()"
             >
-              📁 Choose Image
+              📁 Chọn Ảnh
             </button>
           </div>
-          <p>Select an image to process (PNG, JPG, JPEG)</p>
+          <p>Chọn một ảnh để xử lý (PNG, JPG, JPEG)</p>
         </div>
 
         <!-- Method Selection -->
         <div class="method-selection">
-          <h3>🔧 Choose Processing Method:</h3>
+          <h3>🔧 Chọn Phương pháp Xử lý:</h3>
           <div class="method-buttons">
             <div class="method-btn active" data-method="3">
-              <strong>Negative Transform</strong><br />
-              <small>Âm bản - Invert image colors</small>
+              <strong>Biến đổi Âm bản</strong><br />
+              <small>Đảo ngược màu sắc ảnh</small>
             </div>
             <div class="method-btn" data-method="1">
-              <strong>Log Transform</strong><br />
-              <small>Chuyển đổi log - Enhance dark regions</small>
+              <strong>Biến đổi Log</strong><br />
+              <small>Tăng cường vùng tối</small>
             </div>
             <div class="method-btn" data-method="2">
-              <strong>Power Transform</strong><br />
-              <small>Chuyển đổi mũ - Gamma correction</small>
+              <strong>Biến đổi Mũ</strong><br />
+              <small>Hiệu chỉnh Gamma</small>
             </div>
             <div class="method-btn" data-method="4">
-              <strong>Histogram Equalization</strong><br />
-              <small>Cân bằng histogram - Improve contrast</small>
+              <strong>Cân bằng Histogram</strong><br />
+              <small>Cải thiện độ tương phản</small>
             </div>
             <div class="method-btn" data-method="5">
-              <strong>Piecewise-linear Transform</strong><br />
-              <small>Chuyển đổi đoạn - Enhance specific regions</small>
+              <strong>Biến đổi Tuyến tính từng đoạn</strong><br />
+              <small>Tăng cường các vùng cụ thể</small>
             </div>
             <div class="method-btn" data-method="6">
               <strong>CLAHE</strong><br />
-              <small>Chuyển đổi CLAHE - Cải thiện độ tương phản cục bộ</small>
+              <small>Cải thiện độ tương phản cục bộ</small>
             </div>
           </div>
 
           <!-- Options Section -->
           <div class="options-section">
             <h4 style="margin-bottom: 15px; color: #333">
-              ⚙️ Processing Options:
+              ⚙️ Tùy chọn Xử lý:
             </h4>
 
             <!-- Grayscale Checkbox -->
             <div class="checkbox-wrapper">
               <input type="checkbox" id="grayscaleCheckbox" />
               <label for="grayscaleCheckbox"
-                >🎨 Convert to Grayscale (Chuyển sang ảnh xám)</label
+                >🎨 Chuyển sang Ảnh xám</label
               >
             </div>
 
             <!-- Use OpenCV Built-in Methods Checkbox -->
             <div class="checkbox-wrapper">
               <input type="checkbox" id="cv2Checkbox">
-              <label for="cv2Checkbox">🔧 Use OpenCV Built-in Methods (Sử dụng hàm CV2 có sẵn)</label>
+              <label for="cv2Checkbox">🔧 Sử dụng hàm OpenCV có sẵn</label>
             </div>
 
             <!-- Gamma Control for Power Transform -->
             <div class="gamma-control" id="gammaControl">
               <label for="gammaSlider"
-                >Gamma Value: <span id="gammaValue">0.5</span></label
+                >Giá trị Gamma: <span id="gammaValue">0.5</span></label
               >
               <input
                 type="range"
@@ -548,11 +560,11 @@
             <!-- Piecewise Linear Control -->
             <div class="piecewise-control" id="piecewiseControl">
               <h5 style="margin-bottom: 10px; color: #333">
-                📊 Piecewise Linear Transform
+                📊 Biến đổi Tuyến tính từng đoạn
               </h5>
               <p style="margin-bottom: 15px; font-size: 14px; color: #666">
-                Click on the graph to set two control points. The function will
-                map input intensities to output intensities.
+                Nhấp vào đồ thị để đặt hai điểm điều khiển. Hàm sẽ
+                ánh xạ cường độ đầu vào thành cường độ đầu ra.
               </p>
 
               <div class="piecewise-graph-container">
@@ -567,11 +579,11 @@
               <div class="piecewise-info">
                 <div class="point-info">
                   <div class="point-display">
-                    <strong>Point 1:</strong> (<span id="point1X">100</span>,
+                    <strong>Điểm 1:</strong> (<span id="point1X">100</span>,
                     <span id="point1Y">50</span>)
                   </div>
                   <div class="point-display">
-                    <strong>Point 2:</strong> (<span id="point2X">200</span>,
+                    <strong>Điểm 2:</strong> (<span id="point2X">200</span>,
                     <span id="point2Y">200</span>)
                   </div>
                 </div>
@@ -579,7 +591,7 @@
                   class="reset-points-btn"
                   onclick="resetPiecewisePoints()"
                 >
-                  Reset Points
+                  Đặt lại Điểm
                 </button>
               </div>
             </div>
@@ -587,7 +599,7 @@
 
           <div style="text-align: center; margin-top: 20px">
             <button class="process-btn" id="processBtn" disabled>
-              ⚡ Process Image
+              ⚡ Xử lý Ảnh
             </button>
           </div>
         </div>
@@ -595,7 +607,7 @@
         <!-- Loading -->
         <div class="loading" id="loading">
           <div class="spinner"></div>
-          <p>Processing image...</p>
+          <p>Đang xử lý ảnh...</p>
         </div>
 
         <!-- Error Display -->
@@ -604,21 +616,21 @@
         <!-- Images Display -->
         <div class="images-section" id="imagesSection">
           <div class="image-container">
-            <h4>📷 Original Image</h4>
+            <h4>📷 Ảnh Gốc</h4>
             <div class="image-display" id="originalImage">
-              <div class="placeholder">No image selected</div>
+              <div class="placeholder">Chưa chọn ảnh</div>
             </div>
           </div>
           <div class="image-container">
-            <h4>✨ Custom Method Result</h4>
+            <h4>✨ Kết quả Phương pháp Tự viết</h4>
             <div class="image-display" id="processedImage">
-              <div class="placeholder">Process an image to see results</div>
+              <div class="placeholder">Xử lý ảnh để xem kết quả</div>
             </div>
           </div>
           <div class="image-container" id="cv2ImageContainer" style="display: none;">
-            <h4>🔧 OpenCV Method Result</h4>
+            <h4>🔧 Kết quả Phương pháp OpenCV</h4>
             <div class="image-display" id="cv2ProcessedImage">
-              <div class="placeholder">CV2 result will appear here</div>
+              <div class="placeholder">Kết quả OpenCV sẽ xuất hiện ở đây</div>
             </div>
           </div>
         </div>
@@ -626,23 +638,23 @@
         <!-- Comparison Metrics Section -->
         <div class="comparison-section" id="comparisonSection">
           <div class="comparison-title">
-            📊 Comparison Between Custom Method vs OpenCV Method
+            📊 So sánh Phương pháp Tự viết và Phương pháp OpenCV
           </div>
           <div class="metrics-grid">
             <div class="metric-card mse">
               <div class="metric-label">MSE</div>
               <div class="metric-value" id="mseValue">-</div>
-              <div class="metric-description">Mean Squared Error<br>(Lower is better)</div>
+              <div class="metric-description">Sai số Bình phương Trung bình<br>(Thấp hơn thì tốt hơn)</div>
             </div>
             <div class="metric-card psnr">
               <div class="metric-label">PSNR</div>
               <div class="metric-value" id="psnrValue">-</div>
-              <div class="metric-description">Peak Signal-to-Noise Ratio (dB)<br>(Higher is better)</div>
+              <div class="metric-description">Tỷ số Tín hiệu Đỉnh trên Nhiễu (dB)<br>(Cao hơn thì tốt hơn)</div>
             </div>
             <div class="metric-card ssim">
               <div class="metric-label">SSIM</div>
               <div class="metric-value" id="ssimValue">-</div>
-              <div class="metric-description">Structural Similarity Index<br>(Higher is better, max=1)</div>
+              <div class="metric-description">Chỉ số Tương đồng Cấu trúc<br>(Cao hơn thì tốt hơn, tối đa=1)</div>
             </div>
           </div>
         </div>
@@ -854,7 +866,7 @@
           const reader = new FileReader();
           reader.onload = function (e) {
             selectedImage = e.target.result;
-            originalImageDiv.innerHTML = `<img src="${e.target.result}" alt="Original Image">`;
+            originalImageDiv.innerHTML = `<img src="${e.target.result}" alt="Ảnh Gốc">`;
             processBtn.disabled = false;
             hideError();
           };
@@ -909,7 +921,7 @@
       // Process button handler
       processBtn.addEventListener("click", async function () {
         if (!selectedImage) {
-          showError("Please select an image first");
+          showError("Vui lòng chọn ảnh trước");
           return;
         }
 
@@ -925,7 +937,7 @@
           formData.append("image", blob, "image.jpg");
           formData.append("method", selectedMethod);
           formData.append("grayscale", grayscaleCheckbox.checked);
-          formData.append("use_cv2", cv2Checkbox.checked);
+          formData.append("use_cv2", cv2Checkbox.checked); // Đây là flag để hiển thị CV2 comparison
           
           if (selectedMethod === "2") {
             // Power transform
@@ -946,34 +958,34 @@
           const result = await apiResponse.json();
 
           if (result.success) {
-            processedImageDiv.innerHTML = `<img src="${result.processed_image}" alt="Processed Image">`;
+            // Luôn hiển thị kết quả từ custom method
+            processedImageDiv.innerHTML = `<img src="${result.processed_image}" alt="Kết quả Phương pháp Tự viết">`;
             
-            // Handle CV2 comparison
-            if (result.cv2_processed_image && result.comparison_metrics && !result.cv2_method_used) {
-                // Show comparison when both custom and CV2 results are available
-                cv2ProcessedImageDiv.innerHTML = `<img src="${result.cv2_processed_image}" alt="CV2 Processed Image">`;
-                
-                // Update comparison metrics
-                document.getElementById('mseValue').textContent = result.comparison_metrics.mse.toFixed(4);
-                document.getElementById('psnrValue').textContent = result.comparison_metrics.psnr.toFixed(2);
-                document.getElementById('ssimValue').textContent = result.comparison_metrics.ssim.toFixed(4);
-                
-                comparisonSection.classList.add('show');
-                imagesSection.classList.add('three-columns');
-                cv2ImageContainer.style.display = 'block';
-            } else if (result.cv2_method_used) {
-                // Only CV2 method was used
-                cv2ProcessedImageDiv.innerHTML = `<div class="placeholder">Using OpenCV method only</div>`;
-                comparisonSection.classList.remove('show');
+            // Nếu có yêu cầu hiển thị so sánh CV2
+            if (result.show_cv2_comparison && result.cv2_processed_image && result.comparison_metrics) {
+              // Hiển thị kết quả CV2
+              cv2ProcessedImageDiv.innerHTML = `<img src="${result.cv2_processed_image}" alt="Kết quả Phương pháp OpenCV">`;
+              
+              // Cập nhật metrics so sánh
+              document.getElementById('mseValue').textContent = result.comparison_metrics.mse.toFixed(4);
+              document.getElementById('psnrValue').textContent = result.comparison_metrics.psnr.toFixed(2);
+              document.getElementById('ssimValue').textContent = result.comparison_metrics.ssim.toFixed(4);
+              
+              // Hiển thị comparison section và layout 3 cột
+              comparisonSection.classList.add('show');
+              imagesSection.classList.add('three-columns');
+              cv2ImageContainer.style.display = 'block';
             } else {
-                // Reset comparison section
-                comparisonSection.classList.remove('show');
+              // Ẩn comparison section và trở về layout 2 cột
+              comparisonSection.classList.remove('show');
+              imagesSection.classList.remove('three-columns');
+              cv2ImageContainer.style.display = 'none';
             }
           } else {
-            showError(result.error || "Processing failed");
+            showError(result.error || "Xử lý thất bại");
           }
         } catch (err) {
-          showError("Error: " + err.message);
+          showError("Lỗi: " + err.message);
         } finally {
           hideLoading();
         }
