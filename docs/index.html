@@ -243,6 +243,15 @@
 
     <!-- JavaScript Files -->
     <script src="static/js/data.js"></script>
+    <script>
+    // Sau khi load data.js, ta replace placeholder bằng url động Flask
+    const slide01Url = "slide1/index.html";
+    for (let key in imageDescriptions) {
+        if (imageDescriptions[key].description.includes("__SLIDE01__")) {
+            imageDescriptions[key].description = imageDescriptions[key].description.replace("__SLIDE01__", slide01Url);
+        }
+    }
+    </script>
     <script src="static/js/modal.js"></script>
     <script src="static/js/navigation.js"></script>
     <script src="static/js/header.js"></script>
