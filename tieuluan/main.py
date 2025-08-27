@@ -92,3 +92,16 @@ def apply_piecewise_linear(image, r1=100, s1=0, r2=200, s2=255):
     vec_func = np.vectorize(piecewise_linear_transformation)
     result = vec_func(image, r1, s1, r2, s2)
     return np.clip(result, 0, 255).astype(np.uint8)
+
+def apply_CLAHE(image):
+    """Apply CLAHE (Contrast Limited Adaptive Histogram Equalization) to image"""
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    if len(image.shape) == 2:  # Grayscale
+        return clahe.apply(image)
+    elif len(image.shape) == 3 and image.shape[2] == 3:  # BGR
+        b, g, r = cv2.split(image)
+        b = clahe.apply(b)
+        g = clahe.apply(g)
+        r = clahe.apply(r)
+        return cv2.merge((b, g, r))
+    return image

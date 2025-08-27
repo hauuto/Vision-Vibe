@@ -1,4 +1,3 @@
-from flask import Flask, render_template, jsonify
 from flask_frozen import Freezer
 from flask import Flask, render_template, jsonify, request
 import cv2
@@ -19,7 +18,8 @@ try:
         apply_power_transform, 
         apply_negative_transform,
         histogram_equalization,
-        apply_piecewise_linear
+        apply_piecewise_linear,
+        apply_CLAHE
     )
 except ImportError as e:
     print(f"Error importing from main.py: {e}")
@@ -105,6 +105,8 @@ def process_image():
             r2 = int(request.form.get('r2', 200)) if request.form else int(request.json.get('r2', 200))
             s2 = int(request.form.get('s2', 200)) if request.form else int(request.json.get('s2', 200))
             processed_img = apply_piecewise_linear(img, r1, s1, r2, s2)
+        elif method =='6':
+            processed_img = apply_CLAHE(img)
         else:
             # Default to negative transform
             processed_img = apply_negative_transform(img)
