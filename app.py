@@ -120,9 +120,6 @@ def process_image():
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 print(f"After grayscale: {img.shape}, range: [{np.min(img)}, {np.max(img)}]")
                 
-                # Convert back to 3-channel for consistency in processing
-                img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-                print(f"After BGR conversion: {img.shape}, range: [{np.min(img)}, {np.max(img)}]")
         
         # Get additional parameters with validation
         try:
