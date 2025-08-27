@@ -372,6 +372,9 @@
 						<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 							1. Ảnh âm (Negative image)
 						</div>
+						<div class="text-xl font-bold" style="color: var(--color-blue)">
+							a) Khái niệm
+						</div>
 						<div class="text-xl font-normal" style="color: var(--color-blue);">
 							<p>Ảnh âm (negative image) là một dạng biến đổi <b>cường độ điểm (point processing)</b> trong xử lý ảnh.</p>
 							<p>Ý tưởng cơ bản là <b>đảo ngược giá trị mức xám (intensity)</b> hoặc <b>màu sắc</b> của ảnh gốc.</p>
@@ -400,8 +403,18 @@
 							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 								1. Ảnh âm (Negative image)
 							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Cong thuc + y nghia</p>
+								<p>Giả sử ảnh đầu vào có mức xám trong khoảng
+									[0,𝐿	−1]. Nếu
+									𝑟 là giá trị cường độ mức xám tại một điểm ảnh và
+									𝑠 là giá trị sau biến đổi, thì ảnh âm được định nghĩa:
+									</p>
+
+								<p class="text-center text-3xl">𝑠 =(𝐿−1)−𝑟 </p>
+
 
 							</div>
 
@@ -422,6 +435,47 @@
 							</div>
 							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 								1. Ảnh âm (Negative image)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>Giả sử ảnh đầu vào có mức xám trong khoảng
+									[0,𝐿	−1]. Nếu
+									𝑟 là giá trị cường độ mức xám tại một điểm ảnh và
+									𝑠 là giá trị sau biến đổi, thì ảnh âm được định nghĩa:
+								</p>
+
+								<p class="text-center text-3xl">𝑠 =(𝐿−1)−𝑟 </p>
+
+								<p>
+									Vùng sáng trong ảnh gốc sẽ chuyển thành tối trong ảnh âm.
+								</p>
+								<p>Vùng tối trong ảnh gốc sẽ trở thành sáng trong ảnh âm.</p>
+								<p>Các chi tiết ít nhìn thấy trong vùng tối của ảnh gốc có thể trở nên rõ ràng hơn trong ảnh âm.</p>
+
+							</div>
+
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								1. Ảnh âm (Negative image)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b)Triển khai
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
 								<p>Code</p>
@@ -446,8 +500,16 @@
 							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
 								1. Ảnh âm (Negative image)
 							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Ứng dụng
+							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Ung dung</p>
+								<ul>
+									<li class="nostyle"><b>Y tế</b>: Trong ảnh X-quang, ảnh âm giúp bác sĩ dễ quan sát chi tiết mô mềm hoặc xương.</li>
+									<li class="nostyle"><b>Khoa học</b>: Dùng để phân tích chi tiết ẩn trong các bức ảnh thiên văn.</li>
+									<li class="nostyle"><b>Kỹ thuật số</b>: Tạo hiệu ứng nghệ thuật hoặc kiểm tra tính toàn vẹn của ảnh.</li>
+									<li class="nostyle"><b>Tiền xử lý ảnh</b>: Một số thuật toán xử lý cần dùng ảnh âm để làm nổi bật các đặc trưng.</li>
+								</ul>
 
 							</div>
 
@@ -470,13 +532,243 @@
 								1. Ảnh âm (Negative image)
 							</div>
 							<div class="text-xl font-normal" style="color: var(--color-blue);">
-								<p>Vi du</p>
+								<div class="grid justify-items-center w-1/2">
+									<div>
+										<img
+												src="{{ url_for('static', filename='img/negative-img.jpg')}}"
+												alt="negative-img-ex">
+									</div>
+
+								</div>
+
 
 							</div>
 
 						</div>
 					</div>
 				</section>
+
+
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Biến đổi Log (Log Transformation)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+
+								<p>Biến đổi logarit là một phép <b>biến đổi cường độ điểm (point processing)</b>, trong đó giá trị mức xám của ảnh được ánh xạ theo hàm logarit.</p>
+								<p>Mục đích của phép biến đổi này là <b>tăng cường độ tương phản (contrast enhancement)</b> ở những vùng có giá trị mức xám thấp và <b>nén dải động (dynamic range compression)</b> ở những vùng có mức xám cao.</p>
+							</div>
+
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Biến đổi Log (Log Transformation)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+
+								<p>Biến đổi logarit là một phép <b>biến đổi cường độ điểm (point processing)</b>, trong đó giá trị mức xám của ảnh được ánh xạ theo hàm logarit.</p>
+								<p>Mục đích của phép biến đổi này là <b>tăng cường độ tương phản (contrast enhancement)</b> ở những vùng có giá trị mức xám thấp và <b>nén dải động (dynamic range compression)</b> ở những vùng có mức xám cao.</p>
+							</div>
+
+						</div>
+					</div>
+				</section>
+
+
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Biến đổi Log (Log Transformation)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								a) Khái niệm
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+
+								<p>
+									Với ảnh có giá trị mức xám
+									𝑟 (đầu vào) và
+									𝑠 (đầu ra), công thức biến đổi log là:
+								</p>
+								<p class="text-center text-3xl">
+									𝑠 = 𝑐⋅log(1+𝑟 )
+								</p>
+								<ul>
+									<li class="nostyle">𝑟 : giá trị mức xám gốc (0 ≤ r ≤ L-1).</li>
+									<li class="nostyle">s: giá trị mức xám sau biến đổi.</li>
+									<li class="nostyle">𝑐 : hằng số tỉ lệ (scaling constant), thường được chọn để giá trị
+										𝑠 nằm trong khoảng [0, L-1].</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Biến đổi Log (Log Transformation)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								b) Đặc trưng
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<div class="grid grid-cols-2">
+									<div>
+										<p>
+											Hàm logarit có tốc độ tăng nhanh ở đầu nhỏ (khi
+											𝑟 bé) và chậm dần về sau (khi
+											𝑟 lớn).
+										</p>
+										<p>
+											Do đó:
+										</p>
+										<ul>
+											<li class="nostyle">Vùng tối (giá trị nhỏ) được mở rộng, chi tiết dễ nhìn hơn.</li>
+											<li class="nostyle">Vùng sáng (giá trị lớn) bị nén lại, giảm độ chói.</li>
+										</ul>
+									</div>
+									<div>
+										<img src="{{url_for('static',filename='img/log-1.png')}}" alt="log">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Biến đổi Log (Log Transformation)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								c) Triển khai
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>
+									Code
+								</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Biến đổi Log (Log Transformation)
+							</div>
+							<div class="text-xl font-bold" style="color: var(--color-blue)">
+								d) Ứng dụng
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+								<p>
+									Nén dải động (Dynamic Range Compression): Hữu ích khi xử lý ảnh có dải cường độ quá rộng (ví dụ: ảnh thiên văn, ảnh radar, ảnh y tế).
+								</p>
+
+								<p>Tăng cường chi tiết trong vùng tối: Giúp làm nổi bật các chi tiết ít thấy ở vùng cường độ thấp.</p>
+								<p>Tiền xử lý ảnh: Hỗ trợ các bước tiếp theo như trích chọn đặc trưng, nhận dạng mẫu.</p>
+
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-3">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black mb-4" style="color: var(--color-dark-blue);">Cơ sở lý thuyết</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-purple);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left font-bold">
+							<div class=" text-3xl" style="color: var(--color-dark-blue);">
+								I. Các phép biến đổi cường độ sáng
+							</div>
+							<div class="text-2xl font-bold" style="color: var(--color-dark-blue);">
+								2. Biến đổi Log (Log Transformation)
+							</div>
+							<div class="text-xl font-normal" style="color: var(--color-blue);">
+
+
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+
+
 
 
 
