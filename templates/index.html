@@ -211,6 +211,15 @@
 
     <!-- JavaScript Files -->
     <script src="{{ url_for('static', filename='js/data.js') }}"></script>
+    <script>
+    // Sau khi load data.js, ta replace placeholder bằng url động Flask
+    const slide01Url = "{{ url_for('slide01') }}";
+    for (let key in imageDescriptions) {
+        if (imageDescriptions[key].description.includes("__SLIDE01__")) {
+            imageDescriptions[key].description = imageDescriptions[key].description.replace("__SLIDE01__", slide01Url);
+        }
+    }
+    </script>
     <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
     <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
     <script src="{{ url_for('static', filename='js/header.js') }}"></script>
