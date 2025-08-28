@@ -2257,20 +2257,34 @@
 					</div>
 				</section>
 
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Cài đặt & Minh họa</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="space-y-4">
+								<div class="flex items-start space-x-3">
+									<div class="text-white">
+										<a href="{{url_for('test')}}" target="_blank" class="font-bold">Chuyển hướng sang ứng dụng</a>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+				</section>
 
 				<section class="custom-gradient-1">
 					<div class="p-12">
 						<div class="text-center mb-12">
-							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="text-3xl font-black text-white mb-4 neon-text">Kết quả đạt được:</div>
 							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
 						</div>
 						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
-							<div class="text-3xl font-bold text-white mb-8">
-								4. Đánh giá và so sánh (tiếp)
-							</div>
-							<div class="text-xl text-white font-normal mb-6">
-								Kết quả đạt được:
-							</div>
+
 							<div class="space-y-4">
 								<div class="flex items-start space-x-3">
 									<span style="color: var(--color-cyan);">🏆</span>
@@ -2302,13 +2316,10 @@
 				<section class="custom-gradient-1">
 					<div class="p-12">
 						<div class="text-center mb-12">
-							<div class="text-3xl font-black text-white mb-4 neon-text">Thiết kế và phương pháp giải quyết</div>
+							<div class="text-3xl font-black text-white mb-4 neon-text">Kết luận</div>
 							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
 						</div>
 						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
-							<div class="text-3xl font-bold text-white mb-8">
-								5. Kết luận
-							</div>
 							<div class="text-xl text-white font-normal mb-6">
 								Dự án đã hoàn thành với các kết quả đạt được như mong đợi:
 							</div>
@@ -2338,6 +2349,133 @@
 						</div>
 					</div>
 				</section>
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Hướng mở rộng</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="text-2xl font-bold text-white mb-6">Khả năng mở rộng & Nâng cấp</div>
+
+							<div class="space-y-6 text-white text-lg leading-relaxed">
+								<div class="flex items-start space-x-4">
+									<div class="text-cyan-300 text-2xl">📁</div>
+									<div>
+										<div class="font-semibold">Xử lý nhiều ảnh cùng lúc</div>
+										<div class="text-sm opacity-80">
+											Hỗ trợ batch-processing: upload nhiều ảnh/zip, xử lý song song (multi-threading / worker queue),
+											cho phép tải về kết quả gộp (zip) hoặc lưu lên cloud.
+										</div>
+									</div>
+								</div>
+
+								<div class="flex items-start space-x-4">
+									<div class="text-cyan-300 text-2xl">⚙️</div>
+									<div>
+										<div class="font-semibold">Tích hợp kỹ thuật xử lý ảnh nâng cao</div>
+										<div class="text-sm opacity-80">
+											Thêm các module như: denoising (BM3D, non-local means), deblurring, super-resolution
+										</div>
+									</div>
+								</div>
+
+								<div class="flex items-start space-x-4">
+									<div class="text-cyan-300 text-2xl">🤖</div>
+									<div>
+										<div class="font-semibold">Tích hợp mô hình thị giác máy tính</div>
+										<div class="text-sm opacity-80">
+											Cung cấp các API/plug-in cho mô hình: object detection, segmentation, VQA, enhancement networks
+											(GAN/UNet/SRN). Hỗ trợ inference on-demand và fine-tuning với dataset người dùng.
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+				</section>
+
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Tài liệu tham khảo</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="space-y-6 text-white text-lg leading-relaxed">
+								<div>
+									Bradski, G. & Kaehler, A. (2008).
+									<span class="italic">Learning OpenCV: Computer Vision with the OpenCV Library</span>.
+									O’Reilly Media.
+									<br><span class="opacity-80">https://docs.opencv.org</span>
+								</div>
+								<div>
+									Tailwind Labs. <span class="italic">Tailwind CSS Documentation</span>.
+									<br><span class="opacity-80">https://tailwindcss.com/docs</span>
+								</div>
+								<div>
+									Grinberg, M. (2018).
+									<span class="italic">Flask Web Development: Developing Web Applications with Python</span>.
+									O’Reilly Media.
+									<br><span class="opacity-80">https://flask.palletsprojects.com</span>
+								</div>
+								<div>
+									Hunter, J. D. (2007).
+									<span class="italic">Matplotlib: A 2D graphics environment</span>.
+									Computing in Science & Engineering, 9(3), 90–95.
+									<br><span class="opacity-80">https://matplotlib.org</span>
+								</div>
+								<div>
+									Hakim El Hattab.
+									<span class="italic">Reveal.js: The HTML Presentation Framework</span>.
+									<br><span class="opacity-80">https://revealjs.com</span>
+								</div>
+								<div>
+									Gonzalez, R. C. & Woods, R. E. (2018).
+									<span class="italic">Digital Image Processing</span> (4th Edition). Pearson.
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="custom-gradient-1">
+					<div class="p-12">
+						<div class="text-center mb-12">
+							<div class="text-3xl font-black text-white mb-4 neon-text">Phụ lục</div>
+							<div class="w-32 h-1 mx-auto rounded-full" style="background: var(--color-cyan);"></div>
+						</div>
+						<div class="glassmorphism rounded-3xl p-8 mt-16 text-left">
+							<div class="space-y-6 text-white text-lg leading-relaxed">
+								<div>
+									🔗 <span class="font-bold">Kho mã nguồn (GitHub Repo):</span>
+									<br>
+									<a href="https://github.com/hauuto/Vision-Vibe" target="_blank"
+									   class="text-cyan-300 hover:underline">
+										https://github.com/hauuto/Vision-Vibe
+									</a>
+								</div>
+								<div>
+									📂 <span class="font-bold">Bộ dữ liệu sử dụng:</span>
+									<br>
+									<a href="https://www.kaggle.com/datasets/soumikrakshit/dark-face-dataset/" target="_blank"
+									   class="text-cyan-300 hover:underline">
+										Dark Face Dataset
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+
+
 
 
 			</div>
