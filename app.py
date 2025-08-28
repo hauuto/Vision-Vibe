@@ -274,4 +274,4 @@ def available_methods():
 
 if __name__ == '__main__':
     freezer.freeze()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
