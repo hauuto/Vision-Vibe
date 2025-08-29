@@ -3,12 +3,12 @@
 ## 📌 Mô tả
 Web app dùng **Flask** và **OpenCV** để:
 - Upload ảnh
-- Xử lý ảnh (grayscale, blur, edge detection)
+- Xử lý ảnh
 - Hiển thị ảnh gốc và ảnh đã xử lý
 - Giao diện responsive với **HTML + TailwindCSS**
 
 ## 🚀 Cài đặt
-1. Cài đặt Python 3.8+
+1. Cài đặt Python 3.10
 2. Tạo môi trường ảo và cài đặt thư viện:
    ```
    run.bat
@@ -27,8 +27,6 @@ image_app/
 │   ├── css/
 │   ├── js/
 │   ├── img/
-│   ├── uploads/        # Ảnh upload
-│   └── processed/      # Ảnh đã xử lý
 ├── templates/           # HTML templates
 └── utils/              # Logic xử lý Python
 ```
