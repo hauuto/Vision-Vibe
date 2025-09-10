@@ -1,10 +1,7 @@
-from flask_frozen import Freezer
 from flask import Flask, render_template, jsonify, request
 import cv2
 import numpy as np
 import base64
-from io import BytesIO
-from PIL import Image
 import os
 import sys
 
@@ -263,15 +260,8 @@ def available_methods():
 def inject_template_vars():
     return dict()
 
-freezer = Freezer(app)
-app.config['FREEZER_DESTINATION'] = 'docs'
-app.config['FREEZER_BASE_URL'] = ''
-app.config['FREEZER_RELATIVE_URLS'] = True
 
-@freezer.register_generator
-def available_methods():
-    yield {'_ext': '.json'}
+
 
 if __name__ == '__main__':
-    freezer.freeze()
     app.run(host="127.0.0.1", port=5000, debug=True)
