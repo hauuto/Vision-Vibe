@@ -36,9 +36,9 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route('/slide1/')
+@app.route('/slide01/')
 def slide01():
-    return render_template('components/slide01.html')
+    return render_template('slide01.html')
 
 @app.route('/test/')
 def test():
