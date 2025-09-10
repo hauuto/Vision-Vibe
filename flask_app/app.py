@@ -5,12 +5,11 @@ import base64
 import os
 import sys
 
-# Add the tieuluan directory to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'tieuluan'))
 
-# Import methods from main.py
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Import methods from vision_core package
 try:
-    from myself_apply import (
+    from vision_core.myself_apply import (
         apply_log_transform,
         apply_power_transform, 
         apply_negative_transform,
@@ -18,7 +17,7 @@ try:
         apply_piecewise_linear,
         apply_CLAHE
     )
-    from cv2_apply import (
+    from vision_core.cv2_apply import (
         cv2_apply_log_transform,
         cv2_apply_power_transform,
         cv2_apply_negative_transform,
@@ -40,9 +39,9 @@ def home():
 def slide01():
     return render_template('slide01.html')
 
-@app.route('/test/')
+@app.route('/point_processing/')
 def test():
-    return render_template('test.html')
+    return render_template('point_processing.html')
 
 # --- API DEMOS ---
 @app.route('/api/hello/')
