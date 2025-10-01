@@ -21,8 +21,9 @@ class ModalGallery {
         title.textContent = imageData ? imageData.title : element.alt;
         description.innerHTML = imageData ? imageData.description : "No description available.";
 
-        // Show modal
-        modal.style.display = "block";
+        // Show modal using Tailwind classes
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
 
         // Reset animations
         img.classList.remove("show");
@@ -45,7 +46,8 @@ class ModalGallery {
         modalText.classList.remove("show");
 
         setTimeout(() => {
-            modal.style.display = "none";
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }, 300);
     }
 

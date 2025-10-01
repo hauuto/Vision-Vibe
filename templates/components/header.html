@@ -1,32 +1,48 @@
-<!-- Header Component - Navbar và Sidebar -->
+<!-- Header Component - Navbar and Sidebar (Tailwind) -->
 
-<!-- Navbar (sit on top) -->
-<div class="w3-top">
-    <div class="w3-bar w3-white w3-card" id="myNavbar">
-        <a href="#home">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" style="width: 5%">
+<!-- Navbar (fixed on top) -->
+<div class="fixed top-0 inset-x-0 z-50">
+    <div id="myNavbar"
+        class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 bg-[#10253f] text-white transition-colors duration-300">
+        <a href="#home" class="flex items-center gap-2">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="h-10 w-auto" />
+            <span class="sr-only">Vision Vibe</span>
         </a>
         <!-- Right-sided navbar links -->
-        <div class="w3-right w3-hide-small">
-            <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
-            <a href="#team" class="w3-bar-item w3-button"><i class="fa fa-user"></i> TEAM</a>
-            <a href="#work" class="w3-bar-item w3-button"><i class="fa fa-th"></i> WORK</a>
-            <a href="{{ url_for('test') }}" class="w3-bar-item w3-button">POINT PROCESSING</a>
+        <div class="hidden md:flex items-center gap-6">
+            <a href="#about" class="hover:text-[#7fa4a4] transition">ABOUT</a>
+            <a href="#team" class="hover:text-[#7fa4a4] transition"><i class="fa fa-user mr-1"></i> TEAM</a>
+            <a href="#work" class="hover:text-[#7fa4a4] transition"><i class="fa fa-th mr-1"></i> WORK</a>
+            <a href="{{ url_for('test') }}"
+                class="px-3 py-1.5 rounded-full bg-[#507b88] hover:bg-[#305a72] transition font-medium">POINT
+                PROCESSING</a>
         </div>
-        <!-- Hide right-floated links on small screens and replace them with a menu icon -->
-        <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
-            onclick="w3_open()">
-            <i class="fa fa-bars"></i>
-        </a>
+        <!-- Mobile menu button -->
+        <button type="button"
+            class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-white hover:text-[#7fa4a4] focus:outline-none"
+            onclick="w3_open()" aria-label="Open menu">
+            <i class="fa fa-bars text-2xl"></i>
+        </button>
     </div>
 </div>
 
 <!-- Sidebar on small screens when clicking the menu icon -->
-<nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none"
-    id="mySidebar">
-    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close
-        ×</a>
-    <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
-    <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
-    <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
+<nav id="mySidebar"
+    class="fixed top-0 left-0 h-full w-64 bg-[#1a3c5c] text-white shadow-xl p-6 space-y-2"
+    style="display:none">
+    <div class="flex items-center justify-between mb-4">
+        <span class="text-lg font-semibold">Menu</span>
+        <button onclick="w3_close()"
+            class="text-2xl leading-none hover:text-[#7fa4a4]">×</button>
+    </div>
+    <a href="#about" onclick="w3_close()"
+        class="block px-3 py-2 rounded hover:bg-[#305a72]">ABOUT</a>
+    <a href="#team" onclick="w3_close()"
+        class="block px-3 py-2 rounded hover:bg-[#305a72]">TEAM</a>
+    <a href="#work" onclick="w3_close()"
+        class="block px-3 py-2 rounded hover:bg-[#305a72]">WORK</a>
+    <a href="{{ url_for('test') }}"
+        onclick="w3_close()"
+        class="block px-3 py-2 rounded bg-[#507b88] hover:bg-[#305a72] mt-2">POINT
+        PROCESSING</a>
 </nav>

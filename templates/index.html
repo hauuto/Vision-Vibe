@@ -5,7 +5,8 @@
     <title>Vision Vibe</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
+    <!-- Use TailwindCSS CDN to enable arbitrary color classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='font/fontawesome/css/all.min.css') }}">
     <style>
 		@font-face {
@@ -49,10 +50,6 @@
             min-height: 100%;
         }
 
-        .w3-bar .w3-button {
-            padding: 16px;
-        }
-
         /* Modal animations */
         .modal-image-slide {
             opacity: 0;
@@ -84,120 +81,80 @@
     </style>
 </head>
 
-<body>
+<body class="bg-[#10253f] text-white min-h-screen">
 
     <!-- Include Header Component -->
     {% include 'components/header.html' %}
 
-    <!-- Header with full-height image -->
-    <header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
-        <div class="w3-display-left w3-text-white" style="padding:48px; background: rgba(103, 58, 183, 0.5);">
-            <span class="w3-jumbo w3-hide-small">Khám phá sức mạnh của hình ảnh</span><br>
-            <span class="w3-xxlarge w3-hide-large w3-hide-medium">Khám phá sức mạnh của hình ảnh</span><br>
-            <span class="w3-large">Học hỏi, thử nghiệm và tạo nên kết quả nhóm đáng tự hào.</span>
-            <p><a href="#about"
-                    class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-hover-opacity-off">Bắt đầu ngay!</a></p>
+    <!-- Hero Header -->
+    <header id="home" class="relative min-h-screen bg-cover bg-center" style="background-image: url('{{ url_for('static',filename='img/DemandsforFuture-1.png')}}');">
+        <div class="absolute inset-0 bg-[#1a3c5c]/70"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 flex items-center">
+            <div class="max-w-2xl">
+                <span class="block text-4xl sm:text-5xl font-bold mb-4">Khám phá sức mạnh của hình ảnh</span>
+                <span class="block text-lg sm:text-xl opacity-90">Học hỏi, thử nghiệm và tạo nên kết quả nhóm đáng tự hào.</span>
+                <p class="mt-8">
+                    <a href="#about" class="inline-block px-6 py-3 rounded-full bg-[#507b88] text-white font-semibold shadow-lg hover:bg-[#305a72] transition">Bắt đầu ngay!</a>
+                </p>
+            </div>
         </div>
     </header>
 
     <!-- About Section -->
-    <div class="w3-container" style="padding:128px 16px" id="about">
-        <h3 class="w3-center">Giới thiệu nhóm 05</h3>
-        <p class="w3-center w3-large">Nhóm 05 thực hiện các bài tập trong môn Xử Lý Ảnh với mục tiêu học tập và áp dụng
-            các kiến thức về xử lý ảnh số. Nhóm mong muốn thông qua các bài tập này nắm vững lý thuyết, nâng cao kỹ năng
-            lập trình và xử lý ảnh thực tế, đồng thời phát triển tư duy phân tích kết quả.</p>
-        <div class="w3-row-padding w3-center" style="margin-top:64px">
-            <div class="w3-quarter">
-                <i class="fa fa-desktop w3-margin-bottom w3-jumbo w3-center"></i>
-                <p class="w3-large">Tương tác linh hoạt</p>
-                <p>Xử lý ảnh và giao diện nhóm đều phản hồi nhanh chóng với dữ liệu và ý tưởng mới</p>
-            </div>
-            <div class="w3-quarter">
-                <i class="fa fa-heart w3-margin-bottom w3-jumbo"></i>
-                <p class="w3-large">Đam mê</p>
-                <p>Khơi dậy đam mê công nghệ và khám phá các thuật toán xử lý ảnh.</p>
-            </div>
-            <div class="w3-quarter">
-                <i class="fa fa-diamond w3-margin-bottom w3-jumbo"></i>
-                <p class="w3-large">Thiết kế thông minh</p>
-                <p>Tạo ra các giải pháp và giao diện trực quan, dễ hiểu từ dữ liệu hình ảnh.</p>
-            </div>
-            <div class="w3-quarter">
-                <i class="fa fa-cog w3-margin-bottom w3-jumbo"></i>
-                <p class="w3-large">Hỗ trợ</p>
-                <p>Hỗ trợ lẫn nhau trong nhóm để hoàn thiện bài tập chất lượng cao.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Team Section -->
-    <div class="w3-container" style="padding:128px 16px" id="team">
-        <h2 class="w3-center">Nhóm chúng tôi</h2>
-        <p class="w3-center w3-large"><i>Những kẻ nắm giữ trang web này</i></p>
-        <div class="w3-row-padding w3-grayscale w3-center" style="margin-top:64px">
-            <div class="w3-col l4 m6 w3-margin-bottom">
-                <div class="w3-card">
-                    <img src="{{ url_for('static',filename='img/Khoi.png')}}" alt="John" style="height:600px; width:70%">
-                    <div class="w3-container">
-                        <h3>Nguyễn Thanh Khôi</h3>
-                        <p class="w3-opacity">23655801 </p>
-                        <p>
-                            CS19 @ IUH
-                        </p>
-
-                    </div>
+    <section id="about" class="py-24 px-4 sm:px-6 lg:px-8 bg-[#1a3c5c]">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-3xl font-bold text-center mb-6" style="color:#7fa4a4">Giới thiệu nhóm 05</h3>
+            <p class="text-center max-w-3xl mx-auto text-lg mb-16 text-white">
+                Nhóm 05 thực hiện các bài tập trong môn Xử Lý Ảnh với mục tiêu học tập và áp dụng các kiến thức về xử lý ảnh số. Nhóm mong muốn thông qua các bài tập này nắm vững lý thuyết, nâng cao kỹ năng lập trình và xử lý ảnh thực tế, đồng thời phát triển tư duy phân tích kết quả.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="flex flex-col items-center bg-[#305a72] rounded-lg p-6 shadow-lg">
+                    <i class="fa fa-desktop text-4xl mb-4" style="color:#7fa4a4"></i>
+                    <p class="font-semibold text-lg mb-2">Tương tác linh hoạt</p>
+                    <p class="text-sm text-white/90 text-center">Xử lý ảnh và giao diện nhóm đều phản hồi nhanh chóng với dữ liệu và ý tưởng mới</p>
                 </div>
-            </div>
-            <div class="w3-col l4 m6 w3-margin-bottom">
-                <div class="w3-card">
-                    <img src="{{ url_for('static',filename='img/Hau.png')}}" alt="Mike" style="height:600px;width:70%">
-                    <div class="w3-container">
-                        <h3>Tô Thanh Hậu</h3>
-                        <p class="w3-opacity">23660471</p>
-                        <p>CS19 @ IUH</p>
-                    </div>
+                <div class="flex flex-col items-center bg-[#305a72] rounded-lg p-6 shadow-lg">
+                    <i class="fa fa-heart text-4xl mb-4" style="color:#7fa4a4"></i>
+                    <p class="font-semibold text-lg mb-2">Đam mê</p>
+                    <p class="text-sm text-white/90 text-center">Khơi dậy đam mê công nghệ và khám phá các thuật toán xử lý ảnh.</p>
                 </div>
-            </div>
-            <div class="w3-col l4 m6 w3-margin-bottom">
-                <div class="w3-card">
-                    <img src="{{ url_for('static', filename='img/truongMinhViet.jpg') }}" alt="Dan" style="height:600px; width:100%">
-                    <div class="w3-container">
-                        <h3>Trương Minh Việt</h3>
-                        <p class="w3-opacity">23702921</p>
-                        <p>CS19 @ IUH</p>
-                    </div>
+                <div class="flex flex-col items-center bg-[#305a72] rounded-lg p-6 shadow-lg">
+                    <i class="fa fa-diamond text-4xl mb-4" style="color:#7fa4a4"></i>
+                    <p class="font-semibold text-lg mb-2">Thiết kế thông minh</p>
+                    <p class="text-sm text-white/90 text-center">Tạo ra các giải pháp và giao diện trực quan, dễ hiểu từ dữ liệu hình ảnh.</p>
+                </div>
+                <div class="flex flex-col items-center bg-[#305a72] rounded-lg p-6 shadow-lg">
+                    <i class="fa fa-cog text-4xl mb-4" style="color:#7fa4a4"></i>
+                    <p class="font-semibold text-lg mb-2">Hỗ trợ</p>
+                    <p class="text-sm text-white/90 text-center">Hỗ trợ lẫn nhau trong nhóm để hoàn thiện bài tập chất lượng cao.</p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- Work Section -->
-    <div class="w3-container" style="padding:128px 16px" id="work">
-        <h3 class="w3-center">OUR WORK</h3>
-
-        <div class="w3-row-padding" style="margin-top:64px">
-            <div class="w3-col l3 m6">
-                <img src="{{url_for('static',filename='img/cover_tieuluan1.png')}}" style="width:100%" onclick="onClick(this)"
-                    class="w3-hover-opacity" alt="A microphone">
+    <section id="work" class="py-24 px-4 sm:px-6 lg:px-8 bg-[#10253f]">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-3xl font-bold text-center mb-10" style="color:#7fa4a4">OUR WORK</h3>
+            <div class="flex flex-wrap justify-center gap-8">
+                <div class="w-full max-w-xs">
+                    <img src="{{url_for('static',filename='img/cover_tieuluan1.png')}}" class="rounded-lg shadow-lg cursor-pointer hover:scale-105 transition" onclick="onClick(this)" alt="A microphone">
+                </div>
             </div>
         </div>
-
-    </div>
+    </section>
 
     <!-- Modal for full size images on click-->
-    <div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
-        <span class="w3-button w3-xxlarge w3-black w3-padding-large w3-display-topright"
-            title="Close Modal Image">×</span>
-        <div class="w3-modal-content w3-transparent w3-padding-64">
-            <div class="w3-row-padding w3-center">
-                <div class="w3-half">
-                    <img id="img01" class="modal-image-slide" style="width:100%; max-width:500px;">
-                </div>
-                <div class="w3-half w3-left-align">
-                    <div id="modal-text" class="modal-text-slide">
-                        <h2 id="modal-title" class="w3-text-white w3-margin-bottom"></h2>
-                        <p id="modal-description" class="w3-text-light-grey w3-large w3-line-height"></p>
-                    </div>
+    <div id="modal01" class="fixed inset-0 hidden items-center justify-center bg-black/90 z-50">
+        <button class="absolute top-4 right-4 text-3xl text-white/90 hover:text-white" title="Close Modal Image" onclick="modalGallery.closeModal()">×</button>
+        <div class="w-full h-full flex flex-col md:flex-row items-center justify-center px-6">
+            <div class="md:w-1/2 flex justify-center">
+                <img id="img01" class="modal-image-slide max-w-lg rounded-lg shadow-lg" style="width:100%; max-width:500px;" />
+            </div>
+            <div class="md:w-1/2 mt-8 md:mt-0 md:ml-12 text-left">
+                <div id="modal-text" class="modal-text-slide">
+                    <h2 id="modal-title" class="text-2xl font-bold text-white mb-4"></h2>
+                    <p id="modal-description" class="text-lg" style="color:#7fa4a4"></p>
                 </div>
             </div>
         </div>
@@ -205,8 +162,10 @@
 
 
     <!-- Footer -->
-    <footer class="w3-center w3-black w3-padding-64">
-        <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
+    <footer class="bg-[#1a3c5c] text-center py-10">
+        <a href="#home" class="inline-flex items-center gap-2 px-6 py-3 bg-[#507b88] text-white rounded-full font-semibold shadow hover:bg-[#305a72] transition">
+            <i class="fa fa-arrow-up"></i><span>To the top</span>
+        </a>
     </footer>
 
     <!-- JavaScript Files -->
