@@ -19,7 +19,7 @@ class FlaskAPI {
     // Call Flask Hello API
     async callHelloAPI() {
         try {
-            const response = await fetch('/hello');
+            const response = await fetch('/api/hello/');
             const data = await response.json();
 
             this.showMessage(data.message, 'success');
@@ -37,11 +37,11 @@ class FlaskAPI {
         if (messageDiv && messageText) {
             messageText.textContent = message;
 
-            // Add different styles based on message type
+            // Tailwind-based styles
             if (type === 'error') {
-                messageText.className = "w3-text-red w3-large";
+                messageText.className = "text-white text-lg"; // error as white text for contrast on dark bg
             } else {
-                messageText.className = "w3-text-yellow w3-large";
+                messageText.className = "text-[#7fa4a4] text-lg"; // success/info with accent color
             }
 
             messageDiv.style.display = "block";

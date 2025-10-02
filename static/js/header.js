@@ -13,40 +13,37 @@ class HeaderComponent {
         });
     }
 
-    // Thêm hiệu ứng scroll cho navbar (tùy chọn)
+    // Add scroll effect for navbar
     initScrollEffect() {
         if (this.navbar) {
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
-                    this.navbar.classList.add('w3-opacity');
+                    this.navbar.classList.add('shadow-md');
                 } else {
-                    this.navbar.classList.remove('w3-opacity');
+                    this.navbar.classList.remove('shadow-md');
                 }
             });
         }
     }
 
-    // Khởi tạo các behavior khác cho navbar
+    // Initialize extra behaviors
     initNavbarBehavior() {
-        // Có thể thêm các chức năng khác như:
-        // - Active menu highlighting
-        // - Smooth scroll enhancement
-        // - Mobile menu improvements
+        // You can add: active menu highlighting, smooth scroll enhancements, etc.
         console.log('Header component initialized');
     }
 
-    // Method để highlight menu item hiện tại
+    // Highlight current menu item
     setActiveMenuItem(sectionId) {
         const menuItems = document.querySelectorAll('#myNavbar a[href^="#"]');
         menuItems.forEach(item => {
-            item.classList.remove('w3-theme');
+            item.classList.remove('text-[#7fa4a4]', 'font-semibold', 'border-b-2', 'border-[#7fa4a4]');
             if (item.getAttribute('href') === `#${sectionId}`) {
-                item.classList.add('w3-theme');
+                item.classList.add('text-[#7fa4a4]', 'font-semibold');
             }
         });
     }
 
-    // Method để ẩn/hiện navbar (tùy chọn)
+    // Show/Hide navbar (optional)
     toggleNavbar(show = true) {
         if (this.navbar) {
             const topDiv = this.navbar.parentElement;

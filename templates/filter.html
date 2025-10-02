@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vision Vibe - Bộ Lọc & Cạnh</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='font/fontawesome/css/all.min.css') }}">
+</head>
+<body class="bg-[#10253f] text-white min-h-screen">
+    <div class="fixed top-4 left-4 z-50">
+        <a href="{{ url_for('home') }}" class="group flex items-center mx-5 my-5
+        justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full
+        border border-white border-opacity-30 hover:bg-opacity-30 transition-all duration-300 hover:scale-110 shadow-lg">
+            <img src="{{ url_for('static', filename='img/logo.png')}}" alt="back-to-home" class="rounded-full">
+        </a>
+    </div>
+  <main class="mt-24 max-w-7xl mx-auto px-4 py-10">
+
+
+    <h1 class="text-4xl font-bold mb-8 text-center">Image Filters</h1>
+
+    <!-- Upload & Options -->
+    <section class="bg-[#1a3c5c] rounded-2xl p-6 md:p-8 shadow-lg">
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Upload -->
+        <div class="md:col-span-1">
+          <h2 class="text-xl font-semibold mb-3">1) Ảnh đầu vào</h2>
+          <p class="text-white/80 text-sm mb-3">Chọn ảnh nguồn để bắt đầu. Bạn có thể xây dựng pipeline nhiều bước và xem trước kết quả.</p>
+          <label class="block w-full cursor-pointer">
+            <input id="fileInput" type="file" accept="image/*" class="hidden" />
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#507b88] hover:bg-[#305a72] shadow">
+              <i class="fa fa-upload"></i> Chọn ảnh
+            </span>
+          </label>
+          <p id="fileName" class="mt-2 text-sm text-white/80"></p>
+          <div class="mt-4 border border-white/10 rounded-xl p-3 bg-black/20">
+            <img id="originalPreview" alt="Original" class="w-full object-contain max-h-[60vh] rounded-lg shadow cursor-zoom-in" onclick="onClick(this)" />
+          </div>
+        </div>
+
+        <!-- Operation & Params -->
+        <div class="md:col-span-2">
+          <h2 class="text-xl font-semibold mb-3">2) Chọn thao tác & tham số</h2>
+          <p class="text-white/80 text-sm mb-4">Chọn thao tác, điều chỉnh tham số (dùng thanh trượt), sau đó nhấn "Thêm thao tác vào pipeline". Nhấn "Xem trước pipeline" để xem kết quả tổng hợp.</p>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-1">Nhóm thao tác</label>
+              <select id="groupSelect" class="w-full text-black rounded p-2">
+                <option value="grayscale">Biến ảnh xám</option>
+                <option value="point">Biến đổi điểm (Point processing)</option>
+                <option value="noise">Thêm nhiễu</option>
+                <option value="blur">Làm mờ</option>
+                <option value="sharpen">Làm sắc nét</option>
+                <option value="edge">Phát hiện cạnh</option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-1">Thao tác cụ thể</label>
+              <select id="opSelect" class="w-full text-black rounded p-2"></select>
+            </div>
+          </div>
+
+          <!-- Dynamic Params -->
+          <div id="paramsPanel" class="mt-4 grid md:grid-cols-2 gap-4"></div>
+
+          <!-- Engine -->
+          <div class="mt-4">
+            <label class="block mb-1">Công cụ xử lý</label>
+            <div class="flex items-center gap-4">
+              <label class="inline-flex items-center gap-2">
+                <input type="radio" name="engine" value="cv2" checked class="accent-[#7fa4a4]" />
+                <span>OpenCV (cv2)</span>
+              </label>
+              <label class="inline-flex items-center gap-2">
+                <input type="radio" name="engine" value="custom" class="accent-[#7fa4a4]" />
+                <span>Tự cài đặt (custom)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="addStepBtn" class="px-4 py-2 rounded-lg bg-[#7fa4a4] text-black hover:bg-[#5c8b8b] font-semibold shadow">
+              <i class="fa fa-plus mr-1"></i> Thêm thao tác vào pipeline
+            </button>
+            <button id="previewBtn" class="px-4 py-2 rounded-lg bg-[#507b88] hover:bg-[#305a72] shadow">
+              <i class="fa fa-eye mr-1"></i> Xem trước pipeline
+            </button>
+            <button id="clearStepsBtn" class="px-4 py-2 rounded-lg bg-red-500/80 hover:bg-red-500 shadow">
+              <i class="fa fa-trash mr-1"></i> Xóa tất cả thao tác
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline Steps -->
+    <section class="mt-8 bg-[#1a3c5c] rounded-2xl p-5 shadow-lg">
+      <h3 class="text-lg font-semibold mb-3">3) Pipeline thao tác</h3>
+      <p class="text-white/70 text-sm mb-3">Sắp xếp thứ tự bằng mũi tên. Mỗi thao tác sẽ được áp dụng tuần tự từ trên xuống dưới.</p>
+      <div id="stepsList" class="space-y-2">
+        <div class="text-white/80 text-sm">Chưa có thao tác nào. Hãy thêm thao tác bằng nút phía trên.</div>
+      </div>
+    </section>
+
+    <!-- Results & Export -->
+    <section class="mt-8 grid md:grid-cols-2 gap-8">
+      <div class="bg-[#1a3c5c] rounded-2xl p-5 shadow-lg">
+        <h3 class="text-lg font-semibold mb-2">Ảnh kết quả (Preview)</h3>
+        <div class="border border-white/10 rounded-xl p-3 bg-black/20">
+          <img id="resultImg" alt="Result" class="w-full object-contain max-h-[65vh] rounded-lg shadow cursor-zoom-in" onclick="onClick(this)" />
+        </div>
+        <div class="mt-3 flex gap-2">
+          <button id="downloadBtn" class="px-4 py-2 rounded bg-[#507b88] hover:bg-[#305a72] shadow">
+            <i class="fa fa-download mr-1"></i> Xuất ảnh
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-[#1a3c5c] rounded-2xl p-5 shadow-lg">
+        <h3 class="text-lg font-semibold mb-2">Trung gian (đơn thao tác)</h3>
+        <p class="text-sm text-white/70 mb-2">Chạy đơn thao tác để xem gradient / magnitude / threshold. Nhấp "Chạy đơn thao tác hiện tại".</p>
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <div class="text-sm mb-1">Gradient X</div>
+            <img id="gradXImg" class="w-full object-contain max-h-56 md:max-h-64 lg:max-h-[28vh] rounded bg-black/20 shadow cursor-zoom-in" onclick="onClick(this)" />
+          </div>
+          <div>
+            <div class="text-sm mb-1">Gradient Y</div>
+            <img id="gradYImg" class="w-full object-contain max-h-56 md:max-h-64 lg:max-h-[28vh] rounded bg-black/20 shadow cursor-zoom-in" onclick="onClick(this)" />
+          </div>
+          <div>
+            <div class="text-sm mb-1">Magnitude</div>
+            <img id="magImg" class="w-full object-contain max-h-56 md:max-h-64 lg:max-h-[28vh] rounded bg-black/20 shadow cursor-zoom-in" onclick="onClick(this)" />
+          </div>
+          <div>
+            <div class="text-sm mb-1">Threshold</div>
+            <img id="threshImg" class="w-full object-contain max-h-56 md:max-h-64 lg:max-h-[28vh] rounded bg-black/20 shadow cursor-zoom-in" onclick="onClick(this)" />
+          </div>
+          <div class="lg:col-span-3 col-span-2">
+            <div class="text-sm mb-1">Laplacian</div>
+            <img id="lapImg" class="w-full object-contain max-h-56 md:max-h-64 lg:max-h-[28vh] rounded bg-black/20 shadow cursor-zoom-in" onclick="onClick(this)" />
+          </div>
+        </div>
+        <div class="mt-3">
+          <button id="singleRunBtn" class="px-4 py-2 rounded bg-[#7fa4a4] text-black hover:bg-[#5c8b8b] shadow">Chạy đơn thao tác hiện tại</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal for full size images on click -->
+  <div id="modal01" class="fixed inset-0 hidden items-center justify-center bg-black/90 z-50">
+    <button class="absolute top-4 right-4 text-3xl text-white/90 hover:text-white" title="Close Modal Image" onclick="modalGallery.closeModal()">×</button>
+    <div class="w-full h-full flex items-center justify-center px-6">
+      <img id="img01" class="modal-image-slide max-w-[90vw] max-h-[85vh] rounded-lg shadow-lg" />
+      <!-- Hidden text container to satisfy existing modal.js references -->
+      <div id="modal-text" class="hidden">
+        <h2 id="modal-title"></h2>
+        <p id="modal-description"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/data.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/filter.js') }}"></script>
+</body>
+</html>
