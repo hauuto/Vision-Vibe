@@ -14,15 +14,16 @@ class ModalGallery {
 
         // Get filename from src
         const filename = element.src.split('/').pop();
-        const imageData = imageDescriptions[filename];
+        const imageData = typeof imageDescriptions !== 'undefined' ? imageDescriptions[filename] : null;
 
         // Set content
         img.src = element.src;
-        title.textContent = imageData ? imageData.title : element.alt;
-        description.innerHTML = imageData ? imageData.description : "No description available.";
+        title.textContent = imageData ? imageData.title : (element.alt || '');
+        description.innerHTML = imageData ? imageData.description : '';
 
-        // Show modal
-        modal.style.display = "block";
+        // Show modal using Tailwind classes
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
 
         // Reset animations
         img.classList.remove("show");
@@ -45,7 +46,8 @@ class ModalGallery {
         modalText.classList.remove("show");
 
         setTimeout(() => {
-            modal.style.display = "none";
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }, 300);
     }
 
@@ -61,6 +63,16 @@ class ModalGallery {
                     }
                 });
             }
+
+            // Add Escape key handler to close modal when open
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' || e.key === 'Esc') {
+                    const m = document.getElementById('modal01');
+                    if (m && m.classList.contains('flex')) {
+                        this.closeModal();
+                    }
+                }
+            });
         });
     }
 }

@@ -1,121 +1,151 @@
 import cv2
 import numpy as np
+from typing import Optional, Tuple, Union
+import warnings
+
+# Suppress OpenCV warnings
+warnings.filterwarnings('ignore', category=UserWarning)
 
 
-def amBan(image):
-    """Negative transformation"""
+# ==============================
+# Core Transformation Functions
+# ==============================
+
+def amBan(image: np.ndarray) -> np.ndarray:
+    """Negative transformation - optimized"""
     return 255 - image
 
-def chuyen_doi_log(image, c=None):
-    """Log transformation"""
+def chuyen_doi_log(image: np.ndarray, c: Optional[float] = None) -> np.ndarray:
+    """Log transformation - optimized"""
     if c is None:
         c = 255 / np.log(1 + np.max(image))
-    return c * (np.log(1 + image))
 
-def chuyen_doi_mu(image, g=1, c=None):
-    """Power transformation (gamma correction)"""
+    # Ensure non-negative values and avoid log(0)
+    safe_image = np.maximum(image, 1e-10)
+    return c * np.log(1 + safe_image)
+
+def chuyen_doi_mu(image: np.ndarray, g: float = 1, c: Optional[float] = None) -> np.ndarray:
+    """Power transformation (gamma correction) - optimized"""
     if c is None:
         c = 255.0 / np.power(255.0, g)
-    return c * np.power(image, g)
 
-def cal_img(npArray):
-    """Calculate histogram equalization for single channel - FIXED VERSION"""
-    npArray = np.clip(npArray, 0, 255).astype(np.uint8)
-    arr = np.bincount(npArray.flatten(), minlength=256)
-    total_pixels = npArray.size
-    pdf = arr.astype(np.float64) / total_pixels
-    cdf = np.cumsum(pdf)
-    tf = np.round(cdf * 255).astype(np.uint8)
-    img = tf[npArray.flatten()].reshape(npArray.shape)
-    img_min = np.min(img)
-    img_max = np.max(img)
-    img_normalized = ((img.astype(np.float64) - img_min) / (img_max - img_min) * 255)
-    img = np.round(img_normalized).astype(np.uint8)
-    print(f"🔧 Normalized range from [{img_min}, {img_max}] to [0, 255]")
-    
-    return img.astype(np.uint8)
-
-def histogram_equalization(image):
-    """Apply histogram equalization to image - IMPROVED VERSION WITH NORMALIZATION"""
-    # Ensure input is uint8
-    if image.dtype != np.uint8:
-        image = np.clip(image, 0, 255).astype(np.uint8)
-        
-    if len(image.shape) == 2: 
-        result = cal_img(image)
-        return result
-    
-    elif len(image.shape) == 3 and image.shape[2] == 3:  # BGR format
-        b, g, r = cv2.split(image)
-        tf_b = cal_img(b)
-        tf_g = cal_img(g) 
-        tf_r = cal_img(r)
-        result = cv2.merge((tf_b, tf_g, tf_r))
-        return result.astype(np.uint8)
-    
-    else:
-        print(f"Unsupported image format: shape={image.shape}")
-        return image
-
-def piecewise_linear_transformation(pixel, r1=100, s1=0, r2=200, s2=255):
-    """Piecewise linear transform for a single pixel"""
-    if pixel <= r1:
-        return (s1 / r1) * pixel if r1 != 0 else 0
-    elif pixel <= r2:
-        return ((s2 - s1) / (r2 - r1)) * (pixel - r1) + s1
-    else:
-        return ((255 - s2) / (255 - r2)) * (pixel - r2) + s2 if r2 != 255 else 255
+    # Normalize to [0,1] range for gamma correction
+    normalized = image.astype(np.float32) / 255.0
+    corrected = c * np.power(normalized, g)
+    return np.clip(corrected * 255, 0, 255)
 
 # ==============================
-# Các hàm apply (wrapper)
+# Histogram Processing
 # ==============================
-def apply_log_transform(image, c=None):
-    """Apply log transformation (color-aware)"""
-    if len(image.shape) == 3:  # Color
+
+def cal_img(npArray: np.ndarray) -> np.ndarray:
+    """Optimized histogram equalization for single channel"""
+    # Ensure uint8 input
+    if npArray.dtype != np.uint8:
+        npArray = np.clip(npArray, 0, 255).astype(np.uint8)
+
+    # Calculate histogram
+    hist = cv2.calcHist([npArray], [0], None, [256], [0, 256]).flatten()
+
+    # Calculate CDF
+    cdf = np.cumsum(hist)
+    cdf_normalized = cdf * 255 / cdf[-1]
+
+    # Apply transformation
+    result = cdf_normalized[npArray]
+    return np.clip(result, 0, 255).astype(np.uint8)
+
+def histogram_equalization(image: np.ndarray) -> np.ndarray:
+    """Improved histogram equalization with better handling"""
+    image = np.clip(image, 0, 255).astype(np.uint8)
+
+    if len(image.shape) == 2:  # Grayscale
+        return cal_img(image)
+
+    elif len(image.shape) == 3 and image.shape[2] == 3:  # Color (BGR)
+        # Process each channel separately
         channels = cv2.split(image)
-        log_channels = []
-        for ch in channels:
-            result = chuyen_doi_log(ch.astype(np.float32), c)
-            result = np.clip(result, 0, 255).astype(np.uint8)
-            log_channels.append(result)
-        return cv2.merge(log_channels)
-    else:  # Grayscale
-        result = chuyen_doi_log(image.astype(np.float32), c)
+        equalized_channels = [cal_img(ch) for ch in channels]
+        return cv2.merge(equalized_channels)
+
+    else:
+        raise ValueError(f"Unsupported image format: shape={image.shape}")
+
+# ==============================
+# Apply Functions (Optimized)
+# ==============================
+
+def apply_log_transform(image: np.ndarray, c: Optional[float] = None) -> np.ndarray:
+    """Apply log transformation with proper type handling"""
+    def process_channel(channel):
+        result = chuyen_doi_log(channel.astype(np.float32), c)
         return np.clip(result, 0, 255).astype(np.uint8)
 
-def apply_power_transform(image, gamma=0.5, c=None):
-    """Apply gamma correction (color-aware)"""
-    if len(image.shape) == 3:  # Color
+    if len(image.shape) == 3:
         channels = cv2.split(image)
-        power_channels = []
-        for ch in channels:
-            result = chuyen_doi_mu(ch.astype(np.float32), gamma, c)
-            result = np.clip(result, 0, 255).astype(np.uint8)
-            power_channels.append(result)
-        return cv2.merge(power_channels)
-    else:  # Grayscale
-        result = chuyen_doi_mu(image.astype(np.float32), gamma, c)
+        processed_channels = [process_channel(ch) for ch in channels]
+        return cv2.merge(processed_channels)
+    else:
+        return process_channel(image)
+
+def apply_power_transform(image: np.ndarray, gamma: float = 0.5, c: Optional[float] = None) -> np.ndarray:
+    """Apply gamma correction with proper type handling"""
+    def process_channel(channel):
+        result = chuyen_doi_mu(channel.astype(np.float32), gamma, c)
         return np.clip(result, 0, 255).astype(np.uint8)
 
-def apply_negative_transform(image):
+    if len(image.shape) == 3:
+        channels = cv2.split(image)
+        processed_channels = [process_channel(ch) for ch in channels]
+        return cv2.merge(processed_channels)
+    else:
+        return process_channel(image)
+
+def apply_negative_transform(image: np.ndarray) -> np.ndarray:
     """Apply negative transformation"""
     return amBan(image)
 
-def apply_piecewise_linear(image, r1=100, s1=0, r2=200, s2=255):
-    """Apply piecewise linear transformation to image"""
-    vec_func = np.vectorize(piecewise_linear_transformation)
-    result = vec_func(image, r1, s1, r2, s2)
-    return np.clip(result, 0, 255).astype(np.uint8)
+def apply_piecewise_linear(image: np.ndarray, r1: int = 100, s1: int = 0,
+                          r2: int = 200, s2: int = 255) -> np.ndarray:
+    """Optimized piecewise linear transformation"""
+    def piecewise_transform(pixel_values):
+        result = np.zeros_like(pixel_values, dtype=np.float32)
 
-def apply_CLAHE(image):
-    """Apply CLAHE (Contrast Limited Adaptive Histogram Equalization) to image"""
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        # Create masks for different ranges
+        mask1 = pixel_values <= r1
+        mask2 = (pixel_values > r1) & (pixel_values <= r2)
+        mask3 = pixel_values > r2
+
+        # Apply transformations
+        if r1 != 0:
+            result[mask1] = (s1 / r1) * pixel_values[mask1]
+
+        if r2 != r1:
+            result[mask2] = ((s2 - s1) / (r2 - r1)) * (pixel_values[mask2] - r1) + s1
+
+        if r2 != 255:
+            result[mask3] = ((255 - s2) / (255 - r2)) * (pixel_values[mask3] - r2) + s2
+        else:
+            result[mask3] = 255
+
+        return result
+
+    transformed = piecewise_transform(image.astype(np.float32))
+    return np.clip(transformed, 0, 255).astype(np.uint8)
+
+def apply_CLAHE(image: np.ndarray, clip_limit: float = 2.0,
+               tile_grid_size: Tuple[int, int] = (8, 8)) -> np.ndarray:
+    """Apply CLAHE with configurable parameters"""
+    clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size)
+
     if len(image.shape) == 2:  # Grayscale
         return clahe.apply(image)
-    elif len(image.shape) == 3 and image.shape[2] == 3:  # BGR
-        b, g, r = cv2.split(image)
-        b = clahe.apply(b)
-        g = clahe.apply(g)
-        r = clahe.apply(r)
-        return cv2.merge((b, g, r))
+    elif len(image.shape) == 3 and image.shape[2] == 3:  # Color
+        # Convert to LAB color space for better results
+        lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
+        lab[:, :, 0] = clahe.apply(lab[:, :, 0])  # Apply to L channel only
+        return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
+
     return image
+
+
