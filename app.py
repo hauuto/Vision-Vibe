@@ -26,6 +26,7 @@ try:
         cv2_apply_CLAHE,
         compare_images
     )
+    from vision_core.filters import process_operation, process_operation_cv2
 except ImportError as e:
     print(f"Error importing from modules: {e}")
 
@@ -43,10 +44,110 @@ def slide01():
 def test():
     return render_template('point_processing.html')
 
+# New page for filtering and edges
+@app.route('/filter/')
+def filter_page():
+    return render_template('filter.html')
+
 # --- API DEMOS ---
 @app.route('/api/hello/')
 def api_hello():
     return jsonify({'message': 'Hello from Flask API!'})
+
+# Utility to encode image to base64 PNG
+_def_png = '.png'
+
+def _encode_image(img: np.ndarray) -> str:
+    if img is None:
+        raise ValueError('encode_image: None image')
+    # If single channel, ensure proper shape
+    enc_img = img
+    if img.ndim == 2:
+        pass
+    elif img.ndim == 3 and img.shape[2] in (3, 4):
+        pass
+    else:
+        raise ValueError(f'Unsupported image shape for encoding: {img.shape}')
+    success, buffer = cv2.imencode(_def_png, enc_img)
+    if not success:
+        raise RuntimeError('Failed to encode image')
+    return 'data:image/png;base64,' + base64.b64encode(buffer).decode('utf-8')
+
+@app.route('/api/vision/process', methods=['POST'])
+def api_vision_process():
+    try:
+        # Accept image via multipart form or JSON base64
+        img = None
+        params = {}
+        op = None
+        engine = 'custom'
+
+        if 'image' in request.files:
+            file = request.files['image']
+            if not file or file.filename == '':
+                return jsonify({'error': 'No file provided'}), 400
+            nparr = np.frombuffer(file.read(), np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)
+            op = request.form.get('op', '')
+            engine = (request.form.get('engine') or 'custom').lower()
+            # Collect all params from form
+            params = {k: v for k, v in request.form.items() if k not in ('op', 'engine')}
+        else:
+            data = request.get_json(silent=True) or {}
+            b64 = data.get('image_data')
+            op = data.get('op', '')
+            engine = (data.get('engine') or 'custom').lower()
+            params = data.get('params', {}) or {}
+            if b64:
+                if b64.startswith('data:image'):
+                    b64 = b64.split(',')[1]
+                image_bytes = base64.b64decode(b64)
+                nparr = np.frombuffer(image_bytes, np.uint8)
+                img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)
+
+        if img is None:
+            return jsonify({'error': 'No image provided or decode failed'}), 400
+        if img.ndim == 2:
+            pass
+        elif img.ndim == 3 and img.shape[2] in (3, 4):
+            pass
+        else:
+            # Convert to BGR if single channel expanded
+            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+
+        # Execute operation (choose engine)
+        if engine == 'cv2':
+            out = process_operation_cv2(img, op, params)
+        else:
+            out = process_operation(img, op, params)
+
+        resp = {
+            'success': True,
+            'op': op,
+            'engine': engine,
+        }
+        # Encode main output
+        if 'output' in out:
+            resp['output'] = _encode_image(out['output'])
+        # Encode intermediates when present
+        if 'grad_x' in out:
+            resp['grad_x'] = _encode_image(out['grad_x'])
+        if 'grad_y' in out:
+            resp['grad_y'] = _encode_image(out['grad_y'])
+        if 'magnitude' in out:
+            resp['magnitude'] = _encode_image(out['magnitude'])
+        if 'threshold' in out:
+            resp['threshold'] = _encode_image(out['threshold'])
+        if 'laplacian' in out:
+            resp['laplacian'] = _encode_image(out['laplacian'])
+
+        return jsonify(resp)
+
+    except Exception as e:
+        import traceback
+        print('api_vision_process error:', e)
+        print(traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/process-image', methods=['POST'])
 def process_image():
@@ -253,6 +354,57 @@ def available_methods():
         {'name': '6', 'description': 'CLAHE (Contrast Limited Adaptive Histogram Equalization)'}
     ]
     return jsonify({'methods': methods})
+
+@app.route('/api/vision/pipeline', methods=['POST'])
+def api_vision_pipeline():
+    try:
+        data = request.get_json(silent=True) or {}
+        b64 = data.get('image_data')
+        engine = (data.get('engine') or 'cv2').lower()
+        steps = data.get('steps') or []
+
+        if not b64:
+            return jsonify({'error': 'No image_data provided'}), 400
+        if not isinstance(steps, list) or len(steps) == 0:
+            return jsonify({'error': 'No steps provided'}), 400
+        if len(steps) > 50:
+            return jsonify({'error': 'Too many steps (max 50)'}), 400
+
+        if b64.startswith('data:image'):
+            b64 = b64.split(',')[1]
+        image_bytes = base64.b64decode(b64)
+        nparr = np.frombuffer(image_bytes, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)
+        if img is None:
+            return jsonify({'error': 'Could not decode image'}), 400
+
+        current = img
+        for idx, step in enumerate(steps):
+            if not isinstance(step, dict):
+                return jsonify({'error': f'Invalid step at index {idx}'}), 400
+            op = (step.get('op') or '').lower()
+            params = step.get('params') or {}
+            if engine == 'cv2':
+                out = process_operation_cv2(current, op, params)
+            else:
+                out = process_operation(current, op, params)
+            if 'output' not in out or out['output'] is None:
+                return jsonify({'error': f'Operation {op} failed at step {idx}'}), 500
+            current = out['output']
+
+        resp = {
+            'success': True,
+            'engine': engine,
+            'steps_count': len(steps),
+            'output': _encode_image(current),
+        }
+        return jsonify(resp)
+
+    except Exception as e:
+        import traceback
+        print('api_vision_pipeline error:', e)
+        print(traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
 
 # Template context processor để có thể sử dụng include trong template
 @app.context_processor

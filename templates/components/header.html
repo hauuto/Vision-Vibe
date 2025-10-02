@@ -16,6 +16,8 @@
             <a href="{{ url_for('test') }}"
                 class="px-3 py-1.5 rounded-full bg-[#507b88] hover:bg-[#305a72] transition font-medium">POINT
                 PROCESSING</a>
+            <a href="{{ url_for('filter_page') }}"
+                class="px-3 py-1.5 rounded-full bg-[#7fa4a4] text-black hover:bg-[#5c8b8b] transition font-medium">FILTER &amp; EDGES</a>
         </div>
         <!-- Mobile menu button -->
         <button type="button"
@@ -45,4 +47,7 @@
         onclick="w3_close()"
         class="block px-3 py-2 rounded bg-[#507b88] hover:bg-[#305a72] mt-2">POINT
         PROCESSING</a>
+    <a href="{{ url_for('filter_page') }}"
+        onclick="w3_close()"
+        class="block px-3 py-2 rounded bg-[#7fa4a4] text-black hover:bg-[#5c8b8b] mt-2">FILTER &amp; EDGES</a>
 </nav>

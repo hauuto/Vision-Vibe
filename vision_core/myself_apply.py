@@ -147,3 +147,5 @@ def apply_CLAHE(image: np.ndarray, clip_limit: float = 2.0,
         return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
 
     return image
+
+
