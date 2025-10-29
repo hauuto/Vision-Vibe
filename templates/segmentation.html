@@ -22,6 +22,11 @@
     .modal-content { background-color: #1a3c5c; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 900px; border-radius: 10px; }
     .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 20px; }
     .close:hover { color: #fff; }
+    .tab-button { padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.05); border-radius: 0.5rem 0.5rem 0 0; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); }
+    .tab-button:hover { background: rgba(255,255,255,0.1); }
+    .tab-button.active { background: #1a3c5c; border-bottom-color: #1a3c5c; font-weight: 600; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
   </style>
 </head>
 <body class="bg-[#10253f] text-white min-h-screen">
@@ -29,8 +34,16 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
     <h1 class="text-3xl font-bold mb-6">Segmentation</h1>
-    <p class="text-white/80 mb-8">Chọn thuật toán phân đoạn, tải ảnh lên và xem kết quả xử lý ngay.</p>
+    <p class="text-white/80 mb-6">Chọn thuật toán phân đoạn, tải ảnh lên và xem kết quả xử lý ngay.</p>
 
+    <!-- Tab Navigation -->
+    <div class="flex gap-2 mb-6 border-b border-white/10">
+      <button class="tab-button active" onclick="switchTab('single')">Xử lý đơn</button>
+      <button class="tab-button" onclick="switchTab('compare')">So sánh thuật toán</button>
+    </div>
+
+    <!-- Tab 1: Single Processing -->
+    <div id="tab-single" class="tab-content active">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <!-- Controls -->
       <section class="lg:col-span-5 card p-5 shadow-lg">
@@ -179,7 +192,113 @@
         </div>
       </section>
     </div>
+    </div>
+    <!-- End Tab 1 -->
+
+    <!-- Tab 2: Compare Multiple Algorithms -->
+    <div id="tab-compare" class="tab-content">
+      <div class="card p-6 shadow-lg space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Input images -->
+          <div class="space-y-4">
+            <div class="space-y-3">
+              <h3 class="text-xl font-semibold">Ảnh A</h3>
+              <input id="compareImageA" type="file" accept="image/*" class="w-full cursor-pointer" />
+              <div class="aspect-square bg-[#10253f] border border-white/10 rounded flex items-center justify-center">
+                <img id="comparePreviewA" class="max-h-full object-contain" />
+              </div>
+            </div>
+            
+            <div class="space-y-3">
+              <h3 class="text-xl font-semibold">Ảnh B</h3>
+              <input id="compareImageB" type="file" accept="image/*" class="w-full cursor-pointer" />
+              <div class="aspect-square bg-[#10253f] border border-white/10 rounded flex items-center justify-center">
+                <img id="comparePreviewB" class="max-h-full object-contain" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Algorithm selection -->
+          <div class="lg:col-span-2 space-y-4">
+            <h3 class="text-xl font-semibold">Chọn các thuật toán để so sánh</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {% for m in methods %}
+              <label class="flex items-center gap-2 p-3 bg-[#10253f] rounded border border-white/10 cursor-pointer hover:bg-[#0f1f35] transition">
+                <input type="checkbox" class="algo-checkbox" value="{{ m.value }}" />
+                <span class="text-sm">{{ m.label }}</span>
+              </label>
+              {% endfor %}
+            </div>
+            <div class="flex gap-3 mt-4">
+              <button id="runCompare" type="button" class="btn text-white px-6 py-2 rounded shadow">
+                <i class="fa fa-play"></i> Chạy so sánh
+              </button>
+              <button id="resetCompare" type="button" class="chip px-4 py-2 rounded">Xóa</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results grid -->
+        <div id="compareResults" class="space-y-6"></div>
+      </div>
+    </div>
+    <!-- End Tab 2 -->
   </main>
+
+  <!-- Remove old compare section -->
+  <!--
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <div class="card p-5 shadow-lg space-y-5">
+      <h2 class="text-2xl font-bold">So sánh 2 ảnh / 2 thuật toán</h2>
+      <p class="text-white/80">Chọn 2 ảnh và 2 thuật toán (có thể khác nhau). Kết quả hiển thị trên 2 dòng riêng.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-3">
+          <h3 class="font-semibold">Ảnh A</h3>
+          <label class="block text-sm mb-1">Thuật toán</label>
+          <select id="opA" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+            {% for m in methods %}
+              <option value="{{ m.value }}">{{ m.label }}</option>
+            {% endfor %}
+          </select>
+          <input id="imageA" type="file" accept="image/*" class="w-full cursor-pointer" />
+        </div>
+        <div class="space-y-3">
+          <h3 class="font-semibold">Ảnh B</h3>
+          <label class="block text-sm mb-1">Thuật toán</label>
+          <select id="opB" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+            {% for m in methods %}
+              <option value="{{ m.value }}">{{ m.label }}</option>
+            {% endfor %}
+          </select>
+          <input id="imageB" type="file" accept="image/*" class="w-full cursor-pointer" />
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="runBoth" type="button" class="btn text-white px-4 py-2 rounded shadow">Xử lý cả hai</button>
+        <button id="resetBoth" type="button" class="chip px-4 py-2 rounded">Xóa</button>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h4 class="text-sm font-semibold mb-2">Kết quả A</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <img id="prevA" class="w-full border border-white/10 rounded" />
+            <img id="outA" class="w-full border border-white/10 rounded" />
+          </div>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold mb-2">Kết quả B</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <img id="prevB" class="w-full border border-white/10 rounded" />
+            <img id="outB" class="w-full border border-white/10 rounded" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  -->
 
   <div id="iouModal" class="modal">
     <div class="modal-content">
@@ -413,6 +532,128 @@
       const modal = document.getElementById('iouModal');
       if (event.target == modal) closeIouModal();
     }
+
+    // --- Tab switching ---
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      if (tabName === 'single') {
+        document.querySelector('.tab-button:nth-child(1)').classList.add('active');
+        document.getElementById('tab-single').classList.add('active');
+      } else if (tabName === 'compare') {
+        document.querySelector('.tab-button:nth-child(2)').classList.add('active');
+        document.getElementById('tab-compare').classList.add('active');
+      }
+    }
+
+    // --- Compare multiple algorithms ---
+    document.getElementById('compareImageA')?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      document.getElementById('comparePreviewA').src = url;
+    });
+
+    document.getElementById('compareImageB')?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      document.getElementById('comparePreviewB').src = url;
+    });
+
+    document.getElementById('runCompare')?.addEventListener('click', async () => {
+      const fileA = document.getElementById('compareImageA').files?.[0];
+      const fileB = document.getElementById('compareImageB').files?.[0];
+      
+      if (!fileA && !fileB) { alert('Vui lòng chọn ít nhất 1 ảnh'); return; }
+
+      const checkboxes = document.querySelectorAll('.algo-checkbox:checked');
+      if (checkboxes.length === 0) { alert('Vui lòng chọn ít nhất 1 thuật toán'); return; }
+
+      const algos = Array.from(checkboxes).map(cb => cb.value);
+      const resultsDiv = document.getElementById('compareResults');
+      resultsDiv.innerHTML = '<div class="text-center py-4"><i class="fa fa-spinner fa-spin"></i> Đang xử lý...</div>';
+
+      try {
+        // Process both images with all algorithms
+        const processImage = async (file, label) => {
+          if (!file) return null;
+          const promises = algos.map(async (op) => {
+            const fd = new FormData();
+            fd.append('image', file);
+            fd.append('op', op);
+            const res = await fetch('{{ url_for("api_segmentation_process") }}', { method: 'POST', body: fd });
+            const data = await res.json();
+            return { op, data };
+          });
+          const results = await Promise.all(promises);
+          return { label, results, preview: URL.createObjectURL(file) };
+        };
+
+        const [imageAResults, imageBResults] = await Promise.all([
+          fileA ? processImage(fileA, 'Ảnh A') : Promise.resolve(null),
+          fileB ? processImage(fileB, 'Ảnh B') : Promise.resolve(null)
+        ]);
+
+        // Build comparison table
+        resultsDiv.innerHTML = '';
+
+        // Create grid with algorithm names as rows and images as columns
+        const methods = {{ methods | tojson }};
+        
+        algos.forEach((op) => {
+          const label = methods.find(m => m.value === op)?.label || op;
+          const resultA = imageAResults?.results.find(r => r.op === op);
+          const resultB = imageBResults?.results.find(r => r.op === op);
+          
+          const row = document.createElement('div');
+          row.className = 'card p-4';
+          
+          let html = `<h4 class="font-semibold mb-3 accent text-lg">${label}</h4>`;
+          html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+          
+          if (imageAResults) {
+            html += `
+              <div class="space-y-2">
+                <p class="text-xs text-white/70 font-semibold">Ảnh A</p>
+                <img src="${resultA?.data?.output || ''}" class="w-full border border-white/10 rounded" />
+                ${resultA?.data?.threshold ? `<p class="text-xs text-white/60">T=${resultA.data.threshold}</p>` : ''}
+                ${resultA?.data?.count ? `<p class="text-xs text-white/60">Count=${resultA.data.count}</p>` : ''}
+              </div>
+            `;
+          }
+          
+          if (imageBResults) {
+            html += `
+              <div class="space-y-2">
+                <p class="text-xs text-white/70 font-semibold">Ảnh B</p>
+                <img src="${resultB?.data?.output || ''}" class="w-full border border-white/10 rounded" />
+                ${resultB?.data?.threshold ? `<p class="text-xs text-white/60">T=${resultB.data.threshold}</p>` : ''}
+                ${resultB?.data?.count ? `<p class="text-xs text-white/60">Count=${resultB.data.count}</p>` : ''}
+              </div>
+            `;
+          }
+          
+          html += '</div>';
+          row.innerHTML = html;
+          resultsDiv.appendChild(row);
+        });
+
+      } catch (e) {
+        console.error(e);
+        resultsDiv.innerHTML = '<div class="text-center py-4 text-red-400">Có lỗi xảy ra khi xử lý</div>';
+      }
+    });
+
+    document.getElementById('resetCompare')?.addEventListener('click', () => {
+      document.getElementById('compareImageA').value = '';
+      document.getElementById('compareImageB').value = '';
+      document.getElementById('comparePreviewA').src = '';
+      document.getElementById('comparePreviewB').src = '';
+      document.querySelectorAll('.algo-checkbox').forEach(cb => cb.checked = false);
+      document.getElementById('compareResults').innerHTML = '';
+    });
   </script>
 </body>
 </html>
