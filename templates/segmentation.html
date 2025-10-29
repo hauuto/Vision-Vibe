@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Segmentation | Vision Vibe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='font/fontawesome/css/all.min.css') }}">
+  <style>
+    body { font-family: "Google Sans", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    .card { background: #1a3c5c; border-radius: 0.75rem; }
+    .btn { background: #507b88; }
+    .btn:hover { background: #305a72; }
+    .accent { color: #7fa4a4; }
+    .chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .image-container { position: relative; display: inline-block; }
+    .canvas-overlay { position: absolute; top: 0; left: 0; cursor: crosshair; }
+    .seed-marker { position: absolute; width: 12px; height: 12px; background: red; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10; }
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+    .modal-content { background-color: #1a3c5c; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 900px; border-radius: 10px; }
+    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 20px; }
+    .close:hover { color: #fff; }
+  </style>
+</head>
+<body class="bg-[#10253f] text-white min-h-screen">
+  {% include 'components/header.html' %}
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
+    <h1 class="text-3xl font-bold mb-6">Segmentation</h1>
+    <p class="text-white/80 mb-8">Chọn thuật toán phân đoạn, tải ảnh lên và xem kết quả xử lý ngay.</p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Controls -->
+      <section class="lg:col-span-5 card p-5 shadow-lg">
+        <form id="segForm" class="space-y-5">
+          <div>
+            <label class="block text-sm mb-1">Thuật toán</label>
+            <select id="op" name="op" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2 focus:outline-none">
+              {% for m in methods %}
+                <option value="{{ m.value }}">{{ m.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div id="params" class="space-y-4">
+            <div data-for="global_threshold" class="param hidden">
+              <label class="block text-sm mb-1">Epsilon</label>
+              <input type="number" step="0.1" min="0" id="epsilon" name="epsilon" value="1" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+            </div>
+
+            <div data-for="adaptive_threshold" class="param hidden grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm">Block size (odd ≥ 3)</label>
+                <input type="number" id="block_size" name="block_size" value="15" min="3" step="2" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">C</label>
+                <input type="number" id="C" name="C" value="5" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+            </div>
+
+            <div data-for="region_growing" class="param hidden space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm">Seed X</label>
+                  <input type="number" id="seed_x" name="seed_x" value="0" readonly class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+                </div>
+                <div>
+                  <label class="block text-sm">Seed Y</label>
+                  <input type="number" id="seed_y" name="seed_y" value="0" readonly class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+                </div>
+              </div>
+              <p class="text-xs text-white/70"><i class="fa fa-hand-pointer"></i> Nhấp vào ảnh gốc để chọn seed point</p>
+              
+              <div>
+                <label class="block text-sm mb-1">Phương pháp chọn T</label>
+                <select id="t_method" name="t_method" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+                  <option value="manual">Manual (Tự nhập)</option>
+                  <option value="global">Global Thresholding</option>
+                  <option value="otsu">Otsu's Method</option>
+                </select>
+              </div>
+              
+              <div id="manual_t_input">
+                <label class="block text-sm">T (Δ mức xám)</label>
+                <input type="number" id="T" name="T" value="10" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+            </div>
+
+            <div data-for="watershed" class="param hidden grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm">Blur ksize</label>
+                <input type="number" id="blur_ksize" name="blur_ksize" min="1" step="2" value="3" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Distance ratio</label>
+                <input type="number" id="dist_ratio" name="dist_ratio" step="0.01" min="0.01" max="0.9" value="0.10" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm mb-1">Ảnh đầu vào</label>
+            <input id="imageInput" type="file" accept="image/*" class="w-full cursor-pointer" />
+          </div>
+
+          <div>
+            <label class="block text-sm mb-1">Ground Truth (tùy chọn) <i class="fa fa-info-circle text-xs"></i></label>
+            <input id="groundTruthInput" type="file" accept="image/*" class="w-full cursor-pointer" />
+            <p class="text-xs text-white/60 mt-1">Upload ground truth mask để tính IoU</p>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="button" id="runBtn" class="btn text-white px-4 py-2 rounded shadow flex-1">Xử lý</button>
+            <button type="button" id="resetBtn" class="chip px-4 py-2 rounded">Xóa</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="lg:col-span-7 card p-5 shadow-lg">
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 class="font-semibold mb-2">Ảnh gốc</h3>
+              <div class="aspect-video bg-[#10253f] border border-white/10 rounded flex items-center justify-center relative">
+                <div class="image-container">
+                  <img id="preview" class="max-h-96 object-contain" alt="preview" />
+                  <canvas id="seedCanvas" class="canvas-overlay hidden"></canvas>
+                  <div id="seedMarker" class="seed-marker hidden"></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-semibold mb-2">Kết quả</h3>
+              <div class="aspect-video bg-[#10253f] border border-white/10 rounded flex items-center justify-center relative">
+                <img id="result" class="max-h-96 object-contain" alt="result" />
+                <div id="meta" class="absolute bottom-2 right-2 text-xs bg-black/50 px-2 py-1 rounded hidden"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="watershedOutputs" class="hidden grid grid-cols-3 gap-4">
+            <div>
+              <h4 class="text-sm font-semibold mb-2 text-red-400">Sure Foreground</h4>
+              <img id="sureFg" class="w-full border border-white/10 rounded" />
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-2 text-blue-400">Sure Background</h4>
+              <img id="sureBg" class="w-full border border-white/10 rounded" />
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-2 text-green-400">Unknown Region</h4>
+              <img id="unknownReg" class="w-full border border-white/10 rounded" />
+            </div>
+          </div>
+
+          <div id="chainCodeOutput" class="hidden">
+            <h4 class="text-sm font-semibold mb-2">Chain Code</h4>
+            <div class="bg-[#10253f] border border-white/10 rounded p-3">
+              <p class="text-xs font-mono break-all" id="chainCodeText"></p>
+              <p class="text-xs text-white/70 mt-2">Độ dài: <span id="chainLength"></span></p>
+              <div class="mt-3 flex items-center gap-3">
+                <button type="button" id="drawChainBtn" class="btn text-white px-3 py-1.5 rounded shadow">
+                  <i class="fa fa-pen"></i> Vẽ Chain Code
+                </button>
+                <span id="chainHint" class="text-xs text-white/60 hidden">Đang chờ chuỗi chain code...</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="chainCodeViz" class="hidden">
+            <h4 class="text-sm font-semibold mb-2">Chain Code Visualization</h4>
+            <div class="aspect-video bg-[#10253f] border border-white/10 rounded flex items-center justify-center">
+              <img id="chainCodeImg" class="max-h-96 object-contain" alt="chaincode-visualization" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="iouModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeIouModal()">&times;</span>
+      <h2 class="text-2xl font-bold mb-4 accent">Intersection over Union (IoU)</h2>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <h3 class="font-semibold mb-2">Predicted Mask</h3>
+          <img id="modalPredicted" class="w-full border border-white/10 rounded" />
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">Ground Truth</h3>
+          <img id="modalGroundTruth" class="w-full border border-white/10 rounded" />
+        </div>
+      </div>
+      <div class="bg-[#10253f] border border-white/10 rounded p-4 text-center">
+        <p class="text-sm text-white/70 mb-2">IoU Score</p>
+        <p class="text-4xl font-bold accent" id="iouScore">0.00</p>
+        <p class="text-xs text-white/60 mt-2">Higher is better (max = 1.0)</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const opEl = document.getElementById('op');
+    const paramsWrapper = document.getElementById('params');
+    const imageInput = document.getElementById('imageInput');
+    const groundTruthInput = document.getElementById('groundTruthInput');
+    const previewEl = document.getElementById('preview');
+    const resultEl = document.getElementById('result');
+    const runBtn = document.getElementById('runBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const metaEl = document.getElementById('meta');
+    const seedCanvas = document.getElementById('seedCanvas');
+    const seedMarker = document.getElementById('seedMarker');
+    const seedXInput = document.getElementById('seed_x');
+    const seedYInput = document.getElementById('seed_y');
+    const tMethodSelect = document.getElementById('t_method');
+    const manualTInput = document.getElementById('manual_t_input');
+    
+  let seedPoint = null;
+  let chainCodeRaw = '';
+
+    function updateParamsUI() {
+      const op = opEl.value;
+      document.querySelectorAll('.param').forEach(div => div.classList.add('hidden'));
+      const block = paramsWrapper.querySelector(`[data-for="${op}"]`);
+      if (block) block.classList.remove('hidden');
+      
+      if (op === 'region_growing' && previewEl.src) {
+        seedCanvas.classList.remove('hidden');
+      } else {
+        seedCanvas.classList.add('hidden');
+        seedMarker.classList.add('hidden');
+      }
+      
+      document.getElementById('watershedOutputs').classList.add('hidden');
+      document.getElementById('chainCodeOutput').classList.add('hidden');
+      // Clear chain code visualization when switching methods
+      const chainViz = document.getElementById('chainCodeViz');
+      const chainImg = document.getElementById('chainCodeImg');
+      if (chainImg) chainImg.src = '';
+      if (chainViz) chainViz.classList.add('hidden');
+      chainCodeRaw = '';
+    }
+
+    opEl.addEventListener('change', updateParamsUI);
+    updateParamsUI();
+
+    if (tMethodSelect) {
+      tMethodSelect.addEventListener('change', () => {
+        manualTInput.style.display = tMethodSelect.value === 'manual' ? 'block' : 'none';
+      });
+    }
+
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) { previewEl.src = ''; return; }
+      const url = URL.createObjectURL(file);
+      previewEl.src = url;
+      previewEl.onload = () => {
+        setupCanvas();
+        updateParamsUI();
+      };
+    });
+
+    function setupCanvas() {
+      seedCanvas.width = previewEl.naturalWidth;
+      seedCanvas.height = previewEl.naturalHeight;
+      seedCanvas.style.width = previewEl.offsetWidth + 'px';
+      seedCanvas.style.height = previewEl.offsetHeight + 'px';
+    }
+
+    seedCanvas.addEventListener('click', (e) => {
+      const rect = seedCanvas.getBoundingClientRect();
+      const scaleX = seedCanvas.width / rect.width;
+      const scaleY = seedCanvas.height / rect.height;
+      const x = Math.round((e.clientX - rect.left) * scaleX);
+      const y = Math.round((e.clientY - rect.top) * scaleY);
+      
+      seedPoint = {x, y};
+      seedXInput.value = x;
+      seedYInput.value = y;
+      
+      seedMarker.style.left = (e.clientX - rect.left) + 'px';
+      seedMarker.style.top = (e.clientY - rect.top) + 'px';
+      seedMarker.classList.remove('hidden');
+    });
+
+    resetBtn.addEventListener('click', () => {
+      document.getElementById('segForm').reset();
+      previewEl.src = '';
+      resultEl.src = '';
+      metaEl.classList.add('hidden');
+      seedMarker.classList.add('hidden');
+      seedCanvas.classList.add('hidden');
+      seedPoint = null;
+      document.getElementById('watershedOutputs').classList.add('hidden');
+      document.getElementById('chainCodeOutput').classList.add('hidden');
+  const chainViz = document.getElementById('chainCodeViz');
+  const chainImg = document.getElementById('chainCodeImg');
+  if (chainImg) chainImg.src = '';
+  if (chainViz) chainViz.classList.add('hidden');
+  chainCodeRaw = '';
+      updateParamsUI();
+    });
+
+    async function runSegmentation() {
+      const file = imageInput.files?.[0];
+      if (!file) { alert('Vui lòng chọn ảnh'); return; }
+      const op = opEl.value;
+      const fd = new FormData();
+      fd.append('image', file);
+      fd.append('op', op);
+
+      const gtFile = groundTruthInput.files?.[0];
+      if (gtFile) fd.append('ground_truth', gtFile);
+
+      const currentParam = paramsWrapper.querySelector(`[data-for="${op}"]`);
+      if (currentParam) {
+        currentParam.querySelectorAll('input, select').forEach(inp => {
+          if (inp.value !== '' && inp.name) fd.append(inp.name, inp.value);
+        });
+      }
+
+      runBtn.disabled = true;
+      runBtn.textContent = 'Đang xử lý...';
+      metaEl.classList.add('hidden');
+      document.getElementById('watershedOutputs').classList.add('hidden');
+      document.getElementById('chainCodeOutput').classList.add('hidden');
+
+      try {
+        const res = await fetch('{{ url_for("api_segmentation_process") }}', {
+          method: 'POST',
+          body: fd
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Xử lý thất bại');
+        
+        if (data.output) resultEl.src = data.output;
+        
+        let summary = [];
+        if (typeof data.threshold !== 'undefined') summary.push(`T=${data.threshold}`);
+        if (typeof data.count !== 'undefined') summary.push(`Count=${data.count}`);
+        if (summary.length) {
+          metaEl.textContent = summary.join(' · ');
+          metaEl.classList.remove('hidden');
+        }
+
+        if (data.sure_foreground) {
+          document.getElementById('sureFg').src = data.sure_foreground;
+          document.getElementById('sureBg').src = data.sure_background;
+          document.getElementById('unknownReg').src = data.unknown_region;
+          document.getElementById('watershedOutputs').classList.remove('hidden');
+        }
+
+        if (data.chain_code) {
+          document.getElementById('chainCodeText').textContent = data.chain_code;
+          document.getElementById('chainLength').textContent = data.chain_length;
+          document.getElementById('chainCodeOutput').classList.remove('hidden');
+          chainCodeRaw = data.chain_code_raw || '';
+          document.getElementById('chainHint').classList.toggle('hidden', !!chainCodeRaw);
+        }
+
+        if (typeof data.iou !== 'undefined') {
+          document.getElementById('modalPredicted').src = data.output;
+          document.getElementById('modalGroundTruth').src = data.ground_truth;
+          document.getElementById('iouScore').textContent = data.iou.toFixed(4);
+          document.getElementById('iouModal').style.display = 'flex';
+        }
+
+      } catch (err) {
+        alert(err.message || 'Có lỗi xảy ra');
+        console.error(err);
+      } finally {
+        runBtn.disabled = false;
+        runBtn.textContent = 'Xử lý';
+      }
+    }
+
+    function closeIouModal() {
+      document.getElementById('iouModal').style.display = 'none';
+    }
+
+    runBtn.addEventListener('click', runSegmentation);
+
+    // Draw Chain Code visualization
+    document.getElementById('drawChainBtn')?.addEventListener('click', async () => {
+      if (!chainCodeRaw) {
+        alert('Chưa có chuỗi chain code để vẽ. Hãy chạy thuật toán Chain Code trước.');
+        return;
+      }
+      try {
+        const res = await fetch('{{ url_for("api_visualize_chain_code") }}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chain_code: chainCodeRaw, start_point: [50,50], scale: 8 })
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Vẽ chain code thất bại');
+        const imgEl = document.getElementById('chainCodeImg');
+        imgEl.src = data.image;
+        document.getElementById('chainCodeViz').classList.remove('hidden');
+      } catch (e) {
+        console.error(e);
+        alert(e.message || 'Có lỗi khi vẽ chain code');
+      }
+    });
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('iouModal');
+      if (event.target == modal) closeIouModal();
+    }
+  </script>
+</body>
+</html>
