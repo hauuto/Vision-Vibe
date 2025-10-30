@@ -58,6 +58,43 @@
           </div>
 
           <div id="params" class="space-y-4">
+            <div data-for="morph_open" class="param hidden grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-sm">Kernel size (odd ≥ 1)</label>
+                <input type="number" id="ksize_open" name="ksize" value="5" min="1" step="2" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Iterations</label>
+                <input type="number" id="iters_open" name="iterations" value="1" min="1" step="1" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Shape</label>
+                <select id="shape_open" name="shape" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+                  <option value="rect">Rect</option>
+                  <option value="ellipse">Ellipse</option>
+                  <option value="cross">Cross</option>
+                </select>
+              </div>
+            </div>
+
+            <div data-for="morph_close" class="param hidden grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-sm">Kernel size (odd ≥ 1)</label>
+                <input type="number" id="ksize_close" name="ksize" value="5" min="1" step="2" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Iterations</label>
+                <input type="number" id="iters_close" name="iterations" value="1" min="1" step="1" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Shape</label>
+                <select id="shape_close" name="shape" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+                  <option value="rect">Rect</option>
+                  <option value="ellipse">Ellipse</option>
+                  <option value="cross">Cross</option>
+                </select>
+              </div>
+            </div>
             <div data-for="global_threshold" class="param hidden">
               <label class="block text-sm mb-1">Epsilon</label>
               <input type="number" step="0.1" min="0" id="epsilon" name="epsilon" value="1" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
@@ -119,6 +156,7 @@
             <input id="imageInput" type="file" accept="image/*" class="w-full cursor-pointer" />
           </div>
 
+
           <div>
             <label class="block text-sm mb-1">Ground Truth (tùy chọn) <i class="fa fa-info-circle text-xs"></i></label>
             <input id="groundTruthInput" type="file" accept="image/*" class="w-full cursor-pointer" />
@@ -150,6 +188,11 @@
               <div class="aspect-video bg-[#10253f] border border-white/10 rounded flex items-center justify-center relative">
                 <img id="result" class="max-h-96 object-contain" alt="result" />
                 <div id="meta" class="absolute bottom-2 right-2 text-xs bg-black/50 px-2 py-1 rounded hidden"></div>
+                <div class="absolute top-2 left-2 flex gap-2">
+                  <button id="toggleOriginalBtn" type="button" class="chip px-2 py-1 rounded text-xs hidden">Hiện ảnh gốc</button>
+                  <button id="transferBtn" type="button" class="chip px-2 py-1 rounded text-xs hidden">Chuyển</button>
+                  <button id="downloadCoordsBtn" type="button" class="chip px-2 py-1 rounded text-xs hidden">Tải tọa độ</button>
+                </div>
               </div>
             </div>
           </div>
@@ -332,6 +375,9 @@
     const runBtn = document.getElementById('runBtn');
     const resetBtn = document.getElementById('resetBtn');
     const metaEl = document.getElementById('meta');
+  const toggleOriginalBtn = document.getElementById('toggleOriginalBtn');
+  const transferBtn = document.getElementById('transferBtn');
+  const downloadCoordsBtn = document.getElementById('downloadCoordsBtn');
     const seedCanvas = document.getElementById('seedCanvas');
     const seedMarker = document.getElementById('seedMarker');
     const seedXInput = document.getElementById('seed_x');
@@ -341,6 +387,9 @@
     
   let seedPoint = null;
   let chainCodeRaw = '';
+  let lastResultSrc = '';
+  let showingOriginalInResult = false;
+  let lastCoordsText = '';
 
     function updateParamsUI() {
       const op = opEl.value;
@@ -413,6 +462,12 @@
       previewEl.src = '';
       resultEl.src = '';
       metaEl.classList.add('hidden');
+      toggleOriginalBtn.classList.add('hidden');
+  transferBtn.classList.add('hidden');
+  downloadCoordsBtn.classList.add('hidden');
+      lastResultSrc = '';
+      showingOriginalInResult = false;
+  lastCoordsText = '';
       seedMarker.classList.add('hidden');
       seedCanvas.classList.add('hidden');
       seedPoint = null;
@@ -437,6 +492,25 @@
       const gtFile = groundTruthInput.files?.[0];
       if (gtFile) fd.append('ground_truth', gtFile);
 
+      // Normalize morphology params: ensure odd kernel size and min iteration = 1
+      if (op === 'morph_open' || op === 'morph_close') {
+        const kId = op === 'morph_open' ? 'ksize_open' : 'ksize_close';
+        const itId = op === 'morph_open' ? 'iters_open' : 'iters_close';
+        const kEl = document.getElementById(kId);
+        const itEl = document.getElementById(itId);
+        if (kEl) {
+          let kv = parseInt(kEl.value || '1', 10);
+          if (isNaN(kv) || kv < 1) kv = 1;
+          if (kv % 2 === 0) kv += 1; // force odd
+          kEl.value = String(kv);
+        }
+        if (itEl) {
+          let itv = parseInt(itEl.value || '1', 10);
+          if (isNaN(itv) || itv < 1) itv = 1;
+          itEl.value = String(itv);
+        }
+      }
+
       const currentParam = paramsWrapper.querySelector(`[data-for="${op}"]`);
       if (currentParam) {
         currentParam.querySelectorAll('input, select').forEach(inp => {
@@ -459,6 +533,15 @@
         if (!data.success) throw new Error(data.error || 'Xử lý thất bại');
         
         if (data.output) resultEl.src = data.output;
+        if (data.output) {
+          lastResultSrc = data.output;
+          showingOriginalInResult = false;
+          if (previewEl.src) {
+            toggleOriginalBtn.textContent = 'Hiện ảnh gốc';
+            toggleOriginalBtn.classList.remove('hidden');
+            transferBtn.classList.remove('hidden');
+          }
+        }
         
         let summary = [];
         if (typeof data.threshold !== 'undefined') summary.push(`T=${data.threshold}`);
@@ -490,6 +573,14 @@
           document.getElementById('iouModal').style.display = 'flex';
         }
 
+        // If contours coords are available, enable download button
+        lastCoordsText = data.coords_text || '';
+        if (lastCoordsText) {
+          downloadCoordsBtn.classList.remove('hidden');
+        } else {
+          downloadCoordsBtn.classList.add('hidden');
+        }
+
       } catch (err) {
         alert(err.message || 'Có lỗi xảy ra');
         console.error(err);
@@ -504,6 +595,65 @@
     }
 
     runBtn.addEventListener('click', runSegmentation);
+
+    // Toggle show original in result pane
+    toggleOriginalBtn?.addEventListener('click', () => {
+      if (!previewEl.src || !lastResultSrc) return;
+      if (!showingOriginalInResult) {
+        resultEl.src = previewEl.src;
+        showingOriginalInResult = true;
+        toggleOriginalBtn.textContent = 'Hiện kết quả';
+        metaEl.classList.add('hidden');
+      } else {
+        resultEl.src = lastResultSrc;
+        showingOriginalInResult = false;
+        toggleOriginalBtn.textContent = 'Hiện ảnh gốc';
+        // meta will be re-shown only if summary exists
+        if (metaEl.textContent?.trim()) metaEl.classList.remove('hidden');
+      }
+    });
+
+    // Download contour coordinates
+    downloadCoordsBtn?.addEventListener('click', () => {
+      if (!lastCoordsText) return;
+      const blob = new Blob([lastCoordsText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'contour_coords.txt';
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+    });
+
+    // Move result image into original input
+    transferBtn?.addEventListener('click', async () => {
+      try {
+        if (!lastResultSrc) { alert('Chưa có ảnh kết quả để chuyển'); return; }
+        // Convert data URL to File and set into file input
+        const resp = await fetch(lastResultSrc);
+        const blob = await resp.blob();
+        const fileName = 'result.png';
+        const file = new File([blob], fileName, { type: blob.type || 'image/png' });
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        imageInput.files = dt.files;
+        const objUrl = URL.createObjectURL(file);
+        previewEl.src = objUrl;
+        // Clear result area and states
+        resultEl.src = '';
+        metaEl.classList.add('hidden');
+        toggleOriginalBtn.classList.add('hidden');
+        transferBtn.classList.add('hidden');
+        showingOriginalInResult = false;
+        // Adjust seed canvas to new preview size
+        previewEl.onload = () => setupCanvas();
+      } catch (e) {
+        console.error(e);
+        alert('Không thể chuyển ảnh: ' + (e.message || 'unknown error'));
+      }
+    });
 
     // Draw Chain Code visualization
     document.getElementById('drawChainBtn')?.addEventListener('click', async () => {

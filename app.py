@@ -38,7 +38,11 @@ try:
         detect_by_contours,
         compute_chain_code,
         draw_chain_code,
+        morph_operation,
         compute_iou,
+        parse_contour_coords_text,
+        draw_contours_on_image,
+        contours_to_text,
     )
 except ImportError as e:
     print(f"Error importing from modules: {e}")
@@ -72,6 +76,8 @@ def segmentation_page():
         {'value': 'otsu', 'label': "Otsu's Method"},
         {'value': 'region_growing', 'label': 'Region Growing'},
         {'value': 'watershed', 'label': 'Watershed'},
+        {'value': 'morph_open', 'label': 'Morphology - Opening'},
+        {'value': 'morph_close', 'label': 'Morphology - Closing'},
         {'value': 'connected_components', 'label': 'Connected Components'},
         {'value': 'contours', 'label': 'Contour Detection'},
         {'value': 'chain_code', 'label': 'Chain Code'},
@@ -110,6 +116,49 @@ def _ensure_gray(img: np.ndarray) -> np.ndarray:
     if img.ndim == 3:
         return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     raise ValueError(f'Unsupported image shape: {img.shape}')
+
+@app.route('/api/segmentation/draw-contour-file', methods=['POST'])
+def api_draw_contour_file():
+    """Draw contours from an uploaded coordinate file on top of the uploaded image."""
+    try:
+        if 'image' not in request.files or 'contour' not in request.files:
+            return jsonify({'success': False, 'error': 'Thiếu image hoặc contour file'}), 400
+
+        img_file = request.files['image']
+        cnt_file = request.files['contour']
+        if not img_file or img_file.filename == '':
+            return jsonify({'success': False, 'error': 'Chưa chọn ảnh'}), 400
+        if not cnt_file or cnt_file.filename == '':
+            return jsonify({'success': False, 'error': 'Chưa chọn file tọa độ contour'}), 400
+
+        img_bytes = img_file.read()
+        img_np = np.frombuffer(img_bytes, np.uint8)
+        img = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
+        if img is None:
+            return jsonify({'success': False, 'error': 'Không đọc được ảnh'}), 400
+
+        text = cnt_file.read().decode('utf-8', errors='ignore')
+        contours = parse_contour_coords_text(text)
+        if not contours:
+            return jsonify({'success': False, 'error': 'Không tìm thấy tọa độ hợp lệ trong file'}), 400
+
+        color = (0, 255, 0)
+        thickness = int(request.form.get('thickness', 2)) if 'thickness' in request.form else 2
+        closed = (request.form.get('closed', 'true').lower() in ['true', '1', 'yes']) if 'closed' in request.form else True
+
+        result = draw_contours_on_image(img, contours, color=color, thickness=thickness, closed=closed)
+        total_points = int(sum(c.shape[0] for c in contours))
+        return jsonify({
+            'success': True,
+            'output': _encode_image(result),
+            'contours': len(contours),
+            'points': total_points
+        })
+    except Exception as e:
+        import traceback
+        print('api_draw_contour_file error:', e)
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/segmentation/visualize-chain-code', methods=['POST'])
 def api_visualize_chain_code():
@@ -547,15 +596,31 @@ def api_segmentation_process():
             resp['sure_background'] = _encode_image(sure_bg_color)
             resp['unknown_region'] = _encode_image(unknown_color)
 
+        elif op in ('morph_open', 'morph_close'):
+            ksize = int(params.get('ksize', 5)) if params else 5
+            iterations = int(params.get('iterations', 1)) if params else 1
+            shape = (params.get('shape') or 'rect').lower() if params else 'rect'
+            mode = 'open' if op == 'morph_open' else 'close'
+            out = morph_operation(gray, op=mode, ksize=ksize, shape=shape, iterations=iterations)
+            resp['params'] = {'op': mode, 'ksize': ksize, 'iterations': iterations, 'shape': shape}
+            resp['output'] = _encode_image(out)
+
         elif op == 'connected_components':
             count, label_img = detect_by_connected_components(gray)
             resp['count'] = int(count)
             resp['output'] = _encode_image(label_img)
 
         elif op == 'contours':
-            count, contour_img, _ = detect_by_contours(gray)
+            count, contour_img, contours = detect_by_contours(gray)
             resp['count'] = int(count)
             resp['output'] = _encode_image(contour_img)
+            try:
+                coords_txt = contours_to_text(contours)
+            except Exception:
+                coords_txt = ''
+            if coords_txt:
+                resp['coords_text'] = coords_txt
+                resp['coords_filename'] = 'contour_coords.txt'
 
         elif op == 'chain_code':
             # First threshold the image

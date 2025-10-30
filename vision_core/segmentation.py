@@ -3,7 +3,43 @@ import matplotlib.pyplot as plt
 import io
 import cv2
 import numpy as np
+import re
 from collections import deque
+def morph_operation(img_gray, op='open', ksize=3, shape='rect', iterations=1):
+  """
+  Perform morphological opening/closing on a binary image derived from img_gray using Otsu.
+  Params:
+    - op: 'open' or 'close'
+    - ksize: odd kernel size >= 1
+    - shape: 'rect' | 'ellipse' | 'cross'
+    - iterations: number of iterations (>=1)
+  Returns: binary image after morphology (uint8 0/255)
+  """
+  img = img_gray.copy()
+  if img.ndim == 3:
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  # Binarize with Otsu
+  _, binary = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+  # Normalize params
+  k = max(1, int(ksize))
+  if k % 2 == 0:
+    k += 1
+  iters = max(1, int(iterations))
+  shape_map = {
+    'rect': cv2.MORPH_RECT,
+    'ellipse': cv2.MORPH_ELLIPSE,
+    'cross': cv2.MORPH_CROSS
+  }
+  st_shape = shape_map.get(str(shape).lower(), cv2.MORPH_RECT)
+  kernel = cv2.getStructuringElement(st_shape, (k, k))
+
+  if str(op).lower() in ['open', 'opening', 'morph_open']:
+    result = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=iters)
+  else:
+    result = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel, iterations=iters)
+
+  return result
 
 # Bài 1a: Phân ngưỡng toàn cục
 def global_thresholding(img_gray, epsilon=1):
@@ -210,11 +246,14 @@ def detect_by_contours(img_gray, output_prefix="contour"):
         hull = cv2.convexHull(cnt)
         cv2.drawContours(contour_img, [hull], -1, (0,0,255), 1)
 
-    # 4️⃣ Xuất tọa độ contour ra file
-    with open(f"{output_prefix}_coords.txt", "w") as f:
-        for i, cnt in enumerate(contours):
-            # print(f"Contour {i+1}:\n{cnt.reshape(-1,2)}\n")
-            f.write(f"Contour {i+1}:\n{cnt.reshape(-1,2)}\n\n")
+    # 4️⃣ Xuất tọa độ contour ra file (giữ nguyên hành vi cũ)
+    try:
+        with open(f"{output_prefix}_coords.txt", "w") as f:
+            for i, cnt in enumerate(contours):
+                f.write(f"Contour {i+1}:\n{cnt.reshape(-1,2)}\n\n")
+    except Exception:
+        # Không chặn nếu không ghi được file; sẽ trả về chuỗi để tải về qua web
+        pass
 
     print(f"[Contours] Số đối tượng phát hiện: {len(contours)}")
     return len(contours), contour_img, contours
@@ -302,6 +341,69 @@ def draw_chain_code(chain_code, start=(2, 2), figsize=(5, 5), color='red', show_
   arr = np.frombuffer(buf.getvalue(), dtype=np.uint8)
   img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
   return img
+  
+def parse_contour_coords_text(text: str):
+  """
+  Parse contour coordinates from a text file content.
+  Supported formats:
+  - One point per line: "x y" or "x,y"
+  - Blocks like:
+      Contour 1:
+      [[x y]
+       [x y]
+       ...]
+    possibly multiple such blocks.
+
+  Returns: List of numpy arrays with shape (n,1,2), dtype=int32 suitable for cv2.polylines/drawContours.
+  """
+  text = text.strip()
+  if not text:
+    return []
+
+  contours = []
+
+  # If it contains labeled blocks, split by 'Contour N:'
+  if re.search(r"Contour\s+\d+\s*:", text, flags=re.IGNORECASE):
+    pattern = re.compile(r"Contour\s+\d+\s*:\s*([\s\S]*?)(?=Contour\s+\d+\s*:|$)", re.IGNORECASE)
+    for block in pattern.findall(text):
+      pts = re.findall(r"(\d+)\s*[ ,]+\s*(\d+)", block)
+      if pts:
+        arr = np.array([[ [int(x), int(y)] ] for x, y in pts], dtype=np.int32)
+        contours.append(arr)
+  else:
+    # Try simple list of pairs in whole text
+    pts = re.findall(r"(\d+)\s*[ ,]+\s*(\d+)", text)
+    if pts:
+      arr = np.array([[ [int(x), int(y)] ] for x, y in pts], dtype=np.int32)
+      contours.append(arr)
+
+  return contours
+
+def draw_contours_on_image(img_bgr: np.ndarray, contours, color=(0,255,0), thickness=2, closed=True):
+  """
+  Draw one or more polylines/contours onto the given BGR image copy and return it.
+  contours: list of ndarray with shape (n,1,2) in int32.
+  """
+  if img_bgr is None:
+    raise ValueError("draw_contours_on_image: img_bgr is None")
+  out = img_bgr.copy()
+  for cnt in contours or []:
+    if isinstance(cnt, np.ndarray) and cnt.ndim >= 2 and cnt.shape[-1] == 2:
+      cv2.polylines(out, [cnt.reshape(-1,1,2)], isClosed=bool(closed), color=color, thickness=thickness)
+  return out
+
+def contours_to_text(contours) -> str:
+  """Format contours to a text similar to the saved file output."""
+  if contours is None:
+    return ""
+  parts = []
+  for i, cnt in enumerate(contours, start=1):
+    try:
+      arr = cnt.reshape(-1, 2)
+      parts.append(f"Contour {i}:\n{arr}\n\n")
+    except Exception:
+      continue
+  return ''.join(parts)
   
   
 # Helper
