@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Segmentation | Vision Vibe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='font/fontawesome/css/all.min.css') }}">
+  <style>
+    body { font-family: "Google Sans", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    .card { background: #1a3c5c; border-radius: 0.75rem; }
+    .btn { background: #507b88; }
+    .btn:hover { background: #305a72; }
+    .accent { color: #7fa4a4; }
+    .chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .image-container { position: relative; display: inline-block; }
+    .canvas-overlay { position: absolute; top: 0; left: 0; cursor: crosshair; }
+    .seed-marker { position: absolute; width: 12px; height: 12px; background: red; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10; }
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+    .modal-content { background-color: #1a3c5c; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 900px; border-radius: 10px; }
+    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 20px; }
+    .close:hover { color: #fff; }
+    .tab-button { padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.05); border-radius: 0.5rem 0.5rem 0 0; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); }
+    .tab-button:hover { background: rgba(255,255,255,0.1); }
+    .tab-button.active { background: #1a3c5c; border-bottom-color: #1a3c5c; font-weight: 600; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body class="bg-[#10253f] text-white min-h-screen">
+  {% include 'components/header.html' %}
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
+    <h1 class="text-3xl font-bold mb-6">Segmentation</h1>
+    <p class="text-white/80 mb-6">Chọn thuật toán phân đoạn, tải ảnh lên và xem kết quả xử lý ngay.</p>
+
+    <!-- Tab Navigation -->
+    <div class="flex gap-2 mb-6 border-b border-white/10">
+      <button class="tab-button active" onclick="switchTab('single')">Xử lý đơn</button>
+      <button class="tab-button" onclick="switchTab('compare')">So sánh thuật toán</button>
+    </div>
+
+    <!-- Tab 1: Single Processing -->
+    <div id="tab-single" class="tab-content active">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Controls -->
+      <section class="lg:col-span-5 card p-5 shadow-lg">
+        <form id="segForm" class="space-y-5">
+          <div>
+            <label class="block text-sm mb-1">Thuật toán</label>
+            <select id="op" name="op" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2 focus:outline-none">
+              {% for m in methods %}
+                <option value="{{ m.value }}">{{ m.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div id="params" class="space-y-4">
+            <div data-for="morph_open" class="param hidden grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-sm">Kernel size (odd ≥ 1)</label>
+                <input type="number" id="ksize_open" name="ksize" value="5" min="1" step="2" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Iterations</label>
+                <input type="number" id="iters_open" name="iterations" value="1" min="1" step="1" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Shape</label>
+                <select id="shape_open" name="shape" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+                  <option value="rect">Rect</option>
+                  <option value="ellipse">Ellipse</option>
+                  <option value="cross">Cross</option>
+                </select>
+              </div>
+            </div>
+
+            <div data-for="morph_close" class="param hidden grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-sm">Kernel size (odd ≥ 1)</label>
+                <input type="number" id="ksize_close" name="ksize" value="5" min="1" step="2" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Iterations</label>
+                <input type="number" id="iters_close" name="iterations" value="1" min="1" step="1" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Shape</label>
+                <select id="shape_close" name="shape" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+                  <option value="rect">Rect</option>
+                  <option value="ellipse">Ellipse</option>
+                  <option value="cross">Cross</option>
+                </select>
+              </div>
+            </div>
+            <div data-for="global_threshold" class="param hidden">
+              <label class="block text-sm mb-1">Epsilon</label>
+              <input type="number" step="0.1" min="0" id="epsilon" name="epsilon" value="1" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+            </div>
+
+            <div data-for="adaptive_threshold" class="param hidden grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm">Block size (odd ≥ 3)</label>
+                <input type="number" id="block_size" name="block_size" value="15" min="3" step="2" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">C</label>
+                <input type="number" id="C" name="C" value="5" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+            </div>
+
+            <div data-for="region_growing" class="param hidden space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm">Seed X</label>
+                  <input type="number" id="seed_x" name="seed_x" value="0" readonly class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+                </div>
+                <div>
+                  <label class="block text-sm">Seed Y</label>
+                  <input type="number" id="seed_y" name="seed_y" value="0" readonly class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+                </div>
+              </div>
+              <p class="text-xs text-white/70"><i class="fa fa-hand-pointer"></i> Nhấp vào ảnh gốc để chọn seed point</p>
+              
+              <div>
+                <label class="block text-sm mb-1">Phương pháp chọn T</label>
+                <select id="t_method" name="t_method" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+                  <option value="manual">Manual (Tự nhập)</option>
+                  <option value="global">Global Thresholding</option>
+                  <option value="otsu">Otsu's Method</option>
+                </select>
+              </div>
+              
+              <div id="manual_t_input">
+                <label class="block text-sm">T (Δ mức xám)</label>
+                <input type="number" id="T" name="T" value="10" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+            </div>
+
+            <div data-for="watershed" class="param hidden grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm">Blur ksize</label>
+                <input type="number" id="blur_ksize" name="blur_ksize" min="1" step="2" value="3" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+              <div>
+                <label class="block text-sm">Distance ratio</label>
+                <input type="number" id="dist_ratio" name="dist_ratio" step="0.01" min="0.01" max="0.9" value="0.10" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm mb-1">Ảnh đầu vào</label>
+            <input id="imageInput" type="file" accept="image/*" class="w-full cursor-pointer" />
+          </div>
+
+
+          <div>
+            <label class="block text-sm mb-1">Ground Truth (tùy chọn) <i class="fa fa-info-circle text-xs"></i></label>
+            <input id="groundTruthInput" type="file" accept="image/*" class="w-full cursor-pointer" />
+            <p class="text-xs text-white/60 mt-1">Upload ground truth mask để tính IoU</p>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="button" id="runBtn" class="btn text-white px-4 py-2 rounded shadow flex-1">Xử lý</button>
+            <button type="button" id="resetBtn" class="chip px-4 py-2 rounded">Xóa</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="lg:col-span-7 card p-5 shadow-lg">
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 class="font-semibold mb-2">Ảnh gốc</h3>
+              <div class="aspect-video bg-[#10253f] border border-white/10 rounded flex items-center justify-center relative">
+                <div class="image-container">
+                  <img id="preview" class="max-h-96 object-contain" alt="preview" />
+                  <canvas id="seedCanvas" class="canvas-overlay hidden"></canvas>
+                  <div id="seedMarker" class="seed-marker hidden"></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-semibold mb-2">Kết quả</h3>
+              <div class="aspect-video bg-[#10253f] border border-white/10 rounded flex items-center justify-center relative">
+                <img id="result" class="max-h-96 object-contain" alt="result" />
+                <div id="meta" class="absolute bottom-2 right-2 text-xs bg-black/50 px-2 py-1 rounded hidden"></div>
+                <div class="absolute top-2 left-2 flex gap-2">
+                  <button id="toggleOriginalBtn" type="button" class="chip px-2 py-1 rounded text-xs hidden">Hiện ảnh gốc</button>
+                  <button id="transferBtn" type="button" class="chip px-2 py-1 rounded text-xs hidden">Chuyển</button>
+                  <button id="downloadCoordsBtn" type="button" class="chip px-2 py-1 rounded text-xs hidden">Tải tọa độ</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="watershedOutputs" class="hidden grid grid-cols-3 gap-4">
+            <div>
+              <h4 class="text-sm font-semibold mb-2 text-red-400">Sure Foreground</h4>
+              <img id="sureFg" class="w-full border border-white/10 rounded" />
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-2 text-blue-400">Sure Background</h4>
+              <img id="sureBg" class="w-full border border-white/10 rounded" />
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold mb-2 text-green-400">Unknown Region</h4>
+              <img id="unknownReg" class="w-full border border-white/10 rounded" />
+            </div>
+          </div>
+
+          <div id="chainCodeOutput" class="hidden">
+            <h4 class="text-sm font-semibold mb-2">Chain Code</h4>
+            <div class="bg-[#10253f] border border-white/10 rounded p-3">
+              <p class="text-xs font-mono break-all" id="chainCodeText"></p>
+              <p class="text-xs text-white/70 mt-2">Độ dài: <span id="chainLength"></span></p>
+              <div class="mt-3 flex items-center gap-3">
+                <button type="button" id="drawChainBtn" class="btn text-white px-3 py-1.5 rounded shadow">
+                  <i class="fa fa-pen"></i> Vẽ Chain Code
+                </button>
+                <span id="chainHint" class="text-xs text-white/60 hidden">Đang chờ chuỗi chain code...</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="chainCodeViz" class="hidden">
+            <h4 class="text-sm font-semibold mb-2">Chain Code Visualization</h4>
+            <div class="aspect-video bg-[#10253f] border border-white/10 rounded flex items-center justify-center">
+              <img id="chainCodeImg" class="max-h-96 object-contain" alt="chaincode-visualization" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    </div>
+    <!-- End Tab 1 -->
+
+    <!-- Tab 2: Compare Multiple Algorithms -->
+    <div id="tab-compare" class="tab-content">
+      <div class="card p-6 shadow-lg space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Input images -->
+          <div class="space-y-4">
+            <div class="space-y-3">
+              <h3 class="text-xl font-semibold">Ảnh A</h3>
+              <input id="compareImageA" type="file" accept="image/*" class="w-full cursor-pointer" />
+              <div class="aspect-square bg-[#10253f] border border-white/10 rounded flex items-center justify-center">
+                <img id="comparePreviewA" class="max-h-full object-contain" />
+              </div>
+            </div>
+            
+            <div class="space-y-3">
+              <h3 class="text-xl font-semibold">Ảnh B</h3>
+              <input id="compareImageB" type="file" accept="image/*" class="w-full cursor-pointer" />
+              <div class="aspect-square bg-[#10253f] border border-white/10 rounded flex items-center justify-center">
+                <img id="comparePreviewB" class="max-h-full object-contain" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Algorithm selection -->
+          <div class="lg:col-span-2 space-y-4">
+            <h3 class="text-xl font-semibold">Chọn các thuật toán để so sánh</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {% for m in methods %}
+              <label class="flex items-center gap-2 p-3 bg-[#10253f] rounded border border-white/10 cursor-pointer hover:bg-[#0f1f35] transition">
+                <input type="checkbox" class="algo-checkbox" value="{{ m.value }}" />
+                <span class="text-sm">{{ m.label }}</span>
+              </label>
+              {% endfor %}
+            </div>
+            <div class="flex gap-3 mt-4">
+              <button id="runCompare" type="button" class="btn text-white px-6 py-2 rounded shadow">
+                <i class="fa fa-play"></i> Chạy so sánh
+              </button>
+              <button id="resetCompare" type="button" class="chip px-4 py-2 rounded">Xóa</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results grid -->
+        <div id="compareResults" class="space-y-6"></div>
+      </div>
+    </div>
+    <!-- End Tab 2 -->
+  </main>
+
+  <!-- Remove old compare section -->
+  <!--
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <div class="card p-5 shadow-lg space-y-5">
+      <h2 class="text-2xl font-bold">So sánh 2 ảnh / 2 thuật toán</h2>
+      <p class="text-white/80">Chọn 2 ảnh và 2 thuật toán (có thể khác nhau). Kết quả hiển thị trên 2 dòng riêng.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-3">
+          <h3 class="font-semibold">Ảnh A</h3>
+          <label class="block text-sm mb-1">Thuật toán</label>
+          <select id="opA" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+            {% for m in methods %}
+              <option value="{{ m.value }}">{{ m.label }}</option>
+            {% endfor %}
+          </select>
+          <input id="imageA" type="file" accept="image/*" class="w-full cursor-pointer" />
+        </div>
+        <div class="space-y-3">
+          <h3 class="font-semibold">Ảnh B</h3>
+          <label class="block text-sm mb-1">Thuật toán</label>
+          <select id="opB" class="w-full bg-[#10253f] border border-white/20 rounded px-3 py-2">
+            {% for m in methods %}
+              <option value="{{ m.value }}">{{ m.label }}</option>
+            {% endfor %}
+          </select>
+          <input id="imageB" type="file" accept="image/*" class="w-full cursor-pointer" />
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="runBoth" type="button" class="btn text-white px-4 py-2 rounded shadow">Xử lý cả hai</button>
+        <button id="resetBoth" type="button" class="chip px-4 py-2 rounded">Xóa</button>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h4 class="text-sm font-semibold mb-2">Kết quả A</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <img id="prevA" class="w-full border border-white/10 rounded" />
+            <img id="outA" class="w-full border border-white/10 rounded" />
+          </div>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold mb-2">Kết quả B</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <img id="prevB" class="w-full border border-white/10 rounded" />
+            <img id="outB" class="w-full border border-white/10 rounded" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <div id="iouModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeIouModal()">&times;</span>
+      <h2 class="text-2xl font-bold mb-4 accent">Intersection over Union (IoU)</h2>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <h3 class="font-semibold mb-2">Predicted Mask</h3>
+          <img id="modalPredicted" class="w-full border border-white/10 rounded" />
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">Ground Truth</h3>
+          <img id="modalGroundTruth" class="w-full border border-white/10 rounded" />
+        </div>
+      </div>
+      <div class="bg-[#10253f] border border-white/10 rounded p-4 text-center">
+        <p class="text-sm text-white/70 mb-2">IoU Score</p>
+        <p class="text-4xl font-bold accent" id="iouScore">0.00</p>
+        <p class="text-xs text-white/60 mt-2">Higher is better (max = 1.0)</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const opEl = document.getElementById('op');
+    const paramsWrapper = document.getElementById('params');
+    const imageInput = document.getElementById('imageInput');
+    const groundTruthInput = document.getElementById('groundTruthInput');
+    const previewEl = document.getElementById('preview');
+    const resultEl = document.getElementById('result');
+    const runBtn = document.getElementById('runBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const metaEl = document.getElementById('meta');
+  const toggleOriginalBtn = document.getElementById('toggleOriginalBtn');
+  const transferBtn = document.getElementById('transferBtn');
+  const downloadCoordsBtn = document.getElementById('downloadCoordsBtn');
+    const seedCanvas = document.getElementById('seedCanvas');
+    const seedMarker = document.getElementById('seedMarker');
+    const seedXInput = document.getElementById('seed_x');
+    const seedYInput = document.getElementById('seed_y');
+    const tMethodSelect = document.getElementById('t_method');
+    const manualTInput = document.getElementById('manual_t_input');
+    
+  let seedPoint = null;
+  let chainCodeRaw = '';
+  let lastResultSrc = '';
+  let showingOriginalInResult = false;
+  let lastCoordsText = '';
+
+    function updateParamsUI() {
+      const op = opEl.value;
+      document.querySelectorAll('.param').forEach(div => div.classList.add('hidden'));
+      const block = paramsWrapper.querySelector(`[data-for="${op}"]`);
+      if (block) block.classList.remove('hidden');
+      
+      if (op === 'region_growing' && previewEl.src) {
+        seedCanvas.classList.remove('hidden');
+      } else {
+        seedCanvas.classList.add('hidden');
+        seedMarker.classList.add('hidden');
+      }
+      
+      document.getElementById('watershedOutputs').classList.add('hidden');
+      document.getElementById('chainCodeOutput').classList.add('hidden');
+      // Clear chain code visualization when switching methods
+      const chainViz = document.getElementById('chainCodeViz');
+      const chainImg = document.getElementById('chainCodeImg');
+      if (chainImg) chainImg.src = '';
+      if (chainViz) chainViz.classList.add('hidden');
+      chainCodeRaw = '';
+    }
+
+    opEl.addEventListener('change', updateParamsUI);
+    updateParamsUI();
+
+    if (tMethodSelect) {
+      tMethodSelect.addEventListener('change', () => {
+        manualTInput.style.display = tMethodSelect.value === 'manual' ? 'block' : 'none';
+      });
+    }
+
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) { previewEl.src = ''; return; }
+      const url = URL.createObjectURL(file);
+      previewEl.src = url;
+      previewEl.onload = () => {
+        setupCanvas();
+        updateParamsUI();
+      };
+    });
+
+    function setupCanvas() {
+      seedCanvas.width = previewEl.naturalWidth;
+      seedCanvas.height = previewEl.naturalHeight;
+      seedCanvas.style.width = previewEl.offsetWidth + 'px';
+      seedCanvas.style.height = previewEl.offsetHeight + 'px';
+    }
+
+    seedCanvas.addEventListener('click', (e) => {
+      const rect = seedCanvas.getBoundingClientRect();
+      const scaleX = seedCanvas.width / rect.width;
+      const scaleY = seedCanvas.height / rect.height;
+      const x = Math.round((e.clientX - rect.left) * scaleX);
+      const y = Math.round((e.clientY - rect.top) * scaleY);
+      
+      seedPoint = {x, y};
+      seedXInput.value = x;
+      seedYInput.value = y;
+      
+      seedMarker.style.left = (e.clientX - rect.left) + 'px';
+      seedMarker.style.top = (e.clientY - rect.top) + 'px';
+      seedMarker.classList.remove('hidden');
+    });
+
+    resetBtn.addEventListener('click', () => {
+      document.getElementById('segForm').reset();
+      previewEl.src = '';
+      resultEl.src = '';
+      metaEl.classList.add('hidden');
+      toggleOriginalBtn.classList.add('hidden');
+  transferBtn.classList.add('hidden');
+  downloadCoordsBtn.classList.add('hidden');
+      lastResultSrc = '';
+      showingOriginalInResult = false;
+  lastCoordsText = '';
+      seedMarker.classList.add('hidden');
+      seedCanvas.classList.add('hidden');
+      seedPoint = null;
+      document.getElementById('watershedOutputs').classList.add('hidden');
+      document.getElementById('chainCodeOutput').classList.add('hidden');
+  const chainViz = document.getElementById('chainCodeViz');
+  const chainImg = document.getElementById('chainCodeImg');
+  if (chainImg) chainImg.src = '';
+  if (chainViz) chainViz.classList.add('hidden');
+  chainCodeRaw = '';
+      updateParamsUI();
+    });
+
+    async function runSegmentation() {
+      const file = imageInput.files?.[0];
+      if (!file) { alert('Vui lòng chọn ảnh'); return; }
+      const op = opEl.value;
+      const fd = new FormData();
+      fd.append('image', file);
+      fd.append('op', op);
+
+      const gtFile = groundTruthInput.files?.[0];
+      if (gtFile) fd.append('ground_truth', gtFile);
+
+      // Normalize morphology params: ensure odd kernel size and min iteration = 1
+      if (op === 'morph_open' || op === 'morph_close') {
+        const kId = op === 'morph_open' ? 'ksize_open' : 'ksize_close';
+        const itId = op === 'morph_open' ? 'iters_open' : 'iters_close';
+        const kEl = document.getElementById(kId);
+        const itEl = document.getElementById(itId);
+        if (kEl) {
+          let kv = parseInt(kEl.value || '1', 10);
+          if (isNaN(kv) || kv < 1) kv = 1;
+          if (kv % 2 === 0) kv += 1; // force odd
+          kEl.value = String(kv);
+        }
+        if (itEl) {
+          let itv = parseInt(itEl.value || '1', 10);
+          if (isNaN(itv) || itv < 1) itv = 1;
+          itEl.value = String(itv);
+        }
+      }
+
+      const currentParam = paramsWrapper.querySelector(`[data-for="${op}"]`);
+      if (currentParam) {
+        currentParam.querySelectorAll('input, select').forEach(inp => {
+          if (inp.value !== '' && inp.name) fd.append(inp.name, inp.value);
+        });
+      }
+
+      runBtn.disabled = true;
+      runBtn.textContent = 'Đang xử lý...';
+      metaEl.classList.add('hidden');
+      document.getElementById('watershedOutputs').classList.add('hidden');
+      document.getElementById('chainCodeOutput').classList.add('hidden');
+
+      try {
+        const res = await fetch('{{ url_for("api_segmentation_process") }}', {
+          method: 'POST',
+          body: fd
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Xử lý thất bại');
+        
+        if (data.output) resultEl.src = data.output;
+        if (data.output) {
+          lastResultSrc = data.output;
+          showingOriginalInResult = false;
+          if (previewEl.src) {
+            toggleOriginalBtn.textContent = 'Hiện ảnh gốc';
+            toggleOriginalBtn.classList.remove('hidden');
+            transferBtn.classList.remove('hidden');
+          }
+        }
+        
+        let summary = [];
+        if (typeof data.threshold !== 'undefined') summary.push(`T=${data.threshold}`);
+        if (typeof data.count !== 'undefined') summary.push(`Count=${data.count}`);
+        if (summary.length) {
+          metaEl.textContent = summary.join(' · ');
+          metaEl.classList.remove('hidden');
+        }
+
+        if (data.sure_foreground) {
+          document.getElementById('sureFg').src = data.sure_foreground;
+          document.getElementById('sureBg').src = data.sure_background;
+          document.getElementById('unknownReg').src = data.unknown_region;
+          document.getElementById('watershedOutputs').classList.remove('hidden');
+        }
+
+        if (data.chain_code) {
+          document.getElementById('chainCodeText').textContent = data.chain_code;
+          document.getElementById('chainLength').textContent = data.chain_length;
+          document.getElementById('chainCodeOutput').classList.remove('hidden');
+          chainCodeRaw = data.chain_code_raw || '';
+          document.getElementById('chainHint').classList.toggle('hidden', !!chainCodeRaw);
+        }
+
+        if (typeof data.iou !== 'undefined') {
+          document.getElementById('modalPredicted').src = data.output;
+          document.getElementById('modalGroundTruth').src = data.ground_truth;
+          document.getElementById('iouScore').textContent = data.iou.toFixed(4);
+          document.getElementById('iouModal').style.display = 'flex';
+        }
+
+        // If contours coords are available, enable download button
+        lastCoordsText = data.coords_text || '';
+        if (lastCoordsText) {
+          downloadCoordsBtn.classList.remove('hidden');
+        } else {
+          downloadCoordsBtn.classList.add('hidden');
+        }
+
+      } catch (err) {
+        alert(err.message || 'Có lỗi xảy ra');
+        console.error(err);
+      } finally {
+        runBtn.disabled = false;
+        runBtn.textContent = 'Xử lý';
+      }
+    }
+
+    function closeIouModal() {
+      document.getElementById('iouModal').style.display = 'none';
+    }
+
+    runBtn.addEventListener('click', runSegmentation);
+
+    // Toggle show original in result pane
+    toggleOriginalBtn?.addEventListener('click', () => {
+      if (!previewEl.src || !lastResultSrc) return;
+      if (!showingOriginalInResult) {
+        resultEl.src = previewEl.src;
+        showingOriginalInResult = true;
+        toggleOriginalBtn.textContent = 'Hiện kết quả';
+        metaEl.classList.add('hidden');
+      } else {
+        resultEl.src = lastResultSrc;
+        showingOriginalInResult = false;
+        toggleOriginalBtn.textContent = 'Hiện ảnh gốc';
+        // meta will be re-shown only if summary exists
+        if (metaEl.textContent?.trim()) metaEl.classList.remove('hidden');
+      }
+    });
+
+    // Download contour coordinates
+    downloadCoordsBtn?.addEventListener('click', () => {
+      if (!lastCoordsText) return;
+      const blob = new Blob([lastCoordsText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'contour_coords.txt';
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+    });
+
+    // Move result image into original input
+    transferBtn?.addEventListener('click', async () => {
+      try {
+        if (!lastResultSrc) { alert('Chưa có ảnh kết quả để chuyển'); return; }
+        // Convert data URL to File and set into file input
+        const resp = await fetch(lastResultSrc);
+        const blob = await resp.blob();
+        const fileName = 'result.png';
+        const file = new File([blob], fileName, { type: blob.type || 'image/png' });
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        imageInput.files = dt.files;
+        const objUrl = URL.createObjectURL(file);
+        previewEl.src = objUrl;
+        // Clear result area and states
+        resultEl.src = '';
+        metaEl.classList.add('hidden');
+        toggleOriginalBtn.classList.add('hidden');
+        transferBtn.classList.add('hidden');
+        showingOriginalInResult = false;
+        // Adjust seed canvas to new preview size
+        previewEl.onload = () => setupCanvas();
+      } catch (e) {
+        console.error(e);
+        alert('Không thể chuyển ảnh: ' + (e.message || 'unknown error'));
+      }
+    });
+
+    // Draw Chain Code visualization
+    document.getElementById('drawChainBtn')?.addEventListener('click', async () => {
+      if (!chainCodeRaw) {
+        alert('Chưa có chuỗi chain code để vẽ. Hãy chạy thuật toán Chain Code trước.');
+        return;
+      }
+      try {
+        const res = await fetch('{{ url_for("api_visualize_chain_code") }}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chain_code: chainCodeRaw, start_point: [50,50], scale: 8 })
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Vẽ chain code thất bại');
+        const imgEl = document.getElementById('chainCodeImg');
+        imgEl.src = data.image;
+        document.getElementById('chainCodeViz').classList.remove('hidden');
+      } catch (e) {
+        console.error(e);
+        alert(e.message || 'Có lỗi khi vẽ chain code');
+      }
+    });
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('iouModal');
+      if (event.target == modal) closeIouModal();
+    }
+
+    // --- Tab switching ---
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      if (tabName === 'single') {
+        document.querySelector('.tab-button:nth-child(1)').classList.add('active');
+        document.getElementById('tab-single').classList.add('active');
+      } else if (tabName === 'compare') {
+        document.querySelector('.tab-button:nth-child(2)').classList.add('active');
+        document.getElementById('tab-compare').classList.add('active');
+      }
+    }
+
+    // --- Compare multiple algorithms ---
+    document.getElementById('compareImageA')?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      document.getElementById('comparePreviewA').src = url;
+    });
+
+    document.getElementById('compareImageB')?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      document.getElementById('comparePreviewB').src = url;
+    });
+
+    document.getElementById('runCompare')?.addEventListener('click', async () => {
+      const fileA = document.getElementById('compareImageA').files?.[0];
+      const fileB = document.getElementById('compareImageB').files?.[0];
+      
+      if (!fileA && !fileB) { alert('Vui lòng chọn ít nhất 1 ảnh'); return; }
+
+      const checkboxes = document.querySelectorAll('.algo-checkbox:checked');
+      if (checkboxes.length === 0) { alert('Vui lòng chọn ít nhất 1 thuật toán'); return; }
+
+      const algos = Array.from(checkboxes).map(cb => cb.value);
+      const resultsDiv = document.getElementById('compareResults');
+      resultsDiv.innerHTML = '<div class="text-center py-4"><i class="fa fa-spinner fa-spin"></i> Đang xử lý...</div>';
+
+      try {
+        // Process both images with all algorithms
+        const processImage = async (file, label) => {
+          if (!file) return null;
+          const promises = algos.map(async (op) => {
+            const fd = new FormData();
+            fd.append('image', file);
+            fd.append('op', op);
+            const res = await fetch('{{ url_for("api_segmentation_process") }}', { method: 'POST', body: fd });
+            const data = await res.json();
+            return { op, data };
+          });
+          const results = await Promise.all(promises);
+          return { label, results, preview: URL.createObjectURL(file) };
+        };
+
+        const [imageAResults, imageBResults] = await Promise.all([
+          fileA ? processImage(fileA, 'Ảnh A') : Promise.resolve(null),
+          fileB ? processImage(fileB, 'Ảnh B') : Promise.resolve(null)
+        ]);
+
+        // Build comparison table
+        resultsDiv.innerHTML = '';
+
+        // Create grid with algorithm names as rows and images as columns
+        const methods = {{ methods | tojson }};
+        
+        algos.forEach((op) => {
+          const label = methods.find(m => m.value === op)?.label || op;
+          const resultA = imageAResults?.results.find(r => r.op === op);
+          const resultB = imageBResults?.results.find(r => r.op === op);
+          
+          const row = document.createElement('div');
+          row.className = 'card p-4';
+          
+          let html = `<h4 class="font-semibold mb-3 accent text-lg">${label}</h4>`;
+          html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+          
+          if (imageAResults) {
+            html += `
+              <div class="space-y-2">
+                <p class="text-xs text-white/70 font-semibold">Ảnh A</p>
+                <img src="${resultA?.data?.output || ''}" class="w-full border border-white/10 rounded" />
+                ${resultA?.data?.threshold ? `<p class="text-xs text-white/60">T=${resultA.data.threshold}</p>` : ''}
+                ${resultA?.data?.count ? `<p class="text-xs text-white/60">Count=${resultA.data.count}</p>` : ''}
+              </div>
+            `;
+          }
+          
+          if (imageBResults) {
+            html += `
+              <div class="space-y-2">
+                <p class="text-xs text-white/70 font-semibold">Ảnh B</p>
+                <img src="${resultB?.data?.output || ''}" class="w-full border border-white/10 rounded" />
+                ${resultB?.data?.threshold ? `<p class="text-xs text-white/60">T=${resultB.data.threshold}</p>` : ''}
+                ${resultB?.data?.count ? `<p class="text-xs text-white/60">Count=${resultB.data.count}</p>` : ''}
+              </div>
+            `;
+          }
+          
+          html += '</div>';
+          row.innerHTML = html;
+          resultsDiv.appendChild(row);
+        });
+
+      } catch (e) {
+        console.error(e);
+        resultsDiv.innerHTML = '<div class="text-center py-4 text-red-400">Có lỗi xảy ra khi xử lý</div>';
+      }
+    });
+
+    document.getElementById('resetCompare')?.addEventListener('click', () => {
+      document.getElementById('compareImageA').value = '';
+      document.getElementById('compareImageB').value = '';
+      document.getElementById('comparePreviewA').src = '';
+      document.getElementById('comparePreviewB').src = '';
+      document.querySelectorAll('.algo-checkbox').forEach(cb => cb.checked = false);
+      document.getElementById('compareResults').innerHTML = '';
+    });
+  </script>
+</body>
+</html>

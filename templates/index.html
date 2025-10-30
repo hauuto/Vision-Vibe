@@ -141,6 +141,33 @@
                     <img src="{{url_for('static',filename='img/cover_tieuluan1.png')}}" class="rounded-lg shadow-lg cursor-pointer hover:scale-105 transition" onclick="onClick(this)" alt="A microphone">
                 </div>
             </div>
+
+            <!-- Feature cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+                <a href="{{ url_for('test') }}" class="bg-[#1a3c5c] rounded-lg p-6 shadow-lg hover:shadow-xl transition group">
+                    <div class="flex items-center gap-4 mb-3">
+                        <i class="fa fa-adjust text-3xl" style="color:#7fa4a4"></i>
+                        <h4 class="text-xl font-semibold group-hover:text-[#7fa4a4] transition">Point Processing</h4>
+                    </div>
+                    <p class="text-sm text-white/80">Biến đổi điểm ảnh: Log, Power, Histogram Equalization, CLAHE...</p>
+                </a>
+
+                <a href="{{ url_for('filter_page') }}" class="bg-[#1a3c5c] rounded-lg p-6 shadow-lg hover:shadow-xl transition group">
+                    <div class="flex items-center gap-4 mb-3">
+                        <i class="fa fa-filter text-3xl" style="color:#7fa4a4"></i>
+                        <h4 class="text-xl font-semibold group-hover:text-[#7fa4a4] transition">Filter & Edges</h4>
+                    </div>
+                    <p class="text-sm text-white/80">Làm mờ, làm sắc nét, phát hiện cạnh với Sobel, Canny, Laplacian...</p>
+                </a>
+
+                <a href="{{ url_for('segmentation_page') }}" class="bg-[#1a3c5c] rounded-lg p-6 shadow-lg hover:shadow-xl transition group">
+                    <div class="flex items-center gap-4 mb-3">
+                        <i class="fa fa-object-group text-3xl" style="color:#7fa4a4"></i>
+                        <h4 class="text-xl font-semibold group-hover:text-[#7fa4a4] transition">Segmentation</h4>
+                    </div>
+                    <p class="text-sm text-white/80">Phân đoạn ảnh: Thresholding, Otsu, Watershed, Region Growing, Contours...</p>
+                </a>
+            </div>
         </div>
     </section>
 

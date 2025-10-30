@@ -27,6 +27,23 @@ try:
         compare_images
     )
     from vision_core.filters import process_operation, process_operation_cv2
+    from vision_core.segmentation import (
+        global_thresholding,
+        Thresholding,
+        adaptiveThreshold,
+        otsu,
+        regionGrowing,
+        watershed_segment,
+        detect_by_connected_components,
+        detect_by_contours,
+        compute_chain_code,
+        draw_chain_code,
+        morph_operation,
+        compute_iou,
+        parse_contour_coords_text,
+        draw_contours_on_image,
+        contours_to_text,
+    )
 except ImportError as e:
     print(f"Error importing from modules: {e}")
 
@@ -48,6 +65,24 @@ def test():
 @app.route('/filter/')
 def filter_page():
     return render_template('filter.html')
+
+# Segmentation page
+@app.route('/segmentation/')
+def segmentation_page():
+    # Provide available ops to template
+    methods = [
+        {'value': 'global_threshold', 'label': 'Global Thresholding'},
+        {'value': 'adaptive_threshold', 'label': 'Adaptive Thresholding'},
+        {'value': 'otsu', 'label': "Otsu's Method"},
+        {'value': 'region_growing', 'label': 'Region Growing'},
+        {'value': 'watershed', 'label': 'Watershed'},
+        {'value': 'morph_open', 'label': 'Morphology - Opening'},
+        {'value': 'morph_close', 'label': 'Morphology - Closing'},
+        {'value': 'connected_components', 'label': 'Connected Components'},
+        {'value': 'contours', 'label': 'Contour Detection'},
+        {'value': 'chain_code', 'label': 'Chain Code'},
+    ]
+    return render_template('segmentation.html', methods=methods)
 
 # --- API DEMOS ---
 @app.route('/api/hello/')
@@ -72,6 +107,96 @@ def _encode_image(img: np.ndarray) -> str:
     if not success:
         raise RuntimeError('Failed to encode image')
     return 'data:image/png;base64,' + base64.b64encode(buffer).decode('utf-8')
+
+def _ensure_gray(img: np.ndarray) -> np.ndarray:
+    if img is None:
+        raise ValueError('None image')
+    if img.ndim == 2:
+        return img
+    if img.ndim == 3:
+        return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    raise ValueError(f'Unsupported image shape: {img.shape}')
+
+@app.route('/api/segmentation/draw-contour-file', methods=['POST'])
+def api_draw_contour_file():
+    """Draw contours from an uploaded coordinate file on top of the uploaded image."""
+    try:
+        if 'image' not in request.files or 'contour' not in request.files:
+            return jsonify({'success': False, 'error': 'Thiếu image hoặc contour file'}), 400
+
+        img_file = request.files['image']
+        cnt_file = request.files['contour']
+        if not img_file or img_file.filename == '':
+            return jsonify({'success': False, 'error': 'Chưa chọn ảnh'}), 400
+        if not cnt_file or cnt_file.filename == '':
+            return jsonify({'success': False, 'error': 'Chưa chọn file tọa độ contour'}), 400
+
+        img_bytes = img_file.read()
+        img_np = np.frombuffer(img_bytes, np.uint8)
+        img = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
+        if img is None:
+            return jsonify({'success': False, 'error': 'Không đọc được ảnh'}), 400
+
+        text = cnt_file.read().decode('utf-8', errors='ignore')
+        contours = parse_contour_coords_text(text)
+        if not contours:
+            return jsonify({'success': False, 'error': 'Không tìm thấy tọa độ hợp lệ trong file'}), 400
+
+        color = (0, 255, 0)
+        thickness = int(request.form.get('thickness', 2)) if 'thickness' in request.form else 2
+        closed = (request.form.get('closed', 'true').lower() in ['true', '1', 'yes']) if 'closed' in request.form else True
+
+        result = draw_contours_on_image(img, contours, color=color, thickness=thickness, closed=closed)
+        total_points = int(sum(c.shape[0] for c in contours))
+        return jsonify({
+            'success': True,
+            'output': _encode_image(result),
+            'contours': len(contours),
+            'points': total_points
+        })
+    except Exception as e:
+        import traceback
+        print('api_draw_contour_file error:', e)
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/segmentation/visualize-chain-code', methods=['POST'])
+def api_visualize_chain_code():
+    try:
+        data = request.get_json(silent=True) or {}
+        chain_code_str = (data.get('chain_code') or '').strip()
+        # If fit is True (default), auto-resize to fit canvas; otherwise use start_point + scale
+        fit = data.get('fit') if data.get('fit') is not None else True
+        start_point = data.get('start_point') or [50, 50]
+        scale = int(data.get('scale') or 8)
+
+        # sanitize chain code: keep only digits 0-7
+        chain_code_str = ''.join([ch for ch in chain_code_str if ch in '01234567'])
+        if not chain_code_str:
+            return jsonify({'success': False, 'error': 'Empty chain code'}), 400
+
+        # directions (dy, dx) mapping consistent with segmentation.py
+        directions = [
+            (0, 1),   # 0: right
+            (-1, 1),  # 1: up-right
+            (-1, 0),  # 2: up
+            (-1, -1), # 3: up-left
+            (0, -1),  # 4: left
+            (1, -1),  # 5: down-left
+            (1, 0),   # 6: down
+            (1, 1)    # 7: down-right
+        ]
+
+        # Build list of codes and delegate rendering to segmentation.draw_chain_code
+        codes = [ord(ch) - 48 for ch in chain_code_str if ch in '01234567']
+        # draw_chain_code from segmentation returns a BGR numpy image rendered via matplotlib
+        img = draw_chain_code(codes)
+        return jsonify({'success': True, 'image': _encode_image(img)})
+    except Exception as e:
+        import traceback
+        print('api_visualize_chain_code error:', e)
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/vision/process', methods=['POST'])
 def api_vision_process():
@@ -355,6 +480,209 @@ def available_methods():
     ]
     return jsonify({'methods': methods})
 
+@app.route('/api/segmentation/process', methods=['POST'])
+def api_segmentation_process():
+    try:
+        # Read image from multipart or JSON
+        img = None
+        params = {}
+        op = None
+
+        if 'image' in request.files:
+            file = request.files['image']
+            if not file or file.filename == '':
+                return jsonify({'error': 'No file provided'}), 400
+            nparr = np.frombuffer(file.read(), np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            op = (request.form.get('op') or '').lower()
+            params = {k: v for k, v in request.form.items() if k != 'op'}
+        else:
+            data = request.get_json(silent=True) or {}
+            b64 = data.get('image_data')
+            op = (data.get('op') or '').lower()
+            params = data.get('params') or {}
+            if b64:
+                if b64.startswith('data:image'):
+                    b64 = b64.split(',')[1]
+                image_bytes = base64.b64decode(b64)
+                nparr = np.frombuffer(image_bytes, np.uint8)
+                img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        if img is None:
+            return jsonify({'error': 'No image provided or decode failed'}), 400
+
+        gray = _ensure_gray(img)
+
+        # Dispatch operations
+        op = (op or 'global_threshold').lower()
+        resp = {'success': True, 'op': op}
+
+        if op == 'global_threshold':
+            eps = float(params.get('epsilon', 1)) if params else 1
+            T = global_thresholding(gray, epsilon=eps)
+            out = Thresholding(gray, T=int(T))
+            resp['threshold'] = int(T)
+            resp['output'] = _encode_image(out)
+
+        elif op == 'adaptive_threshold':
+            block_size = int(params.get('block_size', 15)) if params else 15
+            # ensure odd and >=3
+            if block_size < 3:
+                block_size = 3
+            if block_size % 2 == 0:
+                block_size += 1
+            C = int(params.get('C', 5)) if params else 5
+            out = adaptiveThreshold(gray, block_size=block_size, C=C)
+            resp['params'] = {'block_size': block_size, 'C': C}
+            resp['output'] = _encode_image(out)
+
+        elif op == 'otsu':
+            T = int(otsu(gray))
+            out = Thresholding(gray, T=T)
+            resp['threshold'] = T
+            resp['output'] = _encode_image(out)
+
+        elif op == 'region_growing':
+            # seed (x,y), T - with auto T calculation options
+            h, w = gray.shape
+            seed_x = int(params.get('seed_x', w // 2)) if params else w // 2
+            seed_y = int(params.get('seed_y', h // 2)) if params else h // 2
+            
+            # T method: 'manual', 'global', or 'otsu'
+            t_method = (params.get('t_method') or 'manual').lower()
+            if t_method == 'global':
+                th = int(global_thresholding(gray, epsilon=1))
+            elif t_method == 'otsu':
+                th = int(otsu(gray))
+            else:  # manual
+                th = int(params.get('T', 10)) if params else 10
+            
+            out = regionGrowing(gray, seed=(seed_x, seed_y), T=th)
+            resp['params'] = {'seed_x': seed_x, 'seed_y': seed_y, 'T': th, 't_method': t_method}
+            resp['threshold'] = th
+            resp['output'] = _encode_image(out)
+
+        elif op == 'watershed':
+            blur_ksize = int(params.get('blur_ksize', 3)) if params else 3
+            dist_ratio = float(params.get('dist_ratio', 0.1)) if params else 0.1
+            markers_ws, result_img, boundary_mask = watershed_segment(gray, blur_ksize=blur_ksize, dist_ratio=dist_ratio)
+            
+            # Generate additional outputs for visualization
+            # Sure foreground (markers > 1)
+            sure_fg = np.zeros_like(gray)
+            sure_fg[markers_ws > 1] = 255
+            
+            # Sure background (markers == 1)
+            sure_bg = np.zeros_like(gray)
+            sure_bg[markers_ws == 1] = 255
+            
+            # Unknown region (markers == 0, but not boundary)
+            unknown = np.zeros_like(gray)
+            unknown[(markers_ws == 0) & (~boundary_mask)] = 255
+            
+            # Color visualizations (Red channel emphasized)
+            sure_fg_color = cv2.cvtColor(sure_fg, cv2.COLOR_GRAY2BGR)
+            sure_fg_color[:, :, 2] = sure_fg  # Red channel
+            
+            sure_bg_color = cv2.cvtColor(sure_bg, cv2.COLOR_GRAY2BGR)
+            sure_bg_color[:, :, 0] = sure_bg  # Blue channel
+            
+            unknown_color = cv2.cvtColor(unknown, cv2.COLOR_GRAY2BGR)
+            unknown_color[:, :, 1] = unknown  # Green channel
+            
+            resp['params'] = {'blur_ksize': blur_ksize, 'dist_ratio': dist_ratio}
+            resp['output'] = _encode_image(result_img)
+            resp['sure_foreground'] = _encode_image(sure_fg_color)
+            resp['sure_background'] = _encode_image(sure_bg_color)
+            resp['unknown_region'] = _encode_image(unknown_color)
+
+        elif op in ('morph_open', 'morph_close'):
+            ksize = int(params.get('ksize', 5)) if params else 5
+            iterations = int(params.get('iterations', 1)) if params else 1
+            shape = (params.get('shape') or 'rect').lower() if params else 'rect'
+            mode = 'open' if op == 'morph_open' else 'close'
+            out = morph_operation(gray, op=mode, ksize=ksize, shape=shape, iterations=iterations)
+            resp['params'] = {'op': mode, 'ksize': ksize, 'iterations': iterations, 'shape': shape}
+            resp['output'] = _encode_image(out)
+
+        elif op == 'connected_components':
+            count, label_img = detect_by_connected_components(gray)
+            resp['count'] = int(count)
+            resp['output'] = _encode_image(label_img)
+
+        elif op == 'contours':
+            count, contour_img, contours = detect_by_contours(gray)
+            resp['count'] = int(count)
+            resp['output'] = _encode_image(contour_img)
+            try:
+                coords_txt = contours_to_text(contours)
+            except Exception:
+                coords_txt = ''
+            if coords_txt:
+                resp['coords_text'] = coords_txt
+                resp['coords_filename'] = 'contour_coords.txt'
+
+        elif op == 'chain_code':
+            # First threshold the image
+            _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            try:
+                chain_code, cnt = compute_chain_code(binary)
+                # Draw the contour on the image
+                result = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+                cv2.drawContours(result, [cnt], -1, (0, 255, 0), 2)
+                
+                # Create chain code string (limit to first 100 for display)
+                chain_str = ''.join(map(str, chain_code[:100]))
+                if len(chain_code) > 100:
+                    chain_str += f'... ({len(chain_code)} total)'
+                
+                resp['chain_code'] = chain_str
+                resp['chain_length'] = len(chain_code)
+                # Also include the full chain code for visualization
+                resp['chain_code_raw'] = ''.join(map(str, chain_code))
+                resp['output'] = _encode_image(result)
+            except Exception as e:
+                return jsonify({'error': f'Chain code error: {str(e)}'}), 400
+
+        else:
+            return jsonify({'error': f'Unsupported operation: {op}'}), 400
+        
+        # Handle Ground Truth IOU if provided
+        if 'ground_truth' in request.files:
+            gt_file = request.files['ground_truth']
+            if gt_file and gt_file.filename:
+                gt_nparr = np.frombuffer(gt_file.read(), np.uint8)
+                gt_img = cv2.imdecode(gt_nparr, cv2.IMREAD_GRAYSCALE)
+                if gt_img is not None and 'output' in resp:
+                    # Decode the output image from base64 to compute IOU
+                    # For now, use the binary result directly if available
+                    # We need to get the actual mask from the operation
+                    result_mask = None
+                    if op in ['global_threshold', 'adaptive_threshold', 'otsu', 'region_growing']:
+                        # These operations return binary masks
+                        result_mask = out
+                    elif op == 'connected_components':
+                        result_mask = (label_img > 0).astype(np.uint8) * 255
+                    elif op == 'contours':
+                        result_mask = cv2.cvtColor(contour_img, cv2.COLOR_BGR2GRAY)
+                        _, result_mask = cv2.threshold(result_mask, 1, 255, cv2.THRESH_BINARY)
+                    
+                    if result_mask is not None:
+                        # Resize gt to match result if needed
+                        if gt_img.shape != result_mask.shape:
+                            gt_img = cv2.resize(gt_img, (result_mask.shape[1], result_mask.shape[0]))
+                        iou_score = compute_iou(result_mask, gt_img)
+                        resp['iou'] = float(iou_score)
+                        resp['ground_truth'] = _encode_image(gt_img)
+
+        return jsonify(resp)
+
+    except Exception as e:
+        import traceback
+        print('api_segmentation_process error:', e)
+        print(traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/vision/pipeline', methods=['POST'])
 def api_vision_pipeline():
     try:
@@ -415,4 +743,5 @@ def inject_template_vars():
 
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5021))
+    app.run(host="0.0.0.0", port=port)
